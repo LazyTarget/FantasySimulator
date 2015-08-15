@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FantasySimulator.DebugConsole", "FantasySimulator.DebugConsole\FantasySimulator.DebugConsole.csproj", "{376B02B5-A2CA-4D77-8827-692C9A3F8FCA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FantasySimulator.DebugConsole", "FantasySimulator.StartUp\FantasySimulator.DebugConsole\FantasySimulator.DebugConsole.csproj", "{376B02B5-A2CA-4D77-8827-692C9A3F8FCA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FantasySimulator.Interfaces", "FantasySimulator.Interfaces\FantasySimulator.Interfaces.csproj", "{029936D8-7288-4F48-A7CB-20BE69D72660}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FantasySimulator.Interfaces", "FantasySimulator.Base\FantasySimulator.Interfaces\FantasySimulator.Interfaces.csproj", "{029936D8-7288-4F48-A7CB-20BE69D72660}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FantasySimulator.Core", "FantasySimulator.Core\FantasySimulator.Core.csproj", "{DBA3BC6C-BA7D-4697-8CBE-EC6BC53ACB03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FantasySimulator.Core", "FantasySimulator.Base\FantasySimulator.Core\FantasySimulator.Core.csproj", "{DBA3BC6C-BA7D-4697-8CBE-EC6BC53ACB03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FantasySimulator.Models", "FantasySimulator.Models\FantasySimulator.Models.csproj", "{4BFA8B87-54B5-4939-9DC0-9F0B22241856}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FantasySimulator.Models", "FantasySimulator.Base\FantasySimulator.Models\FantasySimulator.Models.csproj", "{4BFA8B87-54B5-4939-9DC0-9F0B22241856}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FantasySimulator.Base", "FantasySimulator.Base", "{85FA5037-E792-4768-869A-DDC3DD0E057F}"
 EndProject
@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FantasySimulator.Simulators
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FantasySimulator.StartUp", "FantasySimulator.StartUp", "{2D16AFC1-5A87-4207-8DDC-04B4E48AE2B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FantasySimulator.Simulator.Soccer", "FantasySimulator.Simulator.Soccer\FantasySimulator.Simulator.Soccer.csproj", "{894B95A9-2911-4ECB-92FA-A6D1EAE302D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FantasySimulator.Simulator.Soccer", "FantasySimulator.Simulator\FantasySimulator.Simulator.Soccer\FantasySimulator.Simulator.Soccer.csproj", "{894B95A9-2911-4ECB-92FA-A6D1EAE302D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
