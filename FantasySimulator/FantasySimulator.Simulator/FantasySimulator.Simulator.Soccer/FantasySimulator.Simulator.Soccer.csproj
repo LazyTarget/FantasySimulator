@@ -39,8 +39,21 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Simulator.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Models\Fixture.cs" />
+    <Compile Include="Models\Gameweek.cs" />
+    <Compile Include="Models\FixtureOdds.cs" />
+    <Compile Include="Models\Odds.cs" />
+    <Compile Include="Models\Rating.cs" />
+    <Compile Include="Models\Team.cs" />
+    <Compile Include="Models\Player.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="SoccerSimulator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SoccerSimulationData.cs" />
+    <Compile Include="SoccerSimulationPlayerResult.cs" />
+    <Compile Include="SoccerSimulationResult.cs" />
+    <Compile Include="SoccerSimulatorSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FantasySimulator.Base\FantasySimulator.Core\FantasySimulator.Core.csproj">
