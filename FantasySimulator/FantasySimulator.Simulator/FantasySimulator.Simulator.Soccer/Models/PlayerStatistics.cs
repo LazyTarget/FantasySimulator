@@ -1,6 +1,6 @@
-﻿namespace FantasySimulator.Simulator.Soccer.Models
+﻿namespace FantasySimulator.Simulator.Soccer
 {
-    public class PlayerStatistics
+    public struct PlayerStatistics
     {
         /// <summary>
         /// Times on the field
@@ -18,15 +18,29 @@
 
         public double GoalsPerMinute
         {
-            get { return (double)Goals / PlayedMinutes; }
+            get { return PlayedMinutes > 0 ? (double)Goals / PlayedMinutes : 0; }
         }
 
         public int Assists { get; set; }
 
         public double AssistsPerMinute
         {
-            get { return (double)Assists / PlayedMinutes; }
+            get { return PlayedMinutes > 0 ? (double)Assists / PlayedMinutes : 0; }
         }
+
+        public int OwnGoals { get; set; }
+
+        public int CleanSheets { get; set; }
+
+        public double Form { get; set; }
+
+        public int BonusPoints { get; set; }
+
+        public int TotalPoints { get; set; }
+
+        public double PointsPerGame { get; set; }
+
+        public int TimesInDreamteam { get; set; }
 
         public int YellowCards { get; set; }
 
@@ -48,7 +62,7 @@
 
         public double PenaltyScorePercentage
         {
-            get { return (double) PenaltiesScored/PenaltiesShoot; }
+            get { return PenaltiesShoot > 0 ? (double) PenaltiesScored / PenaltiesShoot : 0; }
         }
 
     }

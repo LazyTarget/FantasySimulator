@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using FantasySimulator.Simulator.Soccer.Models;
 
 namespace FantasySimulator.Simulator.Soccer
 {

@@ -35,7 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\ISoccerSimulatorSettings.cs" />
+    <Compile Include="Models\FixtureScore.cs" />
     <Compile Include="Models\FixtureStatistics.cs" />
+    <Compile Include="Models\League.cs" />
+    <Compile Include="Models\LeagueTable.cs" />
+    <Compile Include="Models\PlayerFixtureStats.cs" />
     <Compile Include="Models\TeamStatistics.cs" />
     <None Include="project.json" />
     <!-- A reference to the entire .NET Framework is automatically included -->
@@ -71,6 +76,11 @@
       <Project>{4bfa8b87-54b5-4939-9dc0-9f0b22241856}</Project>
       <Name>FantasySimulator.Models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6\System.Web.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

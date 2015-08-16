@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace FantasySimulator.Simulator.Soccer.Models
+namespace FantasySimulator.Simulator.Soccer
 {
     public struct Odds
     {

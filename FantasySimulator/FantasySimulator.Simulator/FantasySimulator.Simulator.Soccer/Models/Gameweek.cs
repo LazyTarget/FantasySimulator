@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FantasySimulator.Simulator.Soccer.Models
+namespace FantasySimulator.Simulator.Soccer
 {
     public class Gameweek
     {
-        public Gameweek()
+        public Gameweek(League league)
         {
+            League = league;
             Fixtures = new List<Fixture>().ToArray();
         }
+
+        public League League { get; private set; }
 
         public int Number { get; set; }
 

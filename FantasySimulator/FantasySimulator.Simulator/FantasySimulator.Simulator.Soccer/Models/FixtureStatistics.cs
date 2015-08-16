@@ -1,22 +1,20 @@
-﻿namespace FantasySimulator.Simulator.Soccer.Models
+﻿namespace FantasySimulator.Simulator.Soccer
 {
-    public class FixtureStatistics
+    public struct FixtureStatistics
     {
-        public bool GameEnded { get; set; }
+        public bool GameFinished { get; set; }
 
         public int PlayedMinutes { get; set; }
 
-        public int GoalsForHomeTeam { get; set; }
-
-        public int GoalsForAwayTeam { get; set; }
+        public FixtureScore Score { get; set; }
 
 
         public override string ToString()
         {
-            if (GameEnded)
-                return string.Format("{0}-{1}", GoalsForHomeTeam, GoalsForAwayTeam);
+            if (GameFinished || PlayedMinutes <= 0)
+                return "Not started";
             else
-                return string.Format("{0}-{1} (min {2})", GoalsForHomeTeam, GoalsForAwayTeam, PlayedMinutes);
+                return string.Format("{0} (min {1})", Score, PlayedMinutes);
         }
     }
 }

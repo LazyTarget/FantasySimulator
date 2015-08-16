@@ -1,4 +1,4 @@
-﻿namespace FantasySimulator.Simulator.Soccer.Models
+﻿namespace FantasySimulator.Simulator.Soccer
 {
     public class FixtureOdds
     {
@@ -6,6 +6,7 @@
         public Odds HomeWin { get; set; }
         public Odds Draw { get; set; }
         public Odds AwayWin { get; set; }
+        public FixtureScore PredictedScore { get; set; }
 
         public override string ToString()
         {

@@ -1,8 +1,16 @@
-﻿namespace FantasySimulator.Simulator.Soccer.Models
+﻿namespace FantasySimulator.Simulator.Soccer
 {
     public class TeamStatistics
     {
-		public int PlayedGames { get; set; }
+        private Team _team;
+
+        public TeamStatistics(Team team)
+        {
+            _team = team;
+        }
+
+
+        public int PlayedGames { get; set; }
 
 		public int WonGames { get; set; }
 
@@ -35,5 +43,6 @@
 		public int LongestUnbeatenStreak { get; set; }
 
 		public double CleanSheetPercentage { get; set; }
+        
     }
 }

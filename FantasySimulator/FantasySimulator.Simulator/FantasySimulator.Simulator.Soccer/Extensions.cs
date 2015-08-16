@@ -1,4 +1,5 @@
-﻿using FantasySimulator.Simulator.Soccer.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace FantasySimulator.Simulator.Soccer
 {
@@ -31,24 +32,74 @@ namespace FantasySimulator.Simulator.Soccer
         public static FixtureWinner GetFixtureLeader(this Fixture fixture)
         {
             var res = FixtureWinner.None;
-            if (fixture.Statistics != null)
+            if (!fixture.Statistics.GameFinished)
+                res = FixtureWinner.Undetermined;
+            else
             {
-                if (!fixture.Statistics.GameEnded)
-                    res = FixtureWinner.Undetermined;
+                if (fixture.Statistics.Score.GoalsForHomeTeam == fixture.Statistics.Score.GoalsForAwayTeam)
+                    res = FixtureWinner.Draw;
                 else
                 {
-                    if (fixture.Statistics.GoalsForHomeTeam == fixture.Statistics.GoalsForAwayTeam)
-                        res = FixtureWinner.Draw;
+                    if (fixture.Statistics.Score.GoalsForHomeTeam > fixture.Statistics.Score.GoalsForAwayTeam)
+                        res = FixtureWinner.HomeTeam;
                     else
-                    {
-                        if (fixture.Statistics.GoalsForHomeTeam > fixture.Statistics.GoalsForAwayTeam)
-                            res = FixtureWinner.HomeTeam;
-                        else
-                            res = FixtureWinner.AwayTeam;
-                    }
+                        res = FixtureWinner.AwayTeam;
                 }
             }
             return res;
+        }
+
+
+        public static Fixture[] GetFixturesByTeam(this Team team, IEnumerable<Fixture> fixtures)
+        {
+            var result = fixtures.Where(x => x.HomeTeam.ID == team.ID || x.AwayTeam.ID == team.ID);
+            return result.ToArray();
+        }
+
+
+        public static int GetPlayedMinutesBeforeFixtureForTeam(this Team team, Fixture fixture)
+        {
+            var playedMinutes = 0;
+            var league = fixture.Gameweek.League;
+            for (var i = 0; i < league.Gameweeks.Length; i++)
+            {
+                var gw = league.Gameweeks[i];
+                if (gw.Number > fixture.Gameweek.Number)
+                    break;
+                
+                var fixtures = team.GetFixturesByTeam(gw.Fixtures).OrderBy(x => x.Time);
+                foreach (var fix in fixtures)
+                {
+                    if (fix == fixture)
+                        break;
+                    playedMinutes += fix.Statistics.PlayedMinutes;
+                }
+            }
+            return playedMinutes;
+        }
+
+        public static int GetPlayedMinutesBeforeFixtureForPlayer(this Player player, Fixture fixture)
+        {
+            var playedMinutes = 0;
+            var league = fixture.Gameweek.League;
+            var team = player.Team;
+            for (var i = 0; i < league.Gameweeks.Length; i++)
+            {
+                var gw = league.Gameweeks[i];
+                if (gw.Number > fixture.Gameweek.Number)
+                    break;
+
+                var fixtures = team.GetFixturesByTeam(gw.Fixtures).OrderBy(x => x.Time);
+                foreach (var fix in fixtures)
+                {
+                    if (fix == fixture)
+                        break;
+                    var stats = fix.GetPlayerStats(player);
+                    var min = stats != null && stats.PlayedMinutes > 0 ? stats.PlayedMinutes : 0;
+                    playedMinutes += min;
+                }
+            }
+            return playedMinutes;
         }
 
     }

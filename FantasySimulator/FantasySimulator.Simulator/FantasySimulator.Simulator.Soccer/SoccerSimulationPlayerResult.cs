@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using FantasySimulator.Simulator.Soccer.Models;
 
 namespace FantasySimulator.Simulator.Soccer
 {
@@ -41,7 +40,7 @@ namespace FantasySimulator.Simulator.Soccer
 
         public override string ToString()
         {
-            return string.Format("{0}, rec.pts: {1}", Player?.Name ?? "", RecommendationPoints);
+            return string.Format("{0}, rec.pts: {1}", Player?.DisplayName ?? "", RecommendationPoints);
         }
     }
 }

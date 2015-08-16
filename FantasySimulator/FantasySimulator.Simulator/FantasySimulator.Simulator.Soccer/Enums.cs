@@ -12,6 +12,8 @@ namespace FantasySimulator.Simulator.Soccer
         FixtureRatingDiff,
         MultipleFixturesInGameweek,
         HomeTeamAdvantage,
+        PlayerUnavailable,
+        LoweredChanceOfPlaying,
     }
 
     public enum PlayerPosition
