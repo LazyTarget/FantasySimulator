@@ -156,3 +156,8 @@ $RECYCLE.BIN/
 .DS_Store
 *.DotSettings
 /src/packages
+
+
+# Custom ignores
+/FantasySimulator/.vs/config/applicationhost.config
+project.lock.json

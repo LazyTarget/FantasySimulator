@@ -9,6 +9,7 @@ namespace FantasySimulator.Simulator.Soccer.Models
         public Team HomeTeam { get; set; }
         public Team AwayTeam { get; set; }
         public DateTime Time { get; set; }
+        public FixtureStatistics Statistics { get; set; }
 
 
         public IEnumerable<Player> GetPlayers()

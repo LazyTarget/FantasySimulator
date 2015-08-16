@@ -25,10 +25,19 @@ namespace FantasySimulator.DebugConsole
             {
                 var gameweek = result.PlayerResults.Keys.Cast<Gameweek>().ElementAt(i);
                 var players = (IEnumerable<SoccerSimulationPlayerResult>) result.PlayerResults.Values.ElementAt(i);
-                foreach (var playerRes in players)
+                var positionGroups = players.GroupBy(x => x.Player.Position);
+
+                Console.WriteLine("Gameweek #{0}", gameweek.Number);
+                foreach (var group in positionGroups)
                 {
-                    Console.WriteLine("Gameweek #{0} - {1} rec.points: {2}", gameweek.Number, playerRes.Player.Name, playerRes.RecommendationPoints);
+                    Console.WriteLine("Position: {0}", group.Key);
+                    foreach (var playerRes in group)
+                    {
+                        Console.WriteLine("{0} [{1}] \t\t--- rec.pts: {2}", playerRes.Player.Name, playerRes.Player.Rating, playerRes.RecommendationPoints);
+                    }
+                    Console.WriteLine();
                 }
+                Console.WriteLine();
             }
 
             Console.ReadLine();
@@ -54,6 +63,7 @@ namespace FantasySimulator.DebugConsole
                             Name = "David Silva",
                             Rating = (Rating) 8,
                             Price = 9.0,
+                            Position = PlayerPosition.Midfielder,
                         },
 
                         new Player
@@ -62,6 +72,7 @@ namespace FantasySimulator.DebugConsole
                             Name = "Vincent Kompany",
                             Rating = (Rating) 7,
                             Price = 7.0,
+                            Position = PlayerPosition.Defender,
                         },
                     }.ToArray(),
                 },
@@ -80,6 +91,7 @@ namespace FantasySimulator.DebugConsole
                             Name = "Eden Hazard",
                             Rating = (Rating) 9,
                             Price = 11.0,
+                            Position = PlayerPosition.Midfielder,
                         },
 
                     }.ToArray(),
@@ -95,10 +107,20 @@ namespace FantasySimulator.DebugConsole
                     {
                         new Player
                         {
+                            ID = "MIGNOLET",
+                            Name = "Simon Mignolet",
+                            Rating = (Rating) 7,
+                            Price = 5.0,
+                            Position = PlayerPosition.Goalkeeper,
+                        },
+
+                        new Player
+                        {
                             ID = "HENDERSON",
                             Name = "Jordan Henderson",
                             Rating = (Rating) 7,
                             Price = 7.0,
+                            Position = PlayerPosition.Midfielder,
                         },
 
                         new Player
@@ -107,6 +129,7 @@ namespace FantasySimulator.DebugConsole
                             Name = "Philipe Couthinho",
                             Rating = (Rating) 8,
                             Price = 8.5,
+                            Position = PlayerPosition.Midfielder,
                         },
 
                     }.ToArray(),
@@ -126,6 +149,7 @@ namespace FantasySimulator.DebugConsole
                             Name = "Matt Richie",
                             Rating = (Rating) 7,
                             Price = 5.0,
+                            Position = PlayerPosition.Midfielder,
                         },
 
                         new Player
@@ -134,6 +158,7 @@ namespace FantasySimulator.DebugConsole
                             Name = "Calum Wilson",
                             Rating = (Rating) 6,
                             Price = 5.5,
+                            Position = PlayerPosition.Forward,
                         },
 
                     }.ToArray(),
@@ -164,18 +189,71 @@ namespace FantasySimulator.DebugConsole
                     {
                         new Fixture
                         {
-                            HomeTeam = teams.Single(x=>x.ID == "MCI"),
-                            AwayTeam = teams.Single(x=>x.ID == "CHE"),
+                            HomeTeam = teams.Single(x => x.ID == "MCI"),
+                            AwayTeam = teams.Single(x => x.ID == "CHE"),
+                            Statistics = new FixtureStatistics
+                            {
+                                GameEnded = true,
+                                PlayedMinutes = 90,
+                                GoalsForHomeTeam = 2,
+                                GoalsForAwayTeam = 2,
+                            },
                         },
 
                         new Fixture
                         {
-                            HomeTeam = teams.Single(x=>x.ID == "LIV"),
-                            AwayTeam = teams.Single(x=>x.ID == "BOU"),
+                            HomeTeam = teams.Single(x => x.ID == "LIV"),
+                            AwayTeam = teams.Single(x => x.ID == "BOU"),
+                            Statistics = new FixtureStatistics
+                            {
+                                GameEnded = true,
+                                PlayedMinutes = 90,
+                                GoalsForHomeTeam = 3,
+                                GoalsForAwayTeam = 0,
+                            },
+                        },
+
+                    }.ToArray(),
+                },
+
+                new Gameweek
+                {
+                    Number = 2,
+                    Fixtures = new List<Fixture>
+                    {
+                        new Fixture
+                        {
+                            HomeTeam = teams.Single(x => x.ID == "BOU"),
+                            AwayTeam = teams.Single(x => x.ID == "MCI"),
+                        },
+
+                        new Fixture
+                        {
+                            HomeTeam = teams.Single(x => x.ID == "CHE"),
+                            AwayTeam = teams.Single(x => x.ID == "LIV"),
                         },
                     }.ToArray(),
                 },
-                
+
+                new Gameweek
+                {
+                    Number = 3,
+                    Fixtures = new List<Fixture>
+                    {
+                        new Fixture
+                        {
+                            HomeTeam = teams.Single(x => x.ID == "LIV"),
+                            AwayTeam = teams.Single(x => x.ID == "MCI"),
+                        },
+
+                        new Fixture
+                        {
+                            HomeTeam = teams.Single(x => x.ID == "BOU"),
+                            AwayTeam = teams.Single(x => x.ID == "CHE"),
+                        },
+                    }.ToArray(),
+                },
+
             }.ToArray();
 
 

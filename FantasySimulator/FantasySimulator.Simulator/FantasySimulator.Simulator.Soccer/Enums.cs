@@ -11,13 +11,24 @@ namespace FantasySimulator.Simulator.Soccer
         PlayerPlaytime,
         FixtureRatingDiff,
         MultipleFixturesInGameweek,
+        HomeTeamAdvantage,
     }
 
     public enum PlayerPosition
     {
         None,
+        Goalkeeper,
         Defender,
         Midfielder,
         Forward,
+    }
+
+    public enum FixtureWinner
+    {
+        None,
+        Undetermined,
+        Draw,
+        HomeTeam,
+        AwayTeam,
     }
 }

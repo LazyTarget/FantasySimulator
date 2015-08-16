@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FantasySimulator.Simulator.Soccer.Models;
 
@@ -7,7 +8,6 @@ namespace FantasySimulator.Simulator.Soccer
     {
         public SoccerSimulationResult()
         {
-            //PlayerResults = new List<SoccerSimulationPlayerResult>().ToArray();
             PlayerResults = new Dictionary<Gameweek, List<SoccerSimulationPlayerResult>>();
         }
 

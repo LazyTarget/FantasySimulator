@@ -14,6 +14,7 @@ namespace FantasySimulator.Simulator.Soccer
             return false;
         }
 
+
         public static Team GetOpposingTeam(this Fixture fixture, Player player)
         {
             if (player != null)
@@ -24,6 +25,30 @@ namespace FantasySimulator.Simulator.Soccer
                     return fixture.HomeTeam;
             }
             return null;
+        }
+
+
+        public static FixtureWinner GetFixtureLeader(this Fixture fixture)
+        {
+            var res = FixtureWinner.None;
+            if (fixture.Statistics != null)
+            {
+                if (!fixture.Statistics.GameEnded)
+                    res = FixtureWinner.Undetermined;
+                else
+                {
+                    if (fixture.Statistics.GoalsForHomeTeam == fixture.Statistics.GoalsForAwayTeam)
+                        res = FixtureWinner.Draw;
+                    else
+                    {
+                        if (fixture.Statistics.GoalsForHomeTeam > fixture.Statistics.GoalsForAwayTeam)
+                            res = FixtureWinner.HomeTeam;
+                        else
+                            res = FixtureWinner.AwayTeam;
+                    }
+                }
+            }
+            return res;
         }
 
     }

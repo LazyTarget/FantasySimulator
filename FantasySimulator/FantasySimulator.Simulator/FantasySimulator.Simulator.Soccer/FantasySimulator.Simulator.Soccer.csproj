@@ -35,6 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Models\FixtureStatistics.cs" />
+    <Compile Include="Models\TeamStatistics.cs" />
     <None Include="project.json" />
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
@@ -44,6 +46,7 @@
     <Compile Include="Models\Gameweek.cs" />
     <Compile Include="Models\FixtureOdds.cs" />
     <Compile Include="Models\Odds.cs" />
+    <Compile Include="Models\PlayerStatistics.cs" />
     <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\Team.cs" />
     <Compile Include="Models\Player.cs" />

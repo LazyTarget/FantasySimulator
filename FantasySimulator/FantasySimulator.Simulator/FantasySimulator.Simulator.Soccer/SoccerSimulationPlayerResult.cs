@@ -31,6 +31,14 @@ namespace FantasySimulator.Simulator.Soccer
         }
 
 
+        public void AddRecommendation(RecommendationType type, int value)
+        {
+            if (!Recommendations.ContainsKey(type))
+                Recommendations.Add(type, 0);
+            Recommendations[type] += value;
+        }
+
+
         public override string ToString()
         {
             return string.Format("{0}, rec.pts: {1}", Player?.Name ?? "", RecommendationPoints);

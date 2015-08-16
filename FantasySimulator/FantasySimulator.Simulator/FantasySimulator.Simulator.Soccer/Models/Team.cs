@@ -18,6 +18,8 @@ namespace FantasySimulator.Simulator.Soccer.Models
 
         public Player[] Players { get; set; }
 
+        public TeamStatistics Statistics { get; set; }
+
 
         public override string ToString()
         {
