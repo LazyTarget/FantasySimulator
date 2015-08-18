@@ -1,38 +1,47 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace FantasySimulator.Simulator.Soccer
 {
-    public class LeagueTable : IEnumerable<Team>
+    public class LeagueTable : IEnumerable<LeagueTeam>
     {
-        private readonly Team[] _teams;
-        private readonly IOrderedEnumerable<Team> _result;
-
-
         public LeagueTable(League league)
         {
+            if (league == null)
+                throw new ArgumentNullException(nameof(league));
             League = league;
-            _teams = league.Teams;
-            _result = _teams.OrderByDescending(x => x.Statistics.Points)
-                            .ThenByDescending(x => x.Statistics.WonGames)
-                            .ThenByDescending(x => x.Statistics.DrawGames)
-                            .ThenByDescending(x => x.Statistics.GoalsDifferance)
-                            .ThenByDescending(x => x.Statistics.GoalsFor)
-                            .ThenBy(x => x.Statistics.LostGames);
         }
 
         public League League { get; private set; }
 
 
-        public IEnumerator<Team> GetEnumerator()
+        public IEnumerator<LeagueTeam> GetEnumerator()
         {
-            return _result.GetEnumerator();
+            var result = League.Teams
+                .OrderByDescending(x => x.Statistics.Points)
+                .ThenByDescending(x => x.Statistics.WonGames)
+                .ThenByDescending(x => x.Statistics.DrawGames)
+                .ThenByDescending(x => x.Statistics.GoalsDifferance)
+                .ThenByDescending(x => x.Statistics.GoalsFor)
+                .ThenBy(x => x.Statistics.LostGames);
+            return result.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public string Print()
+        {
+            var tbl = string.Join(Environment.NewLine, 
+                this.Select(x => string.Format("{1}p\t {2}|{3}|{4}  \t{0}", 
+                                    x.Team.Name, x.Points, x.GamesWon, x.GamesDrawn, x.GamesLost)));
+            System.Diagnostics.Debug.WriteLine(string.Format("LeagueTable '{0}'", League.Name));
+            System.Diagnostics.Debug.WriteLine(tbl);
+            return tbl;
         }
     }
 }

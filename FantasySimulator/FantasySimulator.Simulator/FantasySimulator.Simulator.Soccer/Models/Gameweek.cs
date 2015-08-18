@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FantasySimulator.Simulator.Soccer
 {
@@ -16,7 +17,11 @@ namespace FantasySimulator.Simulator.Soccer
         public int Number { get; set; }
 
         public Fixture[] Fixtures { get; set; }
-        
+
+        public bool Started { get { return Fixtures.Any(x => x.Statistics.GameStarted); } }
+
+        public bool Ended { get { return Fixtures.All(x => x.Statistics.GameFinished); } }
+
 
         public IEnumerable<Player> GetPlayers()
         {

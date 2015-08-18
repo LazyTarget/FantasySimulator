@@ -41,6 +41,7 @@
     <Compile Include="Models\League.cs" />
     <Compile Include="Models\LeagueTable.cs" />
     <Compile Include="Models\PlayerFixtureStats.cs" />
+    <Compile Include="Models\LeagueTeam.cs" />
     <Compile Include="Models\TeamStatistics.cs" />
     <None Include="project.json" />
     <!-- A reference to the entire .NET Framework is automatically included -->

@@ -7,7 +7,7 @@ namespace FantasySimulator.DebugConsole
     {
         public static TObj[] Append<TObj>(this TObj[] array, TObj obj)
         {
-            var list = array.ToList();
+            var list = (array ?? new TObj[0]).ToList();
             list.Add(obj);
             var res = list.ToArray();
             return res;

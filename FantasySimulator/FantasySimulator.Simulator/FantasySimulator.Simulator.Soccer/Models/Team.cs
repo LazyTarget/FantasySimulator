@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FantasySimulator.Simulator.Soccer
 {
@@ -8,7 +9,6 @@ namespace FantasySimulator.Simulator.Soccer
         public Team()
         {
             Players = new List<Player>().ToArray();
-            Statistics = new TeamStatistics(this);
         }
 
 
@@ -22,62 +22,23 @@ namespace FantasySimulator.Simulator.Soccer
 
         public Player[] Players { get; set; }
 
-        public TeamStatistics Statistics { get; private set; }
+        public League[] Leagues { get; set; }
 
 
-
-        public void UpdateStatisticsBasedOnFixture(Fixture fixture)
+        public TeamStatistics GetFullStatistics()
         {
-            // Statistics are updated only when the game has ended
-            var fixtureWinner = fixture.GetFixtureLeader();
-            if (fixtureWinner == FixtureWinner.Undetermined)
-                return;
-
-
-            var isHome = ID == fixture.HomeTeam.ID;
-            var opposingTeam = isHome ? fixture.AwayTeam : fixture.HomeTeam;
-
-            // todo: validate that statistics hasn't already been applied?
-
-            Statistics.PlayedGames++;
-
-            Statistics.GoalsFor += isHome
-                ? fixture.Statistics.Score.GoalsForHomeTeam
-                : fixture.Statistics.Score.GoalsForAwayTeam;
-            Statistics.GoalsConceded += isHome
-                ? fixture.Statistics.Score.GoalsForAwayTeam
-                : fixture.Statistics.Score.GoalsForHomeTeam;
-            
-            switch (fixtureWinner)
+            var res = new TeamStatistics();
+            foreach (var league in Leagues)
             {
-                case FixtureWinner.HomeTeam:
-                    if (isHome)
-                        Statistics.WonGames++;
-                    else
-                        Statistics.LostGames++;
-                    break;
-
-                case FixtureWinner.AwayTeam:
-                    if (isHome)
-                        Statistics.LostGames++;
-                    else
-                        Statistics.WonGames++;
-                    break;
-
-                case FixtureWinner.Draw:
-                    Statistics.DrawGames++;
-                    break;
-
-                case FixtureWinner.None:
-                case FixtureWinner.Undetermined:
-                    throw new NotSupportedException("Cannot update statistics, when game has not ended");
-
-                default:
-                    throw new InvalidOperationException();
+                var team = league.Teams.FirstOrDefault(x => x.Team.ID == ID);
+                if (team == null)
+                    throw new InvalidOperationException("Team is not in league");
+                res += team.Statistics;
             }
+            return res;
         }
-
-
+        
+        
         public override string ToString()
         {
             return Name;

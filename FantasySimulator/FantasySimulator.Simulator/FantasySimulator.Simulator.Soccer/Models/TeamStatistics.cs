@@ -2,14 +2,6 @@
 {
     public class TeamStatistics
     {
-        private Team _team;
-
-        public TeamStatistics(Team team)
-        {
-            _team = team;
-        }
-
-
         public int PlayedGames { get; set; }
 
 		public int WonGames { get; set; }
@@ -43,6 +35,18 @@
 		public int LongestUnbeatenStreak { get; set; }
 
 		public double CleanSheetPercentage { get; set; }
-        
+
+
+        public static TeamStatistics operator +(TeamStatistics a, TeamStatistics b)
+        {
+            if (b == null)
+                return a;
+            a.PlayedGames += b.PlayedGames;
+            a.WonGames += b.WonGames;
+            // todo: automate
+
+            return a;
+        }
+
     }
 }

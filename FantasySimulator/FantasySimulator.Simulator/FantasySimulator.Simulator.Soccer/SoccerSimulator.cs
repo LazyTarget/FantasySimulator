@@ -32,36 +32,39 @@ namespace FantasySimulator.Simulator.Soccer
         public SoccerSimulationResult Simulate(SoccerSimulationData data)
         {
             var result = new SoccerSimulationResult();
-            foreach (var gameweek in data.League.Gameweeks)
+            foreach (var league in data.Leagues)
             {
-                var temp = new List<SoccerSimulationPlayerResult>();
-                var players = gameweek.GetPlayers();
-                foreach (var player in players)
+                foreach (var gameweek in league.Gameweeks)
                 {
-                    var res = AnalysePlayerResult(player, gameweek);
-                    temp.Add(res);
+                    var temp = new List<SoccerSimulationPlayerResult>();
+                    var players = gameweek.GetPlayers();
+                    foreach (var player in players)
+                    {
+                        var res = AnalysePlayerResult(player, gameweek);
+                        temp.Add(res);
+                    }
+
+
+                    var top = new List<SoccerSimulationPlayerResult>();
+                    var recommended = temp.Where(x => x.RecommendationPoints > 0)
+                                  .OrderBy(x => (int) x.Player.Position)
+                                  .ThenByDescending(x => x.RecommendationPoints)
+                                  .ThenByDescending(x => x.EstimatedPoints)
+                                  .ToList();
+                    var groups = recommended.GroupBy(x => x.Player.Position);
+                    foreach (var group in groups)
+                    {
+                        var topForPosition = group.ToList();
+                        if (Settings.TopRecommendationsPerPosition > 0)
+                            topForPosition = topForPosition.Take(Settings.TopRecommendationsPerPosition).ToList();
+                        top.AddRange(topForPosition);
+
+                        // todo: if many with same recommendation points, then set a "uncertainty level" on player?
+                    }
+                    result.PlayerResults.Add(gameweek, top);
+
+                    // todo: if players are recommended for several gameweeks (in a row), then recommend them even more
                 }
-
-
-                var top = new List<SoccerSimulationPlayerResult>();
-                var recommended = temp.Where(x => x.RecommendationPoints > 0)
-                              .OrderBy(x => (int) x.Player.Position)
-                              .ThenByDescending(x => x.RecommendationPoints)
-                              .ThenByDescending(x => x.EstimatedPoints)
-                              .ToList();
-                var groups = recommended.GroupBy(x => x.Player.Position);
-                foreach (var group in groups)
-                {
-                    var topForPosition = group.ToList();
-                    if (Settings.TopRecommendationsPerPosition > 0)
-                        topForPosition = topForPosition.Take(Settings.TopRecommendationsPerPosition).ToList();
-                    top.AddRange(topForPosition);
-
-                    // todo: if many with same recommendation points, then set a "uncertainty level" on player?
-                }
-                result.PlayerResults.Add(gameweek, top);
-
-                // todo: if players are recommended for several gameweeks (in a row), then recommend them even more
             }
             return result;
         }
@@ -73,9 +76,9 @@ namespace FantasySimulator.Simulator.Soccer
             fixtureOdds.Fixture = fixture;
 
             // todo: implement odds algorithm
-            fixtureOdds.HomeWin = fixture.HomeTeam.Rating > fixture.AwayTeam.Rating ? 1 : 3;
-            fixtureOdds.Draw    = fixture.HomeTeam.Rating == fixture.AwayTeam.Rating ? 1 : 5;
-            fixtureOdds.AwayWin = fixture.AwayTeam.Rating > fixture.HomeTeam.Rating ? 1 : 3;
+            fixtureOdds.HomeWin = fixture.HomeTeam.Team.Rating > fixture.AwayTeam.Team.Rating ? 1 : 3;
+            fixtureOdds.Draw    = fixture.HomeTeam.Team.Rating == fixture.AwayTeam.Team.Rating ? 1 : 5;
+            fixtureOdds.AwayWin = fixture.AwayTeam.Team.Rating > fixture.HomeTeam.Team.Rating ? 1 : 3;
 
             // todo: implement prediction
             //fixtureOdds.PredictedScore = 
@@ -92,7 +95,7 @@ namespace FantasySimulator.Simulator.Soccer
             res.Player = player;
 
 
-            var fixtures = gameweek.Fixtures.Where(x => x.HomeTeam.ID == player.Team.ID || x.AwayTeam.ID == player.Team.ID);
+            var fixtures = gameweek.Fixtures.Where(x => x.HomeTeam.Team.ID == player.Team.ID || x.AwayTeam.Team.ID == player.Team.ID);
             foreach (var fixture in fixtures)
             {
                 if (!Settings.SimulateFinishedGames)
@@ -105,11 +108,11 @@ namespace FantasySimulator.Simulator.Soccer
                     if (player.Unavailable)
                         break;
                 }
+                
+                var playerTeam = player.GetLeagueTeam(fixture);
+                var opposingTeam = player.GetOpposingTeam(fixture);
 
-                var playerTeam = player.Team;
-                var opposingTeam = fixture.GetOpposingTeam(player);
-
-                var homeTeamAdvantage = fixture.HasHomeTeamAdvantage(player);
+                var homeTeamAdvantage = player.HasHomeTeamAdvantage(fixture);
                 var odds = CalculateOdds(fixture);
                 var teamBetter = homeTeamAdvantage
                     ? odds.HomeWin < 2

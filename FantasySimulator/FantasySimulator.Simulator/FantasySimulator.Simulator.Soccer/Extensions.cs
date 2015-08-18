@@ -5,28 +5,48 @@ namespace FantasySimulator.Simulator.Soccer
 {
     public static class Extensions
     {
-        public static bool HasHomeTeamAdvantage(this Fixture fixture, Player player)
+        public static bool HasHomeTeamAdvantage(this Player player, Fixture fixture)
         {
             if (player != null)
             {
-                if (player.Team.ID == fixture.HomeTeam.ID)
+                if (player.Team.ID == fixture.HomeTeam.Team.ID)
                     return true;
             }
             return false;
         }
 
 
-        public static Team GetOpposingTeam(this Fixture fixture, Player player)
+        public static LeagueTeam GetOpposingTeam(this Player player, Fixture fixture)
         {
             if (player != null)
             {
-                if (player.Team.ID == fixture.HomeTeam.ID)
+                if (player.Team.ID == fixture.HomeTeam.Team.ID)
                     return fixture.AwayTeam;
-                if (player.Team.ID == fixture.AwayTeam.ID)
+                if (player.Team.ID == fixture.AwayTeam.Team.ID)
                     return fixture.HomeTeam;
             }
             return null;
         }
+
+
+        public static LeagueTeam GetLeagueTeam(this Player player, Fixture fixture)
+        {
+            return GetLeagueTeam(player, fixture.Gameweek);
+        }
+
+        public static LeagueTeam GetLeagueTeam(this Player player, Gameweek gameweek)
+        {
+            var league = player.Team.Leagues.FirstOrDefault(x => x.ID == gameweek.League.ID);
+            var leaugeTeam = GetLeagueTeam(player, league);
+            return leaugeTeam;
+        }
+
+        public static LeagueTeam GetLeagueTeam(this Player player, League league)
+        {
+            var leaugeTeam = league.Teams.FirstOrDefault(x => x.Team.ID == player.Team.ID);
+            return leaugeTeam;
+        }
+
 
 
         public static FixtureWinner GetFixtureLeader(this Fixture fixture)
@@ -50,14 +70,42 @@ namespace FantasySimulator.Simulator.Soccer
         }
 
 
-        public static Fixture[] GetFixturesByTeam(this Team team, IEnumerable<Fixture> fixtures)
+        public static Fixture[] GetFixturesByTeam(this LeagueTeam team, IEnumerable<Fixture> fixtures)
         {
-            var result = fixtures.Where(x => x.HomeTeam.ID == team.ID || x.AwayTeam.ID == team.ID);
+            var result = fixtures.Where(x => x.HomeTeam.Team.ID == team.Team.ID || x.AwayTeam.Team.ID == team.Team.ID);
             return result.ToArray();
         }
 
+        
+        public static IEnumerable<Fixture> GetRecentFixtures(this Team team, int count = 5)
+        {
+            var fixtures = team.Leagues
+                .SelectMany(x => x.Gameweeks)
+                .SelectMany(x => x.Fixtures)
+                .Where(x => x.HomeTeam.Team.ID == team.ID || x.AwayTeam.Team.ID == team.ID)
+                .Where(x => x.Statistics.GameStarted)
+                //.Where(x => x.Statistics.GameFinished)
+                .OrderByDescending(x => x.Time)
+                .Take(count);
+            return fixtures;
+        }
 
-        public static int GetPlayedMinutesBeforeFixtureForTeam(this Team team, Fixture fixture)
+        public static IEnumerable<Fixture> GetRecentFixtures(this LeagueTeam team, int count = 5)
+        {
+            var fixtures = team.League.Gameweeks
+                .SelectMany(x => x.Fixtures)
+                .Where(x => x.HomeTeam.Team.ID == team.Team.ID || x.AwayTeam.Team.ID == team.Team.ID)
+                .Where(x => x.Statistics.GameStarted)
+                //.Where(x => x.Statistics.GameFinished)
+                .OrderByDescending(x => x.Time)
+                .Take(count);
+            return fixtures;
+        }
+
+
+
+
+        public static int GetPlayedMinutesBeforeFixtureForTeam(this LeagueTeam team, Fixture fixture)
         {
             var playedMinutes = 0;
             var league = fixture.Gameweek.League;
@@ -82,7 +130,7 @@ namespace FantasySimulator.Simulator.Soccer
         {
             var playedMinutes = 0;
             var league = fixture.Gameweek.League;
-            var team = player.Team;
+            var team = player.GetLeagueTeam(fixture);
             for (var i = 0; i < league.Gameweeks.Length; i++)
             {
                 var gw = league.Gameweeks[i];

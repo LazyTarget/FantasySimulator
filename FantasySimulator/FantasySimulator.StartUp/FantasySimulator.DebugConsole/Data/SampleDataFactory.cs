@@ -151,6 +151,8 @@ namespace FantasySimulator.DebugConsole.Data
                 }
             }
 
+            var leagueTeams = teams.Select(x => new LeagueTeam(league, x)).ToList();
+
             #endregion
             
 
@@ -165,8 +167,8 @@ namespace FantasySimulator.DebugConsole.Data
                     {
                         new Fixture
                         {
-                            HomeTeam = teams.Single(x => x.ID == "MCI"),
-                            AwayTeam = teams.Single(x => x.ID == "CHE"),
+                            HomeTeam = leagueTeams.Single(x => x.Team.ID == "MCI"),
+                            AwayTeam = leagueTeams.Single(x => x.Team.ID == "CHE"),
                             Statistics = new FixtureStatistics
                             {
                                 GameFinished = true,
@@ -181,8 +183,8 @@ namespace FantasySimulator.DebugConsole.Data
 
                         new Fixture
                         {
-                            HomeTeam = teams.Single(x => x.ID == "LIV"),
-                            AwayTeam = teams.Single(x => x.ID == "BOU"),
+                            HomeTeam = leagueTeams.Single(x => x.Team.ID == "LIV"),
+                            AwayTeam = leagueTeams.Single(x => x.Team.ID == "BOU"),
                             Statistics = new FixtureStatistics
                             {
                                 GameFinished = false,
@@ -205,14 +207,14 @@ namespace FantasySimulator.DebugConsole.Data
                     {
                         new Fixture
                         {
-                            HomeTeam = teams.Single(x => x.ID == "BOU"),
-                            AwayTeam = teams.Single(x => x.ID == "MCI"),
+                            HomeTeam = leagueTeams.Single(x => x.Team.ID == "BOU"),
+                            AwayTeam = leagueTeams.Single(x => x.Team.ID == "MCI"),
                         },
 
                         new Fixture
                         {
-                            HomeTeam = teams.Single(x => x.ID == "CHE"),
-                            AwayTeam = teams.Single(x => x.ID == "LIV"),
+                            HomeTeam = leagueTeams.Single(x => x.Team.ID == "CHE"),
+                            AwayTeam = leagueTeams.Single(x => x.Team.ID == "LIV"),
                         },
                     }.ToArray(),
                 },
@@ -224,14 +226,14 @@ namespace FantasySimulator.DebugConsole.Data
                     {
                         new Fixture
                         {
-                            HomeTeam = teams.Single(x => x.ID == "LIV"),
-                            AwayTeam = teams.Single(x => x.ID == "MCI"),
+                            HomeTeam = leagueTeams.Single(x => x.Team.ID == "LIV"),
+                            AwayTeam = leagueTeams.Single(x => x.Team.ID == "MCI"),
                         },
 
                         new Fixture
                         {
-                            HomeTeam = teams.Single(x => x.ID == "BOU"),
-                            AwayTeam = teams.Single(x => x.ID == "CHE"),
+                            HomeTeam = leagueTeams.Single(x => x.Team.ID == "BOU"),
+                            AwayTeam = leagueTeams.Single(x => x.Team.ID == "CHE"),
                         },
                     }.ToArray(),
                 },
@@ -250,11 +252,11 @@ namespace FantasySimulator.DebugConsole.Data
             #endregion
 
 
-            league.Teams = teams;
+            league.Teams = leagueTeams.ToArray();
             league.Gameweeks = gameweeks;
 
             var simulationData = new SoccerSimulationData();
-            simulationData.League = league;
+            simulationData.Leagues = simulationData.Leagues.Append(league);
             //simulationData.Teams = teams;
             //simulationData.Gameweeks = gameweeks;
             return simulationData;

@@ -8,26 +8,26 @@ namespace FantasySimulator.Simulator.Soccer
     public class Fixture
     {
         public Gameweek Gameweek { get; set; }
-        public Team HomeTeam { get; set; }
-        public Team AwayTeam { get; set; }
+        public LeagueTeam HomeTeam { get; set; }
+        public LeagueTeam AwayTeam { get; set; }
         public DateTime Time { get; set; }
         public FixtureStatistics Statistics { get; set; }
 
 
         public IEnumerable<Player> GetPlayers()
         {
-            if (HomeTeam?.Players != null)
+            if (HomeTeam?.Team?.Players != null)
             {
-                foreach (var player in HomeTeam.Players)
+                foreach (var player in HomeTeam.Team.Players)
                 {
                     // todo: validate is at club for gameweek (transfered in January window?)
                     yield return player;
                 }
             }
 
-            if (AwayTeam?.Players != null)
+            if (AwayTeam?.Team?.Players != null)
             {
-                foreach (var player in AwayTeam.Players)
+                foreach (var player in AwayTeam.Team.Players)
                 {
                     // todo: validate is at club for gameweek (transfered in January window?)
                     yield return player;
@@ -81,7 +81,7 @@ namespace FantasySimulator.Simulator.Soccer
 
         public override string ToString()
         {
-            return string.Format("{0}-{1}", HomeTeam.ShortName, AwayTeam.ShortName);
+            return string.Format("{0}-{1} ({2})", HomeTeam.Team.ShortName, AwayTeam.Team.ShortName, Statistics);
         }
     }
 }

@@ -30,8 +30,27 @@ namespace FantasySimulator.DebugConsole.Data
 
                 var fixturesJson = await GetFixturesFromTextFile();
 
-                var result = GenerateFromJson(teamsAndPlayerJson, fixturesJson);
-                return result;
+                var teams = new List<Team>();
+
+
+                var premierLeague = GenerateLeague(teamsAndPlayerJson, fixturesJson, ref teams);
+
+
+                //var faCup = GenerateLeague(teamsAndPlayerJson, fixturesJson, ref teams);
+                //faCup.ID = "FACUP";
+                //faCup.Name = "FA Cup 15/16";
+
+
+                // todo: Champions League
+
+
+                // todo: include in simulation: players playing in multiple leagues => tired, playtime, etc.
+
+
+                var data = new SoccerSimulationData();
+                data.Leagues = data.Leagues.Append(premierLeague);
+                //data.Leagues = data.Leagues.Append(faCup);
+                return data;
             }
             catch (Exception ex)
             {
@@ -190,14 +209,15 @@ namespace FantasySimulator.DebugConsole.Data
         
 
 
-        private SoccerSimulationData GenerateFromJson(JObject teamsAndPlayersJson, JObject fixturesJson)
+        private League GenerateLeague(JObject teamsAndPlayersJson, JObject fixturesJson, ref List<Team> teams)
         {
             var league = new League
             {
+                ID = "PL",
                 Name = "Premier League 15/16",
                 Year = 2015,
             };
-            var teams = new List<Team>();
+            var leagueTeams = new List<LeagueTeam>();
             var gameweeks = new List<Gameweek>();
             var positions = new Dictionary<int, PlayerPosition>();
 
@@ -239,17 +259,29 @@ namespace FantasySimulator.DebugConsole.Data
             foreach (var prop in eiwTeams.Properties())
             {
                 var t = prop.Value.ToObjectOrDefault<JObject>();
-                var team = new Team
-                {
-                    ID = t.GetPropertyValue<string>("id"),
-                    Name = t.GetPropertyValue<string>("name"),
-                    ShortName = t.GetPropertyValue<string>("short_name"),
+                var teamID = t.GetPropertyValue<string>("id");
+                if (string.IsNullOrWhiteSpace(teamID))
+                    throw new FormatException("Invalid TeamID");
 
-                    // todo: implement
-                    //Rating = 
-                    //Statistics = 
-                };
-                teams.Add(team);
+                var team = teams.FirstOrDefault(x => x.ID == teamID);
+                if (team == null)
+                {
+                    team = new Team
+                    {
+                        ID = teamID,
+                        Name = t.GetPropertyValue<string>("name"),
+                        ShortName = t.GetPropertyValue<string>("short_name"),
+
+                        // todo: implement
+                        //Rating = 
+                        //Statistics = 
+                    };
+                    teams.Add(team);
+                }
+                
+                var leagueTeam = new LeagueTeam(league, team);
+                leagueTeams.Add(leagueTeam);
+                team.Leagues = team.Leagues.Append(league);
             }
 
 
@@ -263,6 +295,8 @@ namespace FantasySimulator.DebugConsole.Data
             foreach (var playerData in stats)
             {
                 var posID = GetProperty<int>(playerData, propMapping, "element_type_id");
+
+                // todo: load and update player (statitics), if player plays in multiple leagues
 
                 var player                          = new Player();
                 player.ID                           = GetProperty<string>(playerData, propMapping, "id");
@@ -329,8 +363,10 @@ namespace FantasySimulator.DebugConsole.Data
 
                     var homeTeamName = obj.GetPropertyValue<string>("homeTeamName");
                     var awayTeamName = obj.GetPropertyValue<string>("awayTeamName");
-                    fixture.HomeTeam = teams.Single(x => x.Name == homeTeamName);
-                    fixture.AwayTeam = teams.Single(x => x.Name == awayTeamName);
+                    var homeTeam = leagueTeams.Single(x => x.Team.Name == homeTeamName);
+                    var awayTeam = leagueTeams.Single(x => x.Team.Name == awayTeamName);
+                    fixture.HomeTeam = homeTeam;
+                    fixture.AwayTeam = awayTeam;
 
                     var resultsJson = obj.GetPropertyValue<JObject>("result");
                     var status = obj.GetPropertyValue<string>("status");
@@ -376,14 +412,9 @@ namespace FantasySimulator.DebugConsole.Data
 
 
             
-            league.Teams = teams.ToArray();
+            league.Teams = leagueTeams.ToArray();
             league.Gameweeks = gameweeks.ToArray();
-
-            var data = new SoccerSimulationData();
-            data.League = league;
-            //data.Teams = teams.ToArray();
-            //data.Gameweeks = gameweeks.ToArray();
-            return data;
+            return league;
         }
 
 
