@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace FantasySimulator.DebugConsole
+namespace FantasySimulator.Core
 {
     public static class JsonExtensions
     {

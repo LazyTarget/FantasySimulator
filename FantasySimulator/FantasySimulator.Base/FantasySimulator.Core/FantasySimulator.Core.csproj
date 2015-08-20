@@ -39,9 +39,17 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions.cs" />
+    <Compile Include="Extensions\JsonExtensions.cs" />
+    <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Randomizer.cs" />
+    <Compile Include="TypeContainer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FantasySimulator.Interfaces\FantasySimulator.Interfaces.csproj">
+      <Project>{029936d8-7288-4f48-a7cb-20be69d72660}</Project>
+      <Name>FantasySimulator.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
