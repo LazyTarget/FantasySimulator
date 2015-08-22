@@ -54,7 +54,7 @@
   <ItemGroup>
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Data\FantasyPremierLeagueDataFactory.cs" />
-    <Compile Include="Data\SampleDataFactory.cs" />
+    <Content Include="Data\SampleDataFactory.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Interfaces\ISoccerSimulationDataFactory.cs" />
     <Compile Include="Program.cs" />
@@ -65,7 +65,10 @@
     <None Include="App_Data\Fixtures.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="App_Data\TransfersPage.json">
+    <None Include="App_Data\TransfersPage_201508182327.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\TransfersPage_201508221312.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />

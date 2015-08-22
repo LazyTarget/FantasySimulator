@@ -37,6 +37,8 @@
   <ItemGroup>
     <Compile Include="Interfaces\IFixtureOddsProvider.cs" />
     <Compile Include="Interfaces\ISoccerSimulatorSettings.cs" />
+    <Compile Include="Models\TransferDetails.cs" />
+    <Compile Include="Models\FantasyPlayer.cs" />
     <Compile Include="Models\FixtureScore.cs" />
     <Compile Include="Models\FixtureStatistics.cs" />
     <Compile Include="Models\League.cs" />
@@ -44,6 +46,7 @@
     <Compile Include="Models\PlayerFixtureStats.cs" />
     <Compile Include="Models\LeagueTeam.cs" />
     <Compile Include="Models\TeamStatistics.cs" />
+    <Compile Include="SimulationContext.cs" />
     <Compile Include="ThirdParty\Kambi\KambiAPI.cs" />
     <None Include="project.json" />
     <!-- A reference to the entire .NET Framework is automatically included -->

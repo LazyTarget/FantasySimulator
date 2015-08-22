@@ -38,26 +38,38 @@ namespace FantasySimulator.Simulator.Soccer
         public SoccerSimulationResult Simulate(SoccerSimulationData data)
         {
             var result = new SoccerSimulationResult();
+            var context = new SimulationContext(data);
             foreach (var league in data.Leagues)
             {
                 foreach (var gameweek in league.Gameweeks)
                 {
+                    foreach (var fixture in gameweek.Fixtures)
+                    {
+                        if (Settings.CalculateOddsWhenSimulating)
+                            fixture.Odds = CalculateOdds(fixture);
+                    }
+
+                    if (gameweek.Ended)
+                    {
+                        context.LastPlayedGameweek = gameweek;
+                    }
+
                     var temp = new List<SoccerSimulationPlayerResult>();
                     var players = gameweek.GetPlayers();
                     foreach (var player in players)
                     {
-                        var res = AnalysePlayerResult(player, gameweek);
+                        var res = AnalysePlayerResult(player, gameweek, context);
                         temp.Add(res);
                     }
 
 
                     var top = new List<SoccerSimulationPlayerResult>();
                     var recommended = temp.Where(x => x.RecommendationPoints > 0)
-                                  .OrderBy(x => (int) x.Player.Position)
+                                  .OrderBy(x => (int) x.Player.Fantasy.Position)
                                   .ThenByDescending(x => x.RecommendationPoints)
                                   .ThenByDescending(x => x.EstimatedPoints)
                                   .ToList();
-                    var groups = recommended.GroupBy(x => x.Player.Position);
+                    var groups = recommended.GroupBy(x => x.Player.Fantasy.Position);
                     foreach (var group in groups)
                     {
                         var topForPosition = group.ToList();
@@ -104,7 +116,7 @@ namespace FantasySimulator.Simulator.Soccer
 
         
 
-        private SoccerSimulationPlayerResult AnalysePlayerResult(Player player, Gameweek gameweek)
+        private SoccerSimulationPlayerResult AnalysePlayerResult(Player player, Gameweek gameweek, SimulationContext context)
         {
             var res = new SoccerSimulationPlayerResult();
             res.Player = player;
@@ -120,7 +132,7 @@ namespace FantasySimulator.Simulator.Soccer
                 }
                 if (Settings.FilterUnavailablePlayers)
                 {
-                    if (player.Unavailable)
+                    if (player.Fantasy.Unavailable)
                         break;
                 }
 
@@ -137,9 +149,11 @@ namespace FantasySimulator.Simulator.Soccer
                 var playerTeam = player.GetLeagueTeam(fixture);
                 var opposingTeam = player.GetOpposingTeam(fixture);
                 var homeTeamAdvantage = player.HasHomeTeamAdvantage(fixture);
+                var gameweeksFromLastPlayedGW = gameweek.Number - context.LastPlayedGameweek.Number;
 
 
-                var odds = CalculateOdds(fixture);
+                //var odds = CalculateOdds(fixture);
+                var odds = fixture.Odds;
                 if (odds != null)
                 {
                     var teamBetter = homeTeamAdvantage
@@ -187,51 +201,54 @@ namespace FantasySimulator.Simulator.Soccer
                 }
                 
 
-                // Good player form
-                if (Settings.MinimumFixturesForFormRecommendationBonus <= 0 ||
-                    playerTeam.Statistics.PlayedGames >= Settings.MinimumFixturesForFormRecommendationBonus)
+
+                // Form
+                if (gameweeksFromLastPlayedGW > 0 &&
+                    gameweeksFromLastPlayedGW <= Settings.LengthOfFormWhenSimulating)
                 {
-                    // todo: don't give points for games too long in the future, as the form could end
+                    // Good player form
+                    if (Settings.MinimumFixturesForFormRecommendationBonus <= 0 ||
+                        playerTeam.Statistics.PlayedGames >= Settings.MinimumFixturesForFormRecommendationBonus)
+                    {
+                        // Positives
+                        if (player.Statistics.Form >= 15)
+                            res.AddRecommendation(RecommendationType.PlayerForm, 3);
+                        if (player.Statistics.Form >= 10)
+                            res.AddRecommendation(RecommendationType.PlayerForm, 2);
+                        else if (player.Statistics.Form >= 6)
+                            res.AddRecommendation(RecommendationType.PlayerPlaytime, 1);
+                    }
 
-                    // Positives
-                    if (player.Statistics.Form >= 15)
-                        res.AddRecommendation(RecommendationType.PlayerForm, 3);
-                    if (player.Statistics.Form >= 10)
-                        res.AddRecommendation(RecommendationType.PlayerForm, 2);
-                    else if (player.Statistics.Form >= 6)
-                        res.AddRecommendation(RecommendationType.PlayerPlaytime, 1);
+
+                    // Good team form
+                    if (Settings.MinimumFixturesForFormRecommendationBonus <= 0 ||
+                        playerTeam.Statistics.PlayedGames >= Settings.MinimumFixturesForFormRecommendationBonus)
+                    {
+                        // Positives
+                        if (playerTeam.Statistics.Form >= 15)
+                            res.AddRecommendation(RecommendationType.TeamForm, 3);
+                        if (playerTeam.Statistics.Form >= 10)
+                            res.AddRecommendation(RecommendationType.TeamForm, 2);
+                        else if (playerTeam.Statistics.Form >= 6)
+                            res.AddRecommendation(RecommendationType.TeamForm, 1);
+                    }
                 }
-
-
-                //// Good team form
-                //if (Settings.MinimumFixturesForFormRecommendationBonus <= 0 ||
-                //    playerTeam.Statistics.PlayedGames >= Settings.MinimumFixturesForFormRecommendationBonus)
-                //{
-                //    // Positives
-                //    if (playerTeam.Statistics.Form >= 15)
-                //        res.AddRecommendation(RecommendationType.TeamForm, 3);
-                //    if (playerTeam.Statistics.Form >= 10)
-                //        res.AddRecommendation(RecommendationType.TeamForm, 2);
-                //    else if (playerTeam.Statistics.Form >= 6)
-                //        res.AddRecommendation(RecommendationType.TeamForm, 1);
-                //}
-
 
 
 
                 // Negatives
-                if (player.ChanceOfPlayingNextFixture >= 0)
+                if (player.Fantasy.ChanceOfPlayingNextFixture >= 0)
                 {
-                    if (player.ChanceOfPlayingNextFixture <= 0)
+                    if (player.Fantasy.ChanceOfPlayingNextFixture <= 0)
                         res.AddRecommendation(RecommendationType.LoweredChanceOfPlaying, -10);
-                    else if (player.ChanceOfPlayingNextFixture <= 0.25)
+                    else if (player.Fantasy.ChanceOfPlayingNextFixture <= 0.25)
                         res.AddRecommendation(RecommendationType.LoweredChanceOfPlaying, -3);
-                    else if (player.ChanceOfPlayingNextFixture <= 0.50)
+                    else if (player.Fantasy.ChanceOfPlayingNextFixture <= 0.50)
                         res.AddRecommendation(RecommendationType.LoweredChanceOfPlaying, -2);
-                    else if (player.ChanceOfPlayingNextFixture <= 0.75)
+                    else if (player.Fantasy.ChanceOfPlayingNextFixture <= 0.75)
                         res.AddRecommendation(RecommendationType.LoweredChanceOfPlaying, -1);
                 }
-                if (player.Unavailable)
+                if (player.Fantasy.Unavailable)
                     res.AddRecommendation(RecommendationType.PlayerUnavailable, -10);
             }
 

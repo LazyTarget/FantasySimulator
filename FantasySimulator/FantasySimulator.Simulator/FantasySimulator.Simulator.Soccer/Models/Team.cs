@@ -18,11 +18,23 @@ namespace FantasySimulator.Simulator.Soccer
 
         public string ShortName { get; set; }
 
+        public string[] Aliases { get; set; }
+
         public Rating Rating { get; set; }
 
         public Player[] Players { get; set; }
 
         public League[] Leagues { get; set; }
+
+
+        public bool MatchName(string name)
+        {
+            var names = (Aliases ?? new string[0]).ToList();
+            names.Insert(0, Name);
+
+            var res = names.Any(x => x.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return res;
+        }
 
 
         public TeamStatistics GetFullStatistics()

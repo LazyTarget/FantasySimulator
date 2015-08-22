@@ -8,5 +8,7 @@
         RecommendationType[] IgnoreRecommendationTypes { get; }
         int MinimumFixturesForPlaytimeRecommendationBonus { get; }
         int MinimumFixturesForFormRecommendationBonus { get; }
+        int LengthOfFormWhenSimulating { get; }
+        bool CalculateOddsWhenSimulating { get; }
     }
 }

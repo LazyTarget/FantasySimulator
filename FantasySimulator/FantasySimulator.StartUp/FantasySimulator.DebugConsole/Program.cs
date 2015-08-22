@@ -22,7 +22,7 @@ namespace FantasySimulator.DebugConsole
             {
                 var gameweek = result.PlayerResults.Keys.Cast<Gameweek>().ElementAt(i);
                 var players = (IEnumerable<SoccerSimulationPlayerResult>) result.PlayerResults.Values.ElementAt(i);
-                var positionGroups = players.GroupBy(x => x.Player.Position);
+                var positionGroups = players.GroupBy(x => x.Player.Fantasy.Position);
 
                 Console.WriteLine("Gameweek #{0}", gameweek.Number);
                 foreach (var group in positionGroups)
@@ -30,7 +30,15 @@ namespace FantasySimulator.DebugConsole
                     Console.WriteLine("Position: {0}", group.Key);
                     foreach (var playerRes in group)
                     {
-                        Console.WriteLine("{0} [{1}] \t\t--- rec.pts: {2}", playerRes.Player.DisplayName, playerRes.Player.Rating, playerRes.RecommendationPoints);
+                        var ptsStr = "";
+                        foreach (var recType in playerRes.Recommendations.Keys)
+                        {
+                            var pts = playerRes.Recommendations[recType];
+                            ptsStr += string.Format("{0}: {1}  |  ", recType, pts);
+                        }
+
+                        //Console.WriteLine("{0} [{1}] \t\t--- rec.pts: {2}", playerRes.Player.DisplayName, playerRes.Player.Rating, playerRes.RecommendationPoints);
+                        Console.WriteLine("{0} [{1}] \t\t--- rec.pts: {2} \t\t\t\t--- {3}", playerRes.Player.DisplayName, playerRes.Player.Rating, playerRes.RecommendationPoints, ptsStr);
                     }
                     Console.WriteLine();
                 }

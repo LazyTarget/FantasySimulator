@@ -8,12 +8,14 @@
         {
             Default = new SoccerSimulatorSettings
             {
-                SimulateFinishedGames = true,
+                //SimulateFinishedGames = true,
                 TopRecommendationsPerPosition = 6,
                 FilterUnavailablePlayers = true,
                 IgnoreRecommendationTypes = null,
                 //MinimumFixturesForPlaytimeRecommendationBonus = 3,
                 //MinimumFixturesForFormRecommendationBonus = 3,
+                LengthOfFormWhenSimulating = 5,
+                CalculateOddsWhenSimulating = true,
             };
         }
         
@@ -23,5 +25,7 @@
         public RecommendationType[] IgnoreRecommendationTypes { get; set; }
         public int MinimumFixturesForPlaytimeRecommendationBonus { get; set; }
         public int MinimumFixturesForFormRecommendationBonus { get; set; }
+        public int LengthOfFormWhenSimulating { get; set; }
+        public bool CalculateOddsWhenSimulating { get; set; }
     }
 }

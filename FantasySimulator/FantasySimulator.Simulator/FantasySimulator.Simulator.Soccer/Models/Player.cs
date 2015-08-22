@@ -19,23 +19,11 @@ namespace FantasySimulator.Simulator.Soccer
 
         public Rating Rating { get; set; }
 
-        public double OriginalPrice { get; set; }
-
-        public double CurrentPrice { get; set; }
-
-        public double PriceChange { get { return CurrentPrice - OriginalPrice; } }
-
-        public PlayerPosition Position { get; set; }
-
-        public bool Unavailable { get; set; }
-
-        public double ChanceOfPlayingNextFixture { get; set; }
-
-        public string News { get; set; }
-
         public Team Team { get; set; }
 
         public PlayerStatistics Statistics { get; set; }
+
+        public FantasyPlayer Fantasy { get; set; }
 
 
         public override string ToString()

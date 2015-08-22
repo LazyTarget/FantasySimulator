@@ -34,7 +34,9 @@
 
 		public int LongestUnbeatenStreak { get; set; }
 
-		public double CleanSheetPercentage { get; set; }
+        public double Form { get; set; }
+
+        public double CleanSheetPercentage { get; set; }
 
 
         public static TeamStatistics operator +(TeamStatistics a, TeamStatistics b)

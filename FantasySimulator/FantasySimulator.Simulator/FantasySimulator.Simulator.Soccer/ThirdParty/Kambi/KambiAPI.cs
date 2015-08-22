@@ -59,11 +59,28 @@ namespace FantasySimulator.Simulator.Soccer.ThirdParty.Kambi
                 var expectedEnglishName = string.Format("{0} - {1}", fixture.HomeTeam.Team.Name, fixture.AwayTeam.Team.Name);
                 foreach (var evt in events.Select(x => x.ToObjectOrDefault<JObject>()).Where(x => x != null))
                 {
+                    var match = false;
+
+                    var homeName = evt.GetPropertyValue<string>("homeName");
+                    var awayName = evt.GetPropertyValue<string>("awayName");
+                    if (!string.IsNullOrWhiteSpace(homeName) &&
+                        !string.IsNullOrWhiteSpace(awayName))
+                    {
+                        var a = fixture.HomeTeam.Team.MatchName(homeName);
+                        var b = fixture.AwayTeam.Team.MatchName(awayName);
+                        if (a && b)
+                            match = true;
+                    }
+
                     var name = (evt.GetPropertyValue<string>("name") ?? "");
                     var englishName = (evt.GetPropertyValue<string>("englishName") ?? "");
-
                     if (expectedEnglishName.Equals(name, StringComparison.OrdinalIgnoreCase) ||
                         expectedEnglishName.Equals(englishName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        match = true;
+                    }
+
+                    if (match)
                     {
                         eventID = evt.GetPropertyValue<string>("id");
                         break;

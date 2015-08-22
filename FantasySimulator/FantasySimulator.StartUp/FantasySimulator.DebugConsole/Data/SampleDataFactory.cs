@@ -6,6 +6,7 @@ using FantasySimulator.Simulator.Soccer;
 
 namespace FantasySimulator.DebugConsole.Data
 {
+    [Obsolete("File has been set as Content, as opposed to Compile")]
     public class SampleDataFactory : ISoccerSimulationDataFactory
     {
         public async Task<SoccerSimulationData> Generate()

@@ -11,6 +11,7 @@ namespace FantasySimulator.Simulator.Soccer
         public LeagueTeam HomeTeam { get; set; }
         public LeagueTeam AwayTeam { get; set; }
         public DateTime Time { get; set; }
+        public FixtureOdds Odds { get; set; }
         public FixtureStatistics Statistics { get; set; }
 
 
@@ -52,20 +53,20 @@ namespace FantasySimulator.Simulator.Soccer
 
                 if (Statistics.GameFinished)
                 {
-                    minutes = !player.Unavailable
-                               ? player.ChanceOfPlayingNextFixture != -1
-                                   ? player.ChanceOfPlayingNextFixture == 1
+                    minutes = !player.Fantasy.Unavailable
+                               ? player.Fantasy.ChanceOfPlayingNextFixture != -1
+                                   ? player.Fantasy.ChanceOfPlayingNextFixture == 1
                                        ? Statistics.PlayedMinutes
-                                       : player.ChanceOfPlayingNextFixture >= 0.75
+                                       : player.Fantasy.ChanceOfPlayingNextFixture >= 0.75
                                            ? randomizer.Next(70, Statistics.PlayedMinutes)
-                                           : player.ChanceOfPlayingNextFixture >= 0.50
+                                           : player.Fantasy.ChanceOfPlayingNextFixture >= 0.50
                                                ? randomizer.Next(50, Statistics.PlayedMinutes)
                                                : 0
                                    : randomizer.Next(45, Statistics.PlayedMinutes)
                                : 0;
                 }
                 else
-                    minutes = !player.Unavailable
+                    minutes = !player.Fantasy.Unavailable
                         ? randomizer.Next(0, Statistics.PlayedMinutes)
                         : 0;
             }

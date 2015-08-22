@@ -14,6 +14,7 @@ namespace FantasySimulator.DebugConsole.Data
 {
     public class FantasyPremierLeagueDataFactory : ISoccerSimulationDataFactory
     {
+        private static string TransfersPageJsonFilename = "TransfersPage_201508182327.json"; // "TransfersPage_201508221312.json";
         private const string GetTransferDataJsonUrl     = "http://fantasy.premierleague.com/transfers/";
         private const string GetPlayerDataJsonUrl       = "http://fantasy.premierleague.com/web/api/elements/";
         private const string GetFixturesJsonUrl         = "http://api.football-data.org/alpha/soccerseasons/398/fixtures";
@@ -170,7 +171,7 @@ namespace FantasySimulator.DebugConsole.Data
             try
             {
                 string json;
-                var path = Path.Combine(Environment.CurrentDirectory, "App_Data/TransfersPage.json");
+                var path = Path.Combine(Environment.CurrentDirectory, "App_Data/", TransfersPageJsonFilename);
                 using (var stream = File.Open(path, FileMode.Open, FileAccess.Read))
                 {
                     var streamReader = new StreamReader(stream);
@@ -304,31 +305,44 @@ namespace FantasySimulator.DebugConsole.Data
                 player.FirstName                    = GetProperty<string>(playerData, propMapping, "first_name");
                 player.LastName                     = GetProperty<string>(playerData, propMapping, "second_name");
                 player.DisplayName                  = GetProperty<string>(playerData, propMapping, "web_name");
-                player.Position                     = positions[posID];
-
-                // todo:
-                player.CurrentPrice                 = GetProperty<double>(playerData, propMapping, "event_cost") / 10;
-                player.OriginalPrice                = GetProperty<double>(playerData, propMapping, "original_cost") / 10;
-                player.Unavailable                  = GetProperty<string>(playerData, propMapping, "status") != "a";
-                player.ChanceOfPlayingNextFixture   = GetProperty<double>(playerData, propMapping, "chance_of_playing_this_round", -1);
-                player.News                         = GetProperty<string>(playerData, propMapping, "news");
-
-                player.Statistics = new PlayerStatistics
+                
+                player.Fantasy                      = new FantasyPlayer
                 {
-                    PlayedMinutes       = GetProperty<int>(playerData, propMapping, "minutes"),
-                    Goals               = GetProperty<int>(playerData, propMapping, "goals_scored"),
-                    Assists             = GetProperty<int>(playerData, propMapping, "assists"),
-                    TimesInDreamteam    = GetProperty<int>(playerData, propMapping, "dreamteam_count"),
-                    YellowCards         = GetProperty<int>(playerData, propMapping, "yellow_cards"),
-                    RedCards            = GetProperty<int>(playerData, propMapping, "red_cards"),
-                    BonusPoints         = GetProperty<int>(playerData, propMapping, "bonus"),
-                    Form                = GetProperty<double>(playerData, propMapping, "form"),
-                    PenaltiesMissed     = GetProperty<int>(playerData, propMapping, "penalties_missed"),
-                    PenaltiesSaved      = GetProperty<int>(playerData, propMapping, "penalties_scored"),
-                    TotalPoints         = GetProperty<int>(playerData, propMapping, "total_points"),
-                    CleanSheets         = GetProperty<int>(playerData, propMapping, "clean_sheets"),
-                    PointsPerGame       = GetProperty<double>(playerData, propMapping, "points_per_game"),
-                    OwnGoals            = GetProperty<int>(playerData, propMapping, "own_goals"),
+                    Position                        = positions[posID],
+                    CurrentPrice                    = GetProperty<double>(playerData, propMapping, "event_cost") / 10,
+                    OriginalPrice                   = GetProperty<double>(playerData, propMapping, "original_cost") / 10,
+                    Unavailable                     = GetProperty<string>(playerData, propMapping, "status") != "a",
+                    ChanceOfPlayingNextFixture      = GetProperty<double>(playerData, propMapping, "chance_of_playing_this_round", -1),
+                    News                            = GetProperty<string>(playerData, propMapping, "news"),
+                    OwnagePercent                   = GetProperty<double>(playerData, propMapping, "selected_by_percent", -1),
+                    TransfersDetailsForSeason       = new TransferDetails
+                    {
+                        TransfersIn                 = GetProperty<int>(playerData, propMapping, "transfers_in"),
+                        TransfersOut                = GetProperty<int>(playerData, propMapping, "transfers_out"),
+                    },
+                    TransfersDetailsForGW           = new TransferDetails
+                    {
+                        TransfersIn                 = GetProperty<int>(playerData, propMapping, "transfers_in_event"),
+                        TransfersOut                = GetProperty<int>(playerData, propMapping, "transfers_out_event"),
+                    },
+                };
+
+                player.Statistics                   = new PlayerStatistics
+                {
+                    PlayedMinutes                   = GetProperty<int>(playerData, propMapping, "minutes"),
+                    Goals                           = GetProperty<int>(playerData, propMapping, "goals_scored"),
+                    Assists                         = GetProperty<int>(playerData, propMapping, "assists"),
+                    TimesInDreamteam                = GetProperty<int>(playerData, propMapping, "dreamteam_count"),
+                    YellowCards                     = GetProperty<int>(playerData, propMapping, "yellow_cards"),
+                    RedCards                        = GetProperty<int>(playerData, propMapping, "red_cards"),
+                    BonusPoints                     = GetProperty<int>(playerData, propMapping, "bonus"),
+                    Form                            = GetProperty<double>(playerData, propMapping, "form"),
+                    PenaltiesMissed                 = GetProperty<int>(playerData, propMapping, "penalties_missed"),
+                    PenaltiesSaved                  = GetProperty<int>(playerData, propMapping, "penalties_scored"),
+                    TotalPoints                     = GetProperty<int>(playerData, propMapping, "total_points"),
+                    CleanSheets                     = GetProperty<int>(playerData, propMapping, "clean_sheets"),
+                    PointsPerGame                   = GetProperty<double>(playerData, propMapping, "points_per_game"),
+                    OwnGoals                        = GetProperty<int>(playerData, propMapping, "own_goals"),
 
 
                     // todo:
