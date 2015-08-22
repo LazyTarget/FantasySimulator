@@ -19,11 +19,16 @@ namespace FantasySimulator.DebugConsole.Data
         private const string GetPlayerDataJsonUrl       = "http://fantasy.premierleague.com/web/api/elements/";
         private const string GetFixturesJsonUrl         = "http://api.football-data.org/alpha/soccerseasons/398/fixtures";
 
+        private IList<Team> _englishClubs;
+
 
         public async Task<SoccerSimulationData> Generate()
         {
             try
             {
+                var openFootball = new OpenFootballDB();
+                _englishClubs = await openFootball.GetEnglishClubs();
+
                 var transfersUpdated = await UpdateTeamsAndPlayerTextFile();
                 var fixturesUpdated = await UpdateFixturesTextFile();
 
@@ -258,32 +263,41 @@ namespace FantasySimulator.DebugConsole.Data
 
             // Get teams
             var eiwTeams = teamsAndPlayersJson.Property("eiwteams").Value.ToObject<JObject>();
-            foreach (var prop in eiwTeams.Properties())
+            if (eiwTeams != null)
             {
-                var t = prop.Value.ToObjectOrDefault<JObject>();
-                var teamID = t.GetPropertyValue<string>("id");
-                if (string.IsNullOrWhiteSpace(teamID))
-                    throw new FormatException("Invalid TeamID");
-
-                var team = teams.FirstOrDefault(x => x.ID == teamID);
-                if (team == null)
+                foreach (var prop in eiwTeams.Properties())
                 {
-                    team = new Team
-                    {
-                        ID = teamID,
-                        Name = t.GetPropertyValue<string>("name"),
-                        ShortName = t.GetPropertyValue<string>("short_name"),
+                    var t = prop.Value.ToObjectOrDefault<JObject>();
+                    var teamID = t.GetPropertyValue<string>("id");
+                    if (string.IsNullOrWhiteSpace(teamID))
+                        throw new FormatException("Invalid TeamID");
 
-                        // todo: implement
-                        //Rating = 
-                        //Statistics = 
-                    };
-                    teams.Add(team);
-                }
+                    var team = teams.FirstOrDefault(x => x.ID == teamID);
+                    if (team == null)
+                    {
+                        team = new Team
+                        {
+                            ID = teamID,
+                            Name = t.GetPropertyValue<string>("name"),
+                            ShortName = t.GetPropertyValue<string>("short_name"),
+
+                            // todo: implement
+                            //Rating = 
+                            //Statistics = 
+                        };
+                        teams.Add(team);
+
+                        var club = _englishClubs?.FirstOrDefault(x => x.MatchName(team.Name));
+                        if (club != null)
+                        {
+                            team.Aliases = club.Aliases;
+                        }
+                    }
                 
-                var leagueTeam = new LeagueTeam(league, team);
-                leagueTeams.Add(leagueTeam);
-                team.Leagues = team.Leagues.Append(league);
+                    var leagueTeam = new LeagueTeam(league, team);
+                    leagueTeams.Add(leagueTeam);
+                    team.Leagues = team.Leagues.Append(league);
+                }
             }
 
 
