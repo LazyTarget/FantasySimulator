@@ -10,7 +10,7 @@ namespace FantasySimulator.Simulator.Soccer
 
 
 
-        public static implicit operator Odds(int v)
+        public static implicit operator Odds(double v)
         {
             var rating = new Odds();
             rating.Value = v;

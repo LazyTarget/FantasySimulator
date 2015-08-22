@@ -10,7 +10,7 @@
 
         public override string ToString()
         {
-            return string.Format("1: {0}, X: {1}, 2: {2}", HomeWin, Draw, AwayWin);
+            return string.Format("1: {0}  |  X: {1}  |  2: {2}", HomeWin, Draw, AwayWin);
         }
     }
 }

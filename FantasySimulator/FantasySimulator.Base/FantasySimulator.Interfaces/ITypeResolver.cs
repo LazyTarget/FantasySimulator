@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace FantasySimulator.Interfaces
+﻿namespace FantasySimulator.Interfaces
 {
     public interface ITypeResolver
     {
         T GetInstance<T>();
-        object GetInstance(Type type);
+        object GetInstance(TypeWrapper type);
     }
 }

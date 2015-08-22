@@ -17,7 +17,7 @@ namespace FantasySimulator.Core
             SetInstance(type, instance);
         }
 
-        public void SetInstance(Type type, object instance)
+        public void SetInstance(TypeWrapper type, object instance)
         {
             _instances[type] = instance;
         }
@@ -32,27 +32,12 @@ namespace FantasySimulator.Core
         public T GetInstance<T>()
         {
             var type = typeof(T);
-            object obj = null;
-            if (_instances.ContainsKey(type))
-            {
-                obj = _instances[type];
-            }
-            else
-            {
-                foreach (var t in _instances.Keys)
-                {
-                    if (type.IsAssignableFrom(t))
-                    {
-                        obj = _instances[t];
-                        break;
-                    }
-                }
-            }
+            var obj = GetInstance(type);
             var res = (T) obj;
             return res;
         }
 
-        public object GetInstance(Type type)
+        public object GetInstance(TypeWrapper type)
         {
             object res = null;
             if (_instances.ContainsKey(type))
@@ -63,7 +48,9 @@ namespace FantasySimulator.Core
             {
                 foreach (var t in _instances.Keys)
                 {
-                    if (type.IsAssignableFrom(t))
+                    if (t == null)
+                        continue;
+                    if (IsAssignableFrom(type, t))
                     {
                         res = _instances[t];
                         break;
@@ -72,6 +59,15 @@ namespace FantasySimulator.Core
             }
             return res;
         }
+        
 
+        private static bool IsAssignableFrom(TypeWrapper a, TypeWrapper b)
+        {
+            var typeInfoA = a.Type.GetTypeInfo();
+            var typeInfoB = b.Type.GetTypeInfo();
+            var res = typeInfoA.IsAssignableFrom(typeInfoB);
+            return res;
+        }
+        
     }
 }

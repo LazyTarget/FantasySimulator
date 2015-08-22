@@ -55,11 +55,10 @@
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Data\FantasyPremierLeagueDataFactory.cs" />
     <Compile Include="Data\SampleDataFactory.cs" />
+    <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Interfaces\ISoccerSimulationDataFactory.cs" />
-    <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Extensions\TaskExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -73,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FantasySimulator.Base\FantasySimulator.Core\FantasySimulator.Core.csproj">
-      <Project>{dba3bc6c-ba7d-4697-8cbe-ec6bc53acb03}</Project>
+      <Project>{DBA3BC6C-BA7D-4697-8CBE-EC6BC53ACB03}</Project>
       <Name>FantasySimulator.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\FantasySimulator.Base\FantasySimulator.Interfaces\FantasySimulator.Interfaces.csproj">

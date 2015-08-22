@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FantasySimulator.Core;
 using FantasySimulator.Interfaces;
 
 namespace FantasySimulator.Simulator.Soccer
@@ -13,8 +14,13 @@ namespace FantasySimulator.Simulator.Soccer
         public SoccerSimulator()
         {
             Settings = SoccerSimulatorSettings.Default;
+
+            TypeContainer = new TypeContainer();
+            TypeContainer.SetInstance<IFixtureOddsProvider>(new ThirdParty.Kambi.KambiAPI());
         }
 
+
+        public ITypeContainer TypeContainer { get; set; }
 
         public ISoccerSimulatorSettings Settings
         {
@@ -72,17 +78,26 @@ namespace FantasySimulator.Simulator.Soccer
 
         private FixtureOdds CalculateOdds(Fixture fixture)
         {
-            var fixtureOdds = new FixtureOdds();
-            fixtureOdds.Fixture = fixture;
+            FixtureOdds odds = null;
+            var provider = TypeContainer.GetInstance<IFixtureOddsProvider>();
+            if (provider != null)
+            {
+                odds = provider.GetFixtureOdds(fixture).WaitForResult();
+            }
+            return odds;
 
-            // todo: implement odds algorithm
-            fixtureOdds.HomeWin = fixture.HomeTeam.Team.Rating > fixture.AwayTeam.Team.Rating ? 1 : 3;
-            fixtureOdds.Draw    = fixture.HomeTeam.Team.Rating == fixture.AwayTeam.Team.Rating ? 1 : 5;
-            fixtureOdds.AwayWin = fixture.AwayTeam.Team.Rating > fixture.HomeTeam.Team.Rating ? 1 : 3;
 
-            // todo: implement prediction
-            //fixtureOdds.PredictedScore = 
-            return fixtureOdds;
+            //var odds = new FixtureOdds();
+            //odds.Fixture = fixture;
+
+            //// todo: implement odds algorithm
+            //odds.HomeWin = fixture.HomeTeam.Team.Rating > fixture.AwayTeam.Team.Rating ? 1 : 3;
+            //odds.Draw = fixture.HomeTeam.Team.Rating == fixture.AwayTeam.Team.Rating ? 1 : 5;
+            //odds.AwayWin = fixture.AwayTeam.Team.Rating > fixture.HomeTeam.Team.Rating ? 1 : 3;
+
+            //// todo: implement prediction
+            ////fixtureOdds.PredictedScore = 
+            //return odds;
         }
 
 
@@ -108,18 +123,8 @@ namespace FantasySimulator.Simulator.Soccer
                     if (player.Unavailable)
                         break;
                 }
-                
-                var playerTeam = player.GetLeagueTeam(fixture);
-                var opposingTeam = player.GetOpposingTeam(fixture);
 
-                var homeTeamAdvantage = player.HasHomeTeamAdvantage(fixture);
-                var odds = CalculateOdds(fixture);
-                var teamBetter = homeTeamAdvantage
-                    ? odds.HomeWin < 2
-                    : odds.AwayWin < 2;
-                var teamWorse = homeTeamAdvantage
-                    ? odds.HomeWin > 3
-                    : odds.AwayWin > 3;
+
 
 
                 // Algorithms
@@ -129,15 +134,35 @@ namespace FantasySimulator.Simulator.Soccer
                 // todo: remove magic numbers
 
 
+                var playerTeam = player.GetLeagueTeam(fixture);
+                var opposingTeam = player.GetOpposingTeam(fixture);
+                var homeTeamAdvantage = player.HasHomeTeamAdvantage(fixture);
+
+
+                var odds = CalculateOdds(fixture);
+                if (odds != null)
+                {
+                    var teamBetter = homeTeamAdvantage
+                    ? odds.HomeWin < 2
+                    : odds.AwayWin < 2;
+                    var teamWorse = homeTeamAdvantage
+                        ? odds.HomeWin > 3
+                        : odds.AwayWin > 3;
+
+
+                    // todo: better team-vs-team quality check (with weight)
+                    if (teamBetter)
+                        res.AddRecommendation(RecommendationType.FixtureRatingDiff, 1);
+                    else if (teamWorse)
+                        res.AddRecommendation(RecommendationType.FixtureRatingDiff, -1);
+                }
+                
+
+
                 // Positives
                 if (homeTeamAdvantage)
                     res.AddRecommendation(RecommendationType.HomeTeamAdvantage, 1);
 
-                // todo: better team-vs-team quality check
-                if (teamBetter)
-                    res.AddRecommendation(RecommendationType.FixtureRatingDiff, 1);
-                else if (teamWorse)
-                    res.AddRecommendation(RecommendationType.FixtureRatingDiff, -1);
                 
                 if (Settings.MinimumFixturesForPlaytimeRecommendationBonus <= 0 ||
                     playerTeam.Statistics.PlayedGames >= Settings.MinimumFixturesForPlaytimeRecommendationBonus)

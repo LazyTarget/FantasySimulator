@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using FantasySimulator.Core;
 using FantasySimulator.Simulator.Soccer;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
