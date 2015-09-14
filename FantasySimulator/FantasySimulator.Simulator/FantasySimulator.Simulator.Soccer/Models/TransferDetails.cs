@@ -16,9 +16,12 @@ namespace FantasySimulator.Simulator.Soccer
         {
             get
             {
-                var res = (double) Math.Abs(TransfersIn) / TotalTransfers;
-                if (TransfersDiff < 0)
-                    res--;
+                //var res = (double) Math.Abs(TransfersIn) / TotalTransfers;
+                //if (TransfersDiff < 0)
+                //    res--;
+                if (TransfersIn == 0)
+                    return 0;
+                var res = (double) TransfersDiff/TransfersIn;
                 return res;
             }
         }
