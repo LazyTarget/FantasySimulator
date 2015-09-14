@@ -14,12 +14,12 @@ namespace FantasySimulator.DebugConsole.Data
 {
     public class FantasyPremierLeagueDataFactory : ISoccerSimulationDataFactory
     {
-        private static string TransfersPageJsonFilename = "TransfersPage_201508182327.json"; // "TransfersPage_201508221312.json";
+        private static string TransfersPageJsonFilename = "TransfersPage_201509142245.json";
         private const string GetTransferDataJsonUrl     = "http://fantasy.premierleague.com/transfers/";
         private const string GetPlayerDataJsonUrl       = "http://fantasy.premierleague.com/web/api/elements/";
         private const string GetFixturesJsonUrl         = "http://api.football-data.org/alpha/soccerseasons/398/fixtures";
 
-        private IList<Team> _englishClubs;
+        private List<Team> _ukClubs;
 
 
         public async Task<SoccerSimulationData> Generate()
@@ -27,7 +27,12 @@ namespace FantasySimulator.DebugConsole.Data
             try
             {
                 var openFootball = new OpenFootballDB();
-                _englishClubs = await openFootball.GetEnglishClubs();
+                var eng = await openFootball.GetEnglishClubs();
+                var wal = await openFootball.GetWelshClubs();
+                _ukClubs = new List<Team>();
+                _ukClubs.AddRange(eng);
+                _ukClubs.AddRange(wal);
+                
 
                 var transfersUpdated = await UpdateTeamsAndPlayerTextFile();
                 var fixturesUpdated = await UpdateFixturesTextFile();
@@ -287,7 +292,7 @@ namespace FantasySimulator.DebugConsole.Data
                         };
                         teams.Add(team);
 
-                        var club = _englishClubs?.FirstOrDefault(x => x.MatchName(team.Name));
+                        var club = _ukClubs?.FirstOrDefault(x => x.MatchName(team.Name));
                         if (club != null)
                         {
                             team.Aliases = club.Aliases;
@@ -392,8 +397,8 @@ namespace FantasySimulator.DebugConsole.Data
 
                     var homeTeamName = obj.GetPropertyValue<string>("homeTeamName");
                     var awayTeamName = obj.GetPropertyValue<string>("awayTeamName");
-                    var homeTeam = leagueTeams.Single(x => x.Team.Name == homeTeamName);
-                    var awayTeam = leagueTeams.Single(x => x.Team.Name == awayTeamName);
+                    var homeTeam = leagueTeams.Single(x => x.Team.Name == homeTeamName || x.Team.MatchName(homeTeamName));
+                    var awayTeam = leagueTeams.Single(x => x.Team.Name == awayTeamName || x.Team.MatchName(awayTeamName));
                     fixture.HomeTeam = homeTeam;
                     fixture.AwayTeam = awayTeam;
 
