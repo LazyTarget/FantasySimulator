@@ -38,7 +38,7 @@ namespace FantasySimulator.Simulator.Soccer
         public SoccerSimulationResult Simulate(SoccerSimulationData data)
         {
             var result = new SoccerSimulationResult();
-            var context = new SimulationContext(data);
+            var context = new SimulationContext(data, Settings);
             foreach (var league in data.Leagues)
             {
                 foreach (var gameweek in league.Gameweeks)
@@ -58,6 +58,12 @@ namespace FantasySimulator.Simulator.Soccer
                     var players = gameweek.GetPlayers();
                     foreach (var player in players)
                     {
+                        if (Settings.FilterUnavailablePlayers)
+                        {
+                            if (player.Fantasy.Unavailable)
+                                break;
+                        }
+
                         var res = AnalysePlayerResult(player, gameweek, context);
                         temp.Add(res);
                     }
@@ -120,8 +126,8 @@ namespace FantasySimulator.Simulator.Soccer
         {
             var res = new SoccerSimulationPlayerResult();
             res.Player = player;
-
-
+            
+            
             var fixtures = gameweek.Fixtures.Where(x => x.HomeTeam.Team.ID == player.Team.ID || x.AwayTeam.Team.ID == player.Team.ID);
             foreach (var fixture in fixtures)
             {
@@ -130,14 +136,29 @@ namespace FantasySimulator.Simulator.Soccer
                     if (fixture.Statistics.GameFinished)
                         continue;
                 }
-                if (Settings.FilterUnavailablePlayers)
+
+
+                if (Settings.PlayerAnalysers != null)
                 {
-                    if (player.Fantasy.Unavailable)
-                        break;
+                    foreach (var analyser in Settings.PlayerAnalysers)
+                    {
+                        var rec = analyser.Analyse(player, fixture, context);
+                        if (rec != null)
+                        {
+                            foreach (var r in rec)
+                            {
+                                if (r == null || r.Type == RecommendationType.None)
+                                    continue;
+                                res.AddRecommendation(r.Type, r.Points);
+                            }
+                        }
+                    }
                 }
 
 
 
+                #region OLD
+                /*
 
                 // Algorithms
                 // todo: give recommendation if is not Forward and tends to score/assist often
@@ -170,14 +191,14 @@ namespace FantasySimulator.Simulator.Soccer
                     else if (teamWorse)
                         res.AddRecommendation(RecommendationType.FixtureRatingDiff, -1);
                 }
-                
+
 
 
                 // Positives
                 if (homeTeamAdvantage)
                     res.AddRecommendation(RecommendationType.HomeTeamAdvantage, 1);
 
-                
+
                 if (Settings.MinimumFixturesForPlaytimeRecommendationBonus <= 0 ||
                     playerTeam.Statistics.PlayedGames >= Settings.MinimumFixturesForPlaytimeRecommendationBonus)
                 {
@@ -199,7 +220,7 @@ namespace FantasySimulator.Simulator.Soccer
                             res.AddRecommendation(RecommendationType.PlayerPlaytime, -1);
                     }
                 }
-                
+
 
 
                 // Form
@@ -250,18 +271,25 @@ namespace FantasySimulator.Simulator.Soccer
                 }
                 if (player.Fantasy.Unavailable)
                     res.AddRecommendation(RecommendationType.PlayerUnavailable, -10);
+                */
+
+                #endregion
+
             }
 
 
-            if (Settings.IgnoreRecommendationTypes != null && Settings.IgnoreRecommendationTypes.Any())
-            {
-                foreach (var type in Settings.IgnoreRecommendationTypes)
-                {
-                    res.Recommendations.Remove(type);
-                }
-            }
+            //////if (Settings.IgnoreRecommendationTypes != null && Settings.IgnoreRecommendationTypes.Any())
+            //////{
+            //////    foreach (var type in Settings.IgnoreRecommendationTypes)
+            //////    {
+            //////        res.Recommendations.Remove(type);
+            //////    }
+            //////}
+
+
             return res;
         }
         
     }
+    
 }

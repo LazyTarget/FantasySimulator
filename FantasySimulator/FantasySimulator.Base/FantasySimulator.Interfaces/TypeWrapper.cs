@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace FantasySimulator.Interfaces
 {
@@ -41,5 +42,14 @@ namespace FantasySimulator.Interfaces
 		{
 			return new TypeWrapper(type);
 		}
-	}
+
+
+        public static bool IsAssignableFrom(TypeWrapper a, TypeWrapper b)
+        {
+            var typeInfoA = a.Type.GetTypeInfo();
+            var typeInfoB = b.Type.GetTypeInfo();
+            var res = typeInfoA.IsAssignableFrom(typeInfoB);
+            return res;
+        }
+    }
 }

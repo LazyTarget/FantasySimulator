@@ -1,4 +1,6 @@
-﻿namespace FantasySimulator.Simulator.Soccer
+﻿using System.Collections.Generic;
+
+namespace FantasySimulator.Simulator.Soccer
 {
     public interface ISoccerSimulatorSettings
     {
@@ -10,5 +12,6 @@
         int MinimumFixturesForFormRecommendationBonus { get; }
         int LengthOfFormWhenSimulating { get; }
         bool CalculateOddsWhenSimulating { get; }
+        IList<Analysers.PlayerAnalyserBase> PlayerAnalysers { get; }
     }
 }

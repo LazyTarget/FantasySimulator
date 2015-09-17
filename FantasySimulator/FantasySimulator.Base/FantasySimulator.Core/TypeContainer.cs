@@ -50,22 +50,13 @@ namespace FantasySimulator.Core
                 {
                     if (t == null)
                         continue;
-                    if (IsAssignableFrom(type, t))
+                    if (TypeWrapper.IsAssignableFrom(type, t))
                     {
                         res = _instances[t];
                         break;
                     }
                 }
             }
-            return res;
-        }
-        
-
-        private static bool IsAssignableFrom(TypeWrapper a, TypeWrapper b)
-        {
-            var typeInfoA = a.Type.GetTypeInfo();
-            var typeInfoB = b.Type.GetTypeInfo();
-            var res = typeInfoA.IsAssignableFrom(typeInfoB);
             return res;
         }
         
