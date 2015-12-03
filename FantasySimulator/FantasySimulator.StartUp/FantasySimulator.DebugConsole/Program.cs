@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FantasySimulator.DebugConsole.Config;
 using FantasySimulator.DebugConsole.Data;
 using FantasySimulator.Simulator.Soccer;
 
@@ -8,14 +9,17 @@ namespace FantasySimulator.DebugConsole
 {
     class Program
     {
-        //private static readonly ISoccerSimulationDataFactory DataFactory = new SampleDataFactory();
-        private static readonly ISoccerSimulationDataFactory DataFactory = new FantasyPremierLeagueDataFactory();
+        //private static ISoccerSimulationDataFactory DataFactory = new SampleDataFactory();
+        private static ISoccerSimulationDataFactory DataFactory = new FantasyPremierLeagueDataFactory();
+        //private static ISoccerSimulatorSettingsFactory SettingsFactory = new DefaultSoccerSimulatorSettingsFactory();
+        private static ISoccerSimulatorSettingsFactory SettingsFactory = new SoccerSimulatorSettingsXmlConfigFactory();
 
 
         static void Main(string[] args)
         {
-            var simulationData = DataFactory.Generate().WaitForResult();
             var simulator = new SoccerSimulator();
+            simulator.Settings = SettingsFactory.GetSettings();
+            var simulationData = DataFactory.Generate().WaitForResult();
             var result = simulator.Simulate(simulationData);
             
             for (var i = 0; i < result.PlayerResults.Count; i++)

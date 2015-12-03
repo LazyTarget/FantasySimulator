@@ -12,6 +12,6 @@ namespace FantasySimulator.Simulator.Soccer
         int MinimumFixturesForFormRecommendationBonus { get; }
         int LengthOfFormWhenSimulating { get; }
         bool CalculateOddsWhenSimulating { get; }
-        IList<Analysers.PlayerAnalyserBase> PlayerAnalysers { get; }
+        Analysers.PlayerAnalyserBase[] PlayerAnalysers { get; }
     }
 }

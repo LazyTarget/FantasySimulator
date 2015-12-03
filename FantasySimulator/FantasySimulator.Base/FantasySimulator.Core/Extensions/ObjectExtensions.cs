@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using FantasySimulator.Interfaces;
 
@@ -22,20 +24,35 @@ namespace FantasySimulator.Core
                     return result;
                 //if (value == DBNull.Value)
                 //    return result;
-                if (typeof (T) == value.GetType())
+                var type = value.GetType();
+                if (typeof (T) == type)
                 {
                     result = (T) value;
                 }
                 else if (typeof(T).GetTypeInfo().IsEnum)
                 {
                     var str = value.SafeConvert<string>();
+                    if (type == typeof (string))
+                    {
+                        var values = Enum.GetValues(typeof(T)).Cast<T>().Select(x => x.ToString()).ToList();
+                        var index = values.FindIndex(x => string.Equals(x, str, StringComparison.OrdinalIgnoreCase));
+                        if (index >= 0)
+                            str = values.ElementAt(index);
+                    }
                     var obj = Enum.Parse(typeof(T), str);
                     result = (T)obj;
                 }
                 //else if (typeof (IConvertible).IsAssignableFrom(typeof (T)))
                 else if (TypeWrapper.IsAssignableFrom(typeof (IConvertible), typeof (T)))
                 {
-                    var obj = Convert.ChangeType(value, typeof (T));
+                    if (type == typeof (string))
+                    {
+                        var str = value.SafeConvert<string>() ?? "";
+                        var isNumeric = str.Length > 0 && str.All(c => char.IsDigit(c) || char.IsPunctuation(c) || c == ',' || c == '+');
+                        if (isNumeric)
+                            value = str.Replace(',', '.');
+                    }
+                    var obj = Convert.ChangeType(value, typeof (T), CultureInfo.InvariantCulture);
                     result = (T) obj;
                 }
                 else
@@ -50,7 +67,23 @@ namespace FantasySimulator.Core
             }
         }
 
-        public static object SafeConvert(this object value, TypeWrapper targetType, object defaultValue)
+
+        public static object SafeConvertDynamic(this object value, TypeWrapper targetType)
+        {
+            object result = null;
+            try
+            {
+                var defaultValue = Activator.CreateInstance(targetType.Type);
+                result = SafeConvertDynamic(value, targetType.Type, defaultValue);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return result;
+            }
+        }
+
+        public static object SafeConvertDynamic(this object value, TypeWrapper targetType, object defaultValue)
         {
             var result = defaultValue;
             try
@@ -64,19 +97,33 @@ namespace FantasySimulator.Core
                 {
                     result = value;
                 }
-                else if (targetType.Type.IsAssignableFrom(type))
+                else if (TypeWrapper.IsAssignableFrom(targetType.Type, type))
                 {
                     result = value;
                 }
                 else if (targetType.Type.GetTypeInfo().IsEnum)
                 {
                     var str = value.SafeConvert<string>();
-                    result = Enum.Parse(targetType, str);
+                    if (type == typeof (string))
+                    {
+                        var values = Enum.GetValues(targetType.Type).Cast<Enum>().Select(x => x.ToString()).ToList();
+                        var index = values.FindIndex(x => string.Equals(x, str, StringComparison.OrdinalIgnoreCase));
+                        if (index >= 0)
+                            str = values.ElementAt(index);
+                    }
+                    result = Enum.Parse(targetType.Type, str);
                 }
                 //else if (typeof (IConvertible).IsAssignableFrom(targetType))
-                else if (TypeWrapper.IsAssignableFrom(typeof (IConvertible), targetType))
+                else if (TypeWrapper.IsAssignableFrom(typeof (IConvertible), targetType.Type))
                 {
-                    result = Convert.ChangeType(value, targetType);
+                    if (type == typeof (string))
+                    {
+                        var str = value.SafeConvert<string>() ?? "";
+                        var isNumeric = str.Length > 0 && str.All(c => char.IsDigit(c) || char.IsPunctuation(c) || c == ',' || c == '+');
+                        if (isNumeric)
+                            value = str.Replace(',', '.');
+                    }
+                    result = Convert.ChangeType(value, targetType.Type);
                 }
                 else
                 {

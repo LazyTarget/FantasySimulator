@@ -331,7 +331,7 @@ namespace FantasySimulator.DebugConsole.Data
                     CurrentPrice                    = GetProperty<double>(playerData, propMapping, "event_cost") / 10,
                     OriginalPrice                   = GetProperty<double>(playerData, propMapping, "original_cost") / 10,
                     Unavailable                     = GetProperty<string>(playerData, propMapping, "status") != "a",
-                    ChanceOfPlayingNextFixture      = GetProperty<double>(playerData, propMapping, "chance_of_playing_this_round", -1),
+                    ChanceOfPlayingNextFixture      = GetProperty<double>(playerData, propMapping, "chance_of_playing_this_round", -1) / 100,
                     News                            = GetProperty<string>(playerData, propMapping, "news"),
                     OwnagePercent                   = GetProperty<double>(playerData, propMapping, "selected_by_percent", -1),
                     TransfersDetailsForSeason       = new TransferDetails

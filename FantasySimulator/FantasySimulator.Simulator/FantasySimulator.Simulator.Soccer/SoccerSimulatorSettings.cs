@@ -13,7 +13,9 @@ namespace FantasySimulator.Simulator.Soccer
                 PlayerAnalysers = new List<Analysers.PlayerAnalyserBase>
                 {
                     new Analysers.HomeTeamAdvantagePlayerAnalyser(),
-                },
+                    new Analysers.ChanceOfPlayerNextFixturePlayerAnalyser(),
+
+                }.ToArray(),
             };
         }
 
@@ -38,15 +40,6 @@ namespace FantasySimulator.Simulator.Soccer
         public int MinimumFixturesForFormRecommendationBonus { get; set; }
         public int LengthOfFormWhenSimulating { get; set; }
         public bool CalculateOddsWhenSimulating { get; set; }
-        public IList<Analysers.PlayerAnalyserBase> PlayerAnalysers { get; set; }
-
-
-        public static SoccerSimulatorSettings FromConfig()
-        {
-            var settings = new SoccerSimulatorSettings();
-
-
-            return settings;
-        }
+        public Analysers.PlayerAnalyserBase[] PlayerAnalysers { get; set; }
     }
 }
