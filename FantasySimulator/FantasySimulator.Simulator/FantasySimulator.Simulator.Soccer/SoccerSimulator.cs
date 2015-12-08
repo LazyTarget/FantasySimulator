@@ -142,6 +142,8 @@ namespace FantasySimulator.Simulator.Soccer
                 {
                     foreach (var analyser in Settings.PlayerAnalysers)
                     {
+                        if (!analyser.Enabled)
+                            continue;
                         var rec = analyser.Analyse(player, fixture, context);
                         if (rec != null)
                         {
@@ -166,13 +168,13 @@ namespace FantasySimulator.Simulator.Soccer
                 // todo: logical number algorithm
                 // todo: remove magic numbers
 
-
+                
                 var playerTeam = player.GetLeagueTeam(fixture);
                 var opposingTeam = player.GetOpposingTeam(fixture);
                 var homeTeamAdvantage = player.HasHomeTeamAdvantage(fixture);
                 var gameweeksFromLastPlayedGW = gameweek.Number - context.LastPlayedGameweek.Number;
 
-
+                
                 //var odds = CalculateOdds(fixture);
                 var odds = fixture.Odds;
                 if (odds != null)

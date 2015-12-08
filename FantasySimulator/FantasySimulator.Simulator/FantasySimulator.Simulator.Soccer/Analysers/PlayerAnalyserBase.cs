@@ -10,13 +10,22 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
     {
         protected PlayerAnalyserBase()
         {
+            Enabled = true;
             Properties = new Dictionary<string, object>();
         }
 
+        public abstract string Name { get; }
+
+        public bool Enabled { get; private set; }
+
         public IDictionary<string, object> Properties { get; private set; }
+
 
         public virtual void Configure(XElement element)
         {
+            if (element.Attribute("enabled") != null)
+                Enabled = element.GetAttributeValue("enabled").SafeConvert<bool>();
+
             foreach (var elem in element.Elements("property").Where(x => x != null))
             {
                 try

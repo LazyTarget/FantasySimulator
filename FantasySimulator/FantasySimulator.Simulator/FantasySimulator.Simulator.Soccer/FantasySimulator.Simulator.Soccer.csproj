@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Analysers\ChanceOfPlayerNextFixturePlayerAnalyser.cs" />
+    <Compile Include="Analysers\ChanceOfPlayingNextFixturePlayerAnalyser.cs" />
     <Compile Include="Analysers\HomeTeamAdvantagePlayerAnalyser.cs" />
     <Compile Include="Interfaces\IFixtureOddsProvider.cs" />
     <Compile Include="Interfaces\ISoccerSimulatorSettings.cs" />

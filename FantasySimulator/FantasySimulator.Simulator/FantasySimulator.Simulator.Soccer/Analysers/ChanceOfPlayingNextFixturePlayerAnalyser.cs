@@ -5,9 +5,9 @@ using FantasySimulator.Core;
 
 namespace FantasySimulator.Simulator.Soccer.Analysers
 {
-    public class ChanceOfPlayerNextFixturePlayerAnalyser : PlayerAnalyserBase
+    public class ChanceOfPlayingNextFixturePlayerAnalyser : PlayerAnalyserBase
     {
-        public ChanceOfPlayerNextFixturePlayerAnalyser()
+        public ChanceOfPlayingNextFixturePlayerAnalyser()
         {
             PointsRange = new List<PointRangeMapping>
             {
@@ -64,9 +64,11 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
         }
 
 
+        public override string Name { get { return nameof(ChanceOfPlayingNextFixturePlayerAnalyser); } }
+
         public PointRangeMapping[] PointsRange { get; set; }
 
-
+        
         public override void Configure(XElement element)
         {
             base.Configure(element);

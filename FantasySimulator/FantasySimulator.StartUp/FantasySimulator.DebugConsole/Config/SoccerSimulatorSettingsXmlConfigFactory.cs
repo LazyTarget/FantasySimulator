@@ -150,7 +150,7 @@ namespace FantasySimulator.DebugConsole.Config
         {
             public SoccerSimulatorXmlSettings()
             {
-                PlayerAnalysers = new PlayerAnalyserBase[0];
+                //PlayerAnalysers = new PlayerAnalyserBase[0];
             }
 
 
@@ -189,7 +189,10 @@ namespace FantasySimulator.DebugConsole.Config
 
                     var analyser = (PlayerAnalyserBase) Activator.CreateInstance(type);
                     analyser.Configure(element);
-                    PlayerAnalysers = PlayerAnalysers.Concat(new[] {analyser}).ToArray();
+                    PlayerAnalysers = PlayerAnalysers.Cast<PlayerAnalyserBase>()
+                                                     .Where(x => x.Name != analyser.Name)
+                                                     .Concat(new[] {analyser})
+                                                     .ToArray();
                 }
                 catch (Exception ex)
                 {

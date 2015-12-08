@@ -10,6 +10,8 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
             Points = 1;
         }
 
+        public override string Name { get { return nameof(HomeTeamAdvantagePlayerAnalyser); } }
+
         public int Points
         {
             get { return Properties["Points"].SafeConvert<int>(); }
