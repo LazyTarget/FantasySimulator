@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using FantasySimulator.Core;
+using FantasySimulator.Simulator.Soccer.Structs;
 
 namespace FantasySimulator.Simulator.Soccer.Analysers
 {
@@ -9,96 +10,16 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
     {
         public ChanceOfPlayingNextFixturePlayerAnalyser()
         {
-            PointsRange = new List<PointRangeMapping>
-            {
-                new PointRangeMapping
-                {
-                    Points = -10,
-                    Predicates = new List<RangePredicate>
-                    {
-                        new RangePredicate
-                        {
-                            Value = 0d,
-                            Operator = ComparisonOperator.LessOrEqualThan
-                        },
-                    }.ToArray(),
-                },
-                new PointRangeMapping
-                {
-                    Points = -3,
-                    Predicates = new List<RangePredicate>
-                    {
-                        new RangePredicate
-                        {
-                            Value = 0.25d,
-                            Operator = ComparisonOperator.LessOrEqualThan
-                        },
-                    }.ToArray(),
-                },
-                new PointRangeMapping
-                {
-                    Points = -2,
-                    Predicates = new List<RangePredicate>
-                    {
-                        new RangePredicate
-                        {
-                            Value = 0.5d,
-                            Operator = ComparisonOperator.LessOrEqualThan
-                        },
-                    }.ToArray(),
-                },
-                new PointRangeMapping
-                {
-                    Points = -1,
-                    Predicates = new List<RangePredicate>
-                    {
-                        new RangePredicate
-                        {
-                            Value = 0.75d,
-                            Operator = ComparisonOperator.LessOrEqualThan
-                        },
-                    }.ToArray(),
-                },
-            }.ToArray();
-
+            PointsRange = GetDefaultPointsRange();
         }
 
 
         public override string Name { get { return nameof(ChanceOfPlayingNextFixturePlayerAnalyser); } }
-
-        public PointRangeMapping[] PointsRange { get; set; }
-
         
-        public override void Configure(XElement element)
+        public PointsRange PointsRange
         {
-            base.Configure(element);
-
-            var mappingElems = element.Elements("mapping").ToList();
-            if (mappingElems.Any())
-            {
-                PointsRange = new PointRangeMapping[0];
-                foreach (var elem in mappingElems)
-                {
-                    var map = new PointRangeMapping();
-                    foreach (var e in elem.Elements())
-                    {
-                        if (e.Name.LocalName == "points")
-                            map.Points = (e.GetAttributeValue("value") ?? e.Value).SafeConvert<int>();
-                        else
-                        {
-                            var op = e.Name.LocalName.SafeConvert<ComparisonOperator>();
-                            if (op != ComparisonOperator.None)
-                            {
-                                var predicate = new RangePredicate();
-                                predicate.Operator = op;
-                                predicate.Value = e.GetAttributeValue("value").SafeConvert<double>();
-                                map.Predicates = map.Predicates.Concat(new[] {predicate}).ToArray();
-                            }
-                        }
-                    }
-                    PointsRange = PointsRange.Concat(new[] {map}).ToArray();
-                }
-            }
+            get { return Properties["PointsRange"].SafeConvert<PointsRange>(); }
+            set { Properties["PointsRange"] = value; }
         }
 
 
@@ -107,6 +28,8 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
             var res = new PlayerRecommendation();
             res.Type = RecommendationType.ChanceOfPlaying;
 
+
+            // old:
             //// Negatives
             //if (player.Fantasy.ChanceOfPlayingNextFixture >= 0)
             //{
@@ -120,13 +43,19 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
             //        res.Points = -1;
             //}
 
+
+            var valueMap = new ValueMap();
+            valueMap["percentage"] = player.Fantasy.ChanceOfPlayingNextFixture;
+
+
             res.Points = 0;
-            foreach (var mapping in PointsRange)
+            foreach (var mapping in PointsRange.Mappings)
             {
                 if (mapping == null)
                     continue;
-                var predicate = mapping.Predicates.ToList().Find(x => x.Test(player.Fantasy.ChanceOfPlayingNextFixture));
-                if (predicate != null)
+                
+                var valid = mapping.Test(valueMap);
+                if (valid)
                 {
                     res.Points = mapping.Points;
                     break;
@@ -136,55 +65,77 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
         }
 
 
-        public class RangeMapping
+        public override void Configure(XElement element)
         {
-            public RangeMapping()
-            {
-                Predicates = new RangePredicate[0];
-            }
-
-            public RangePredicate[] Predicates { get; set; }
+            base.Configure(element);
         }
 
-        public class PointRangeMapping : RangeMapping
-        {
-            public int Points { get; set; }
-        }
 
-        public class RangePredicate
-        {
-            public ComparisonOperator Operator { get; set; }
-            public double Value { get; set; }
 
-            public bool Test(double value)
+        protected virtual PointsRange GetDefaultPointsRange()
+        {
+            var mappings = new List<PointRangeMapping>
             {
-                var c = value.CompareTo(Value);
-                switch (Operator)
+                new PointRangeMapping
                 {
-                    case ComparisonOperator.LessThan:
-                        return c < 0;
-                    case ComparisonOperator.LessOrEqualThan:
-                        return c <= 0;
-                    case ComparisonOperator.Equals:
-                        return c == 0;
-                    case ComparisonOperator.GreaterOrEqualThan:
-                        return c >= 0;
-                    case ComparisonOperator.GreaterThan:
-                        return c > 0;
-                    default:
-                        return false;
-                }
-            }
+                    Points = -10,
+                    Predicates = new List<RangePredicate>
+                    {
+                        new RangePredicate
+                        {
+                            Value = 0d,
+                            Operator = ComparisonOperator.LessOrEqualThan,
+                            Unit = "percentage",
+                        },
+                    }.ToArray(),
+                },
+                new PointRangeMapping
+                {
+                    Points = -3,
+                    Predicates = new List<RangePredicate>
+                    {
+                        new RangePredicate
+                        {
+                            Value = 0.25d,
+                            Operator = ComparisonOperator.LessOrEqualThan,
+                            Unit = "percentage",
+                        },
+                    }.ToArray(),
+                },
+                new PointRangeMapping
+                {
+                    Points = -2,
+                    Predicates = new List<RangePredicate>
+                    {
+                        new RangePredicate
+                        {
+                            Value = 0.5d,
+                            Operator = ComparisonOperator.LessOrEqualThan,
+                            Unit = "percentage",
+                        },
+                    }.ToArray(),
+                },
+                new PointRangeMapping
+                {
+                    Points = -1,
+                    Predicates = new List<RangePredicate>
+                    {
+                        new RangePredicate
+                        {
+                            Value = 0.75d,
+                            Operator = ComparisonOperator.LessOrEqualThan,
+                            Unit = "percentage",
+                        },
+                    }.ToArray(),
+                },
+            }.ToArray();
+
+            var range = new PointsRange();
+            range.Mappings = mappings;
+            return range;
         }
 
-        public enum ComparisonOperator
-        {
-            None,
-            LessThan,
-            LessOrEqualThan,
-            Equals,
-            GreaterOrEqualThan,
-            GreaterThan,
-        }
+
+        
     }
 }

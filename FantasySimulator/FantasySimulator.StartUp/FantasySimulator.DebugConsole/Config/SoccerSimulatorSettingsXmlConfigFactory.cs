@@ -107,46 +107,11 @@ namespace FantasySimulator.DebugConsole.Config
 
         private void ConfigureFromXml(XElement rootElement, SoccerSimulatorXmlSettings settings)
         {
-            var settingsNode = rootElement.Element("settings");
-            if (settingsNode != null)
-            {
-                foreach (var childNode in settingsNode.Elements())
-                {
-                    if (childNode == null || string.IsNullOrWhiteSpace(childNode.Name.LocalName))
-                        continue;
-                    if (childNode.Name == "property")
-                    {
-                        settings.ApplyProperty(childNode);
-                    }
-                    else
-                    {
-                        
-                    }
-                }
-            }
-
-            
-            var playerAnalysersNode = rootElement.Element("playerAnalysers");
-            if (playerAnalysersNode != null)
-            {
-                foreach (var childNode in playerAnalysersNode.Elements())
-                {
-                    if (childNode == null || string.IsNullOrWhiteSpace(childNode.Name.LocalName))
-                        continue;
-                    if (childNode.Name == "analyser")
-                    {
-                        settings.ApplyAnalyser(childNode);
-                    }
-                    else
-                    {
-                        
-                    }
-                }
-            }
+            settings.Configure(rootElement);
         }
 
 
-        private class SoccerSimulatorXmlSettings : SoccerSimulatorSettings
+        private class SoccerSimulatorXmlSettings : SoccerSimulatorSettings//, IXmlConfigurable
         {
             public SoccerSimulatorXmlSettings()
             {
@@ -154,7 +119,50 @@ namespace FantasySimulator.DebugConsole.Config
             }
 
 
-            public virtual void ApplyProperty(XElement element)
+
+            public void Configure(XElement element)
+            {
+                var settingsNode = element.Element("settings");
+                if (settingsNode != null)
+                {
+                    foreach (var childNode in settingsNode.Elements())
+                    {
+                        if (childNode == null || string.IsNullOrWhiteSpace(childNode.Name.LocalName))
+                            continue;
+                        if (childNode.Name == "property")
+                        {
+                            ApplyProperty(childNode);
+                        }
+                        else
+                        {
+                        
+                        }
+                    }
+                }
+
+            
+                var playerAnalysersNode = element.Element("playerAnalysers");
+                if (playerAnalysersNode != null)
+                {
+                    foreach (var childNode in playerAnalysersNode.Elements())
+                    {
+                        if (childNode == null || string.IsNullOrWhiteSpace(childNode.Name.LocalName))
+                            continue;
+                        if (childNode.Name == "analyser")
+                        {
+                            ApplyAnalyser(childNode);
+                        }
+                        else
+                        {
+                        
+                        }
+                    }
+                }
+            }
+
+
+
+            protected virtual void ApplyProperty(XElement element)
             {
                 try
                 {
@@ -176,7 +184,7 @@ namespace FantasySimulator.DebugConsole.Config
                 }
             }
 
-            public virtual void ApplyAnalyser(XElement element)
+            protected virtual void ApplyAnalyser(XElement element)
             {
                 try
                 {

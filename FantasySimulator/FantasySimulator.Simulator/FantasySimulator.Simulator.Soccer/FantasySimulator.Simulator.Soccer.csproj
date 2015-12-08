@@ -37,8 +37,10 @@
   <ItemGroup>
     <Compile Include="Analysers\ChanceOfPlayingNextFixturePlayerAnalyser.cs" />
     <Compile Include="Analysers\HomeTeamAdvantagePlayerAnalyser.cs" />
+    <Compile Include="Analysers\PlaytimePlayerAnalyser.cs" />
     <Compile Include="Interfaces\IFixtureOddsProvider.cs" />
     <Compile Include="Interfaces\ISoccerSimulatorSettings.cs" />
+    <Compile Include="Interfaces\IXmlConfigurable.cs" />
     <Compile Include="Models\TransferDetails.cs" />
     <Compile Include="Models\FantasyPlayer.cs" />
     <Compile Include="Models\FixtureScore.cs" />
@@ -51,7 +53,16 @@
     <Compile Include="Analysers\PlayerAnalyserBase.cs" />
     <Compile Include="PlayerRecommendation.cs" />
     <Compile Include="SimulationContext.cs" />
+    <Compile Include="Structs\Enums.cs" />
+    <Compile Include="Structs\PointRangeMapping.cs" />
+    <Compile Include="Structs\PointsRange.cs" />
+    <Compile Include="Structs\Range.cs" />
+    <Compile Include="Structs\RangeMapping.cs" />
+    <Compile Include="Structs\ValuePredicate.cs" />
+    <Compile Include="Structs\RangePredicate.cs" />
+    <Compile Include="Structs\ValueMap.cs" />
     <Compile Include="ThirdParty\Kambi\KambiAPI.cs" />
+    <Compile Include="XmlHelpers.cs" />
     <None Include="project.json" />
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>

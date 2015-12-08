@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 using FantasySimulator.Core;
+using FantasySimulator.Interfaces;
 
 namespace FantasySimulator.Simulator.Soccer.Analysers
 {
@@ -33,16 +35,7 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
                     var propertyName = elem.GetAttributeValue("name");
                     if (string.IsNullOrWhiteSpace(propertyName))
                         continue;
-                    var propertyType = elem.GetAttributeValue("type");
-                    var str = elem.GetAttributeValue("value") ?? elem.Value;
-                    object value;
-                    if (!string.IsNullOrWhiteSpace(propertyType))
-                    {
-                        var type = Type.GetType(propertyType);
-                        value = str.SafeConvertDynamic(type);
-                    }
-                    else
-                        value = str;
+                    object value = elem.InstantiateElement();
                     Properties[propertyName] = value;
                 }
                 catch (Exception ex)
