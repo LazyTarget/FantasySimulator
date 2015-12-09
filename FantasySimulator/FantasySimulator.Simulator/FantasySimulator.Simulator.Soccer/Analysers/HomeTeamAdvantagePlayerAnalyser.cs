@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Xml.Linq;
 using FantasySimulator.Core;
 
 namespace FantasySimulator.Simulator.Soccer.Analysers
@@ -27,6 +28,16 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
             if (homeTeamAdvantage)
                 res.Points = Points;
             yield return res;
+        }
+
+        public override void Configure(XElement element)
+        {
+            base.Configure(element);
+        }
+
+        public override void ConfigureDefault()
+        {
+            base.ConfigureDefault();
         }
     }
 }

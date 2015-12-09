@@ -5,11 +5,17 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
 {
     public class PlaytimePlayerAnalyser : PlayerAnalyserBase
     {
+        public PlaytimePlayerAnalyser()
+        {
+            
+        }
+
         public override string Name { get { return nameof(PlaytimePlayerAnalyser); } }
         
 
         public override IEnumerable<PlayerRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context)
         {
+
 
 
             //if (Settings.MinimumFixturesForPlaytimeRecommendationBonus <= 0 ||
@@ -41,5 +47,11 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
         {
             base.Configure(element);
         }
+
+        public override void ConfigureDefault()
+        {
+
+        }
+        
     }
 }

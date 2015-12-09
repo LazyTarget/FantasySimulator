@@ -10,7 +10,7 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
     {
         public ChanceOfPlayingNextFixturePlayerAnalyser()
         {
-            PointsRange = GetDefaultPointsRange();
+            
         }
 
 
@@ -71,9 +71,11 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
         }
 
 
-
-        protected virtual PointsRange GetDefaultPointsRange()
+        public override void ConfigureDefault()
         {
+            base.ConfigureDefault();
+
+            
             var mappings = new List<PointRangeMapping>
             {
                 new PointRangeMapping
@@ -132,10 +134,7 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
 
             var range = new PointsRange();
             range.Mappings = mappings;
-            return range;
         }
-
-
         
     }
 }

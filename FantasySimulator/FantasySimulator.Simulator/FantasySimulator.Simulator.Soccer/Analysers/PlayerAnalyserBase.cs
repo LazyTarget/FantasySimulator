@@ -14,6 +14,7 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
         {
             Enabled = true;
             Properties = new Dictionary<string, object>();
+            ConfigureDefault();
         }
 
         public abstract string Name { get; }
@@ -21,6 +22,8 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
         public bool Enabled { get; private set; }
 
         public IDictionary<string, object> Properties { get; private set; }
+
+        public abstract IEnumerable<PlayerRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context);
 
 
         public virtual void Configure(XElement element)
@@ -45,6 +48,10 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
             }
         }
 
-        public abstract IEnumerable<PlayerRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context);
+        public virtual void ConfigureDefault()
+        {
+
+        }
+
     }
 }
