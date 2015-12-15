@@ -14,7 +14,7 @@ namespace FantasySimulator.DebugConsole.Data
 {
     public class FantasyPremierLeagueDataFactory : ISoccerSimulationDataFactory
     {
-        private static string TransfersPageJsonFilename = "TransfersPage_201512021752.json";
+        private static string TransfersPageJsonFilename = "TransfersPage_201512151815.json";
         private const string GetTransferDataJsonUrl     = "http://fantasy.premierleague.com/transfers/";
         private const string GetPlayerDataJsonUrl       = "http://fantasy.premierleague.com/web/api/elements/";
         private const string GetFixturesJsonUrl         = "http://api.football-data.org/alpha/soccerseasons/398/fixtures";
