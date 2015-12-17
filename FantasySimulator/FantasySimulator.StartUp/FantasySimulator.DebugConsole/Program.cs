@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using FantasySimulator.DebugConsole.Config;
 using FantasySimulator.DebugConsole.Data;
 using FantasySimulator.Simulator.Soccer;
+using log4net;
 
 namespace FantasySimulator.DebugConsole
 {
@@ -15,8 +17,13 @@ namespace FantasySimulator.DebugConsole
         private static ISoccerSimulatorSettingsFactory SettingsFactory = new SoccerSimulatorSettingsXmlConfigFactory();
 
 
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+
         static void Main(string[] args)
         {
+            _log.Info("Log test...");
+
             var simulator = new SoccerSimulator();
             simulator.Settings = SettingsFactory.GetSettings();
             var simulationData = DataFactory.Generate().WaitForResult();

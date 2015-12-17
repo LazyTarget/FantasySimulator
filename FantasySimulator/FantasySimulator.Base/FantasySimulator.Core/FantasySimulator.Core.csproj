@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -44,6 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Diagnostics\Log.cs" />
+    <Compile Include="Diagnostics\Interfaces\ILog.cs" />
+    <Compile Include="Diagnostics\Interfaces\ILogFactory.cs" />
+    <Compile Include="Diagnostics\Loggers\AggregateLog.cs" />
+    <Compile Include="Diagnostics\Loggers\Log4NetLog.cs" />
+    <Compile Include="Diagnostics\Log4NetLogFactory.cs" />
     <Compile Include="Extensions\XmlExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
