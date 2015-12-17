@@ -12,7 +12,7 @@ namespace FantasySimulator.Simulator.Soccer.Structs
         {
             Properties = new Dictionary<string, object>();
             Predicates = new RangePredicate[0];
-            PredicateMode = PredicateMode.All;
+            PredicateMode = PredicateMode.Any;
         }
 
         public RangePredicate[] Predicates { get; set; }
@@ -65,6 +65,7 @@ namespace FantasySimulator.Simulator.Soccer.Structs
 
         public virtual bool Test(ValueMap values)
         {
+            var result = true;
             if (Predicates.Any())
             {
                 int numberOfValid = 0;
@@ -78,24 +79,40 @@ namespace FantasySimulator.Simulator.Soccer.Structs
                         if (valid)
                             numberOfValid++;
 
+                        //if (PredicateMode == PredicateMode.Any)
+                        //{
+                        //    if (valid)
+                        //        return true;
+                        //}
+                        //else if (!valid)
+                        //    return false;
+
                         if (PredicateMode == PredicateMode.Any)
                         {
                             if (valid)
-                                return true;
+                                break;
                         }
                         else if (!valid)
-                            return false;
+                            break;
                     }
                     else
+                    {
+                        break;
                         return false;
+                    }
                 }
 
                 if (PredicateMode == PredicateMode.Any)
-                    return numberOfValid > 0;
-                if (PredicateMode == PredicateMode.All)
-                    return numberOfValid == Predicates.Length;
+                    result = numberOfValid > 0;
+                else if (PredicateMode == PredicateMode.All)
+                    result = numberOfValid == Predicates.Length;
+                else
+                {
+                    result = false;     // not implemented
+                    throw new NotSupportedException($"PredicateMode {PredicateMode} not supported");
+                }
             }
-            return true;
+            return result;
         }
 
     }

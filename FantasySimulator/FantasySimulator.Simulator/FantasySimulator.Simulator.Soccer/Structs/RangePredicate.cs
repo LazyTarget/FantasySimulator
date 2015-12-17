@@ -20,8 +20,12 @@ namespace FantasySimulator.Simulator.Soccer.Structs
             {
                 if (string.Equals(e.Name.LocalName, "operator", StringComparison.OrdinalIgnoreCase))
                     Operator = (e.GetAttributeValue("value") ?? e.Value).SafeConvert<ComparisonOperator>();
-                //else if (string.Equals(e.Name.LocalName, "value", StringComparison.OrdinalIgnoreCase))
-                //    Value = (e.GetAttributeValue("value") ?? e.Value).SafeConvert<double>();
+                else if (string.Equals(e.Name.LocalName, "value", StringComparison.OrdinalIgnoreCase))
+                {
+                    var parser = new SimpleMathParser();
+                    var expression = (e.GetAttributeValue("value") ?? e.Value);
+                    Value = parser.Parse(expression);
+                }
                 //else if (string.Equals(e.Name.LocalName, "unit", StringComparison.OrdinalIgnoreCase))
                 //    Unit = (e.GetAttributeValue("value") ?? e.Value).SafeConvert<string>();
             }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using FantasySimulator.Core;
+using FantasySimulator.Simulator.Soccer.Structs;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace FantasySimulator.Simulator.Soccer.Analysers
@@ -11,35 +13,48 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
         }
 
         public override string Name { get { return nameof(PlaytimePlayerAnalyser); } }
-        
+
+        public PointsRange PointsRange
+        {
+            get { return Properties["PointsRange"].SafeConvert<PointsRange>(); }
+            set { Properties["PointsRange"] = value; }
+        }
+
 
         public override IEnumerable<PlayerRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context)
         {
+            var res = new PlayerRecommendation();
+            res.Type = RecommendationType.PlayerPlaytime;
 
+            var playerTeam = player.GetLeagueTeam(fixture);
+            double teamPlayedMinutes = playerTeam.GetPlayedMinutesBeforeFixtureForTeam(fixture);
+            double playerMinutes = player.GetPlayedMinutesBeforeFixtureForPlayer(fixture);
+            var percentage = teamPlayedMinutes > 0
+                ? playerMinutes / teamPlayedMinutes
+                : 0;
 
+            var valueMap = new ValueMap();
+            valueMap["minutes"] = playerMinutes;
+            valueMap["percentage"] = percentage;
+            //valueMap["playedgames"] = ;
+            //valueMap["substitutes-in"] = ;
+            //valueMap["substitutes-out"] = ;
+            // todo: add more data points (subs, recent playtime (5 last team games), recent subs)
 
-            //if (Settings.MinimumFixturesForPlaytimeRecommendationBonus <= 0 ||
-            //        playerTeam.Statistics.PlayedGames >= Settings.MinimumFixturesForPlaytimeRecommendationBonus)
-            //{
-            //    var teamPlayedMinutes = playerTeam.GetPlayedMinutesBeforeFixtureForTeam(fixture);
-            //    var playerMinutes = player.GetPlayedMinutesBeforeFixtureForPlayer(fixture);
-            //    if (teamPlayedMinutes > 0)
-            //    {
-            //        var playedPercentage = (double)playerMinutes / teamPlayedMinutes;
+            res.Points = 0;
+            foreach (var mapping in PointsRange.Mappings)
+            {
+                if (mapping == null)
+                    continue;
 
-            //        // Positives
-            //        if (playedPercentage >= (80d / 90))
-            //            res.AddRecommendation(RecommendationType.PlayerPlaytime, 2);
-            //        //else if (playedPercentage >= (70d / 90))
-            //        //    res.AddRecommendation(RecommendationType.PlayerPlaytime, 2);
-            //        else if (playedPercentage >= (60d / 90))
-            //            res.AddRecommendation(RecommendationType.PlayerPlaytime, 1);
-            //        // Negatives
-            //        else if (playedPercentage <= 0.15)
-            //            res.AddRecommendation(RecommendationType.PlayerPlaytime, -1);
-            //    }
-            //}
-            yield break;
+                var valid = mapping.Test(valueMap);
+                if (valid)
+                {
+                    res.Points = mapping.Points;
+                    break;
+                }
+            }
+            yield return res;
         }
 
 
@@ -50,7 +65,7 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
 
         public override void ConfigureDefault()
         {
-
+            base.ConfigureDefault();
         }
         
     }
