@@ -5,16 +5,21 @@ namespace FantasySimulator.Simulator.Soccer
     public class SoccerSimulatorSettings : ISoccerSimulatorSettings
     {
         public static readonly SoccerSimulatorSettings Default;
+        private static readonly Analysers.PlayerAnalyserBase[] DefaultAnalysers;
 
         static SoccerSimulatorSettings()
         {
-            Default = new SoccerSimulatorSettings
+            DefaultAnalysers = new List<Analysers.PlayerAnalyserBase>
             {
-                PlayerAnalysers = new List<Analysers.PlayerAnalyserBase>
-                {
-                    new Analysers.HomeTeamAdvantagePlayerAnalyser(),
-                },
-            };
+                new Analysers.HomeTeamAdvantagePlayerAnalyser(),
+                new Analysers.ChanceOfPlayingNextFixturePlayerAnalyser(),
+
+            }.ToArray();
+
+
+            Default = new SoccerSimulatorSettings();
+            Default.PlayerAnalysers = new Analysers.PlayerAnalyserBase[DefaultAnalysers.Length];
+            DefaultAnalysers.CopyTo(Default.PlayerAnalysers, 0);
         }
 
 
@@ -28,6 +33,9 @@ namespace FantasySimulator.Simulator.Soccer
             //MinimumFixturesForFormRecommendationBonus = 3;
             LengthOfFormWhenSimulating = 5;
             CalculateOddsWhenSimulating = true;
+
+            PlayerAnalysers = new Analysers.PlayerAnalyserBase[DefaultAnalysers.Length];
+            DefaultAnalysers.CopyTo(PlayerAnalysers, 0);
         }
         
         public bool SimulateFinishedGames { get; set; }
@@ -38,15 +46,6 @@ namespace FantasySimulator.Simulator.Soccer
         public int MinimumFixturesForFormRecommendationBonus { get; set; }
         public int LengthOfFormWhenSimulating { get; set; }
         public bool CalculateOddsWhenSimulating { get; set; }
-        public IList<Analysers.PlayerAnalyserBase> PlayerAnalysers { get; set; }
-
-
-        public static SoccerSimulatorSettings FromConfig()
-        {
-            var settings = new SoccerSimulatorSettings();
-
-
-            return settings;
-        }
+        public Analysers.PlayerAnalyserBase[] PlayerAnalysers { get; set; }
     }
 }

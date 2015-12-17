@@ -13,7 +13,7 @@ namespace FantasySimulator.Simulator.Soccer
         MultipleFixturesInGameweek,
         HomeTeamAdvantage,
         PlayerUnavailable,
-        LoweredChanceOfPlaying,
+        ChanceOfPlaying,
     }
 
     public enum PlayerPosition

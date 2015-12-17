@@ -2,7 +2,6 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{894B95A9-2911-4ECB-92FA-A6D1EAE302D6}</ProjectGuid>
@@ -10,12 +9,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FantasySimulator.Simulator.Soccer</RootNamespace>
     <AssemblyName>FantasySimulator.Simulator.Soccer</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,10 +30,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Analysers\ChanceOfPlayerNextFixturePlayerAnalyser.cs" />
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Analysers\ChanceOfPlayingNextFixturePlayerAnalyser.cs" />
     <Compile Include="Analysers\HomeTeamAdvantagePlayerAnalyser.cs" />
+    <Compile Include="Analysers\PlaytimePlayerAnalyser.cs" />
     <Compile Include="Interfaces\IFixtureOddsProvider.cs" />
     <Compile Include="Interfaces\ISoccerSimulatorSettings.cs" />
+    <Compile Include="Interfaces\IXmlConfigurable.cs" />
     <Compile Include="Models\TransferDetails.cs" />
     <Compile Include="Models\FantasyPlayer.cs" />
     <Compile Include="Models\FixtureScore.cs" />
@@ -51,9 +63,16 @@
     <Compile Include="Analysers\PlayerAnalyserBase.cs" />
     <Compile Include="PlayerRecommendation.cs" />
     <Compile Include="SimulationContext.cs" />
+    <Compile Include="Structs\Enums.cs" />
+    <Compile Include="Structs\PointRangeMapping.cs" />
+    <Compile Include="Structs\PointsRange.cs" />
+    <Compile Include="Structs\Range.cs" />
+    <Compile Include="Structs\RangeMapping.cs" />
+    <Compile Include="Structs\ValuePredicate.cs" />
+    <Compile Include="Structs\RangePredicate.cs" />
+    <Compile Include="Structs\ValueMap.cs" />
     <Compile Include="ThirdParty\Kambi\KambiAPI.cs" />
-    <None Include="project.json" />
-    <!-- A reference to the entire .NET Framework is automatically included -->
+    <Compile Include="XmlHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
@@ -88,12 +107,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Web">
-      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6\System.Web.dll</HintPath>
-    </Reference>
+    <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

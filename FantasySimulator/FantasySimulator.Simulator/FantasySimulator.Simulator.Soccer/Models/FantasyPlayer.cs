@@ -18,6 +18,9 @@
 
         public bool Unavailable { get; set; }
 
+        /// <summary>
+        /// Formatted in decimals, ex: 0.75 = 75 %
+        /// </summary>
         public double ChanceOfPlayingNextFixture { get; set; }
 
         public string News { get; set; }

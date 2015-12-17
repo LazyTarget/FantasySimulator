@@ -38,6 +38,10 @@
       <HintPath>..\..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -53,6 +57,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\DefaultSoccerSimulatorSettingsFactory.cs" />
+    <Compile Include="Config\ISoccerSimulatorSettingsFactory.cs" />
+    <Compile Include="Config\SoccerSimulatorSettingsXmlConfigFactory.cs" />
+    <Compile Include="Config\SoccerSimulatorConfigurationSectionHandler.cs" />
     <Compile Include="Data\OpenFootballDB.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Data\FantasyPremierLeagueDataFactory.cs" />
@@ -102,7 +110,12 @@
     <None Include="App_Data\TransfersPage_201512151815.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FantasySimulator.Base\FantasySimulator.Core\FantasySimulator.Core.csproj">

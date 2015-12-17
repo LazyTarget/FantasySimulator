@@ -142,6 +142,8 @@ namespace FantasySimulator.Simulator.Soccer
                 {
                     foreach (var analyser in Settings.PlayerAnalysers)
                     {
+                        if (!analyser.Enabled)
+                            continue;
                         var rec = analyser.Analyse(player, fixture, context);
                         if (rec != null)
                         {
@@ -166,13 +168,13 @@ namespace FantasySimulator.Simulator.Soccer
                 // todo: logical number algorithm
                 // todo: remove magic numbers
 
-
+                
                 var playerTeam = player.GetLeagueTeam(fixture);
                 var opposingTeam = player.GetOpposingTeam(fixture);
                 var homeTeamAdvantage = player.HasHomeTeamAdvantage(fixture);
                 var gameweeksFromLastPlayedGW = gameweek.Number - context.LastPlayedGameweek.Number;
 
-
+                
                 //var odds = CalculateOdds(fixture);
                 var odds = fixture.Odds;
                 if (odds != null)
@@ -261,13 +263,13 @@ namespace FantasySimulator.Simulator.Soccer
                 if (player.Fantasy.ChanceOfPlayingNextFixture >= 0)
                 {
                     if (player.Fantasy.ChanceOfPlayingNextFixture <= 0)
-                        res.AddRecommendation(RecommendationType.LoweredChanceOfPlaying, -10);
+                        res.AddRecommendation(RecommendationType.ChanceOfPlaying, -10);
                     else if (player.Fantasy.ChanceOfPlayingNextFixture <= 0.25)
-                        res.AddRecommendation(RecommendationType.LoweredChanceOfPlaying, -3);
+                        res.AddRecommendation(RecommendationType.ChanceOfPlaying, -3);
                     else if (player.Fantasy.ChanceOfPlayingNextFixture <= 0.50)
-                        res.AddRecommendation(RecommendationType.LoweredChanceOfPlaying, -2);
+                        res.AddRecommendation(RecommendationType.ChanceOfPlaying, -2);
                     else if (player.Fantasy.ChanceOfPlayingNextFixture <= 0.75)
-                        res.AddRecommendation(RecommendationType.LoweredChanceOfPlaying, -1);
+                        res.AddRecommendation(RecommendationType.ChanceOfPlaying, -1);
                 }
                 if (player.Fantasy.Unavailable)
                     res.AddRecommendation(RecommendationType.PlayerUnavailable, -10);
