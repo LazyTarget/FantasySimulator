@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
+using FantasySimulator.Core.Diagnostics;
 using FantasySimulator.DebugConsole.Config;
 using FantasySimulator.DebugConsole.Data;
 using FantasySimulator.Simulator.Soccer;
-using log4net;
 
 namespace FantasySimulator.DebugConsole
 {
@@ -17,12 +18,17 @@ namespace FantasySimulator.DebugConsole
         private static ISoccerSimulatorSettingsFactory SettingsFactory = new SoccerSimulatorSettingsXmlConfigFactory();
 
 
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = Log.GetLog(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _unhandledLog = Log.GetLog("Logger.UnhandledExceptions");
+        private static readonly ILog _firstChanceLog = Log.GetLog("Logger.FirstChanceExceptions");
 
 
         static void Main(string[] args)
         {
-            _log.Info("Log test...");
+            _log.Info("Program started...");
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_OnUnhandledException;
+            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_OnFirstChanceException;
+
 
             var simulator = new SoccerSimulator();
             simulator.Settings = SettingsFactory.GetSettings();
@@ -61,6 +67,18 @@ namespace FantasySimulator.DebugConsole
             // todo: export as csv/excel? detailed report, with the team-vs-team, estimated points, recommendation points
 
             Console.ReadLine();
+            _log.Info("Program exited...");
+        }
+
+
+        private static void CurrentDomain_OnFirstChanceException(object sender, FirstChanceExceptionEventArgs args)
+        {
+            _firstChanceLog.Error("OnFirstChanceException", args.Exception);
+        }
+
+        private static void CurrentDomain_OnUnhandledException(object sender, UnhandledExceptionEventArgs args)
+        {
+            _unhandledLog.Fatal("OnUnhandledException", args.ExceptionObject as Exception);
         }
     }
 }

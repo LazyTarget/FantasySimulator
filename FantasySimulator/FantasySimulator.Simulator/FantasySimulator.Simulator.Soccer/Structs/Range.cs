@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using FantasySimulator.Core.Classes;
 
 namespace FantasySimulator.Simulator.Soccer.Structs
 {
@@ -9,11 +10,11 @@ namespace FantasySimulator.Simulator.Soccer.Structs
     {
         public Range()
         {
-            Properties = new Dictionary<string, object>();
-            Mappings = new TMapping[0];
+            Properties = new DictionaryEx<string, object>();
+            Mappings = new List<TMapping>();
         }
 
-        public TMapping[] Mappings { get; set; }
+        public IList<TMapping> Mappings { get; set; }
 
         public IDictionary<string, object> Properties { get; private set; }
 
@@ -28,12 +29,12 @@ namespace FantasySimulator.Simulator.Soccer.Structs
             var mappingElems = element.Elements("mapping").ToList();
             if (mappingElems.Any())
             {
-                Mappings = new TMapping[0];
+                Mappings.Clear();
                 foreach (var elem in mappingElems)
                 {
                     var map = InstanciateMapping();
                     map.Configure(elem);
-                    Mappings = Mappings.Concat(new[] {map}).ToArray();
+                    Mappings.Add(map);
                 }
             }
         }

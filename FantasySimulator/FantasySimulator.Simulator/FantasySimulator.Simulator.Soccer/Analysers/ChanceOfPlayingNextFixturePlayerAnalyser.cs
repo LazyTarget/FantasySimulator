@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -25,6 +26,10 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
 
         public override IEnumerable<PlayerRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context)
         {
+            if (PointsRange == null)
+                throw new ArgumentException("Invalid property", nameof(PointsRange));
+
+
             var res = new PlayerRecommendation();
             res.Type = RecommendationType.ChanceOfPlaying;
 

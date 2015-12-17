@@ -2,7 +2,7 @@
 
 namespace FantasySimulator.Core.Diagnostics
 {
-    public class Log
+    public static class Log
     {
         public static ILogFactory Factory { get; set; }
 
@@ -12,7 +12,7 @@ namespace FantasySimulator.Core.Diagnostics
         }
 
 
-        public ILog GetLog(string name)
+        public static ILog GetLog(string name)
         {
             if (Factory == null)
                 throw new InvalidOperationException("Invalid factory instance");
@@ -20,7 +20,7 @@ namespace FantasySimulator.Core.Diagnostics
             return log;
         }
 
-        public ILog GetLog(Type type)
+        public static ILog GetLog(Type type)
         {
             if (Factory == null)
                 throw new InvalidOperationException("Invalid factory instance");

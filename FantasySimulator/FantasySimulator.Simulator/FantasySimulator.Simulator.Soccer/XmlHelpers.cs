@@ -17,7 +17,11 @@ namespace FantasySimulator.Simulator.Soccer
                 if (!string.IsNullOrWhiteSpace(propertyType))
                 {
                     var type = Type.GetType(propertyType);
-                    if (TypeWrapper.IsAssignableFrom(typeof(IXmlConfigurable), type))
+                    if (type == null)
+                    {
+                        throw new TypeAccessException($"Type '{propertyType}' not found");
+                    }
+                    else if (TypeWrapper.IsAssignableFrom(typeof(IXmlConfigurable), type))
                     {
                         var temp = (IXmlConfigurable)Activator.CreateInstance(type);
                         temp.Configure(element);

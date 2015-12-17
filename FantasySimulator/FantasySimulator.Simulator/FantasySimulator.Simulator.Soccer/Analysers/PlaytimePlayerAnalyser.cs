@@ -1,4 +1,5 @@
-﻿using FantasySimulator.Core;
+﻿using System;
+using FantasySimulator.Core;
 using FantasySimulator.Simulator.Soccer.Structs;
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -23,6 +24,9 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
 
         public override IEnumerable<PlayerRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context)
         {
+            if (PointsRange == null)
+                throw new ArgumentException("Invalid property", nameof(PointsRange));
+
             var res = new PlayerRecommendation();
             res.Type = RecommendationType.PlayerPlaytime;
 

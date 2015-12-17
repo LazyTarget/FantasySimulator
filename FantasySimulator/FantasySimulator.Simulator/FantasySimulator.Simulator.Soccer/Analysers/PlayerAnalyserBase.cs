@@ -4,16 +4,19 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using FantasySimulator.Core;
-using FantasySimulator.Interfaces;
+using FantasySimulator.Core.Classes;
+using FantasySimulator.Core.Diagnostics;
 
 namespace FantasySimulator.Simulator.Soccer.Analysers
 {
     public abstract class PlayerAnalyserBase
     {
+        private static readonly ILog _log = Log.GetLog(MethodBase.GetCurrentMethod().DeclaringType);
+
         protected PlayerAnalyserBase()
         {
             Enabled = true;
-            Properties = new Dictionary<string, object>();
+            Properties = new DictionaryEx<string, object>();
             ConfigureDefault();
         }
 
@@ -33,17 +36,17 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
 
             foreach (var elem in element.Elements("property").Where(x => x != null))
             {
+                var propertyName = elem.GetAttributeValue("name");
+                if (string.IsNullOrWhiteSpace(propertyName))
+                    continue;
                 try
                 {
-                    var propertyName = elem.GetAttributeValue("name");
-                    if (string.IsNullOrWhiteSpace(propertyName))
-                        continue;
                     object value = elem.InstantiateElement();
                     Properties[propertyName] = value;
                 }
                 catch (Exception ex)
                 {
-                    
+                    _log.Error($"Error instantiating property '{propertyName}'", ex);
                 }
             }
         }
