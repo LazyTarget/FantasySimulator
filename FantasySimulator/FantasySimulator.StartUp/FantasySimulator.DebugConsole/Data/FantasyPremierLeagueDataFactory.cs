@@ -408,15 +408,13 @@ namespace FantasySimulator.DebugConsole.Data
                     var min = obj.GetPropertyValue<int>("minute");      // todo: correct?
                     if (finished && min <= 0)
                         min = 90;
+                    var goalsHome = resultsJson?.GetPropertyValue<int>("goalsHomeTeam") ?? 0;
+                    var goalsAway = resultsJson?.GetPropertyValue<int>("goalsAwayTeam") ?? 0;
                     fixture.Statistics = new FixtureStatistics
                     {
                         PlayedMinutes = min,
                         GameFinished = finished,
-                        Score = new FixtureScore
-                        {
-                            GoalsForHomeTeam = resultsJson?.GetPropertyValue<int>("goalsHomeTeam") ?? 0,
-                            GoalsForAwayTeam = resultsJson?.GetPropertyValue<int>("goalsAwayTeam") ?? 0,
-                        },
+                        Score = FixtureScore.Create(goalsHome, goalsAway),
                     };
 
 

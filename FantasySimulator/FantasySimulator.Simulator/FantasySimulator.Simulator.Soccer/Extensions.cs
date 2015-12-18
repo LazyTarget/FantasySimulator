@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FantasySimulator.Simulator.Soccer
@@ -9,9 +10,17 @@ namespace FantasySimulator.Simulator.Soccer
         {
             if (player != null)
             {
-                if (player.Team.ID == fixture.HomeTeam.Team.ID)
-                    return true;
+                //if (player.Team.ID == fixture.HomeTeam.Team.ID)
+                //    return true;
+                return HasHomeTeamAdvantage(player.Team, fixture);
             }
+            return false;
+        }
+
+        public static bool HasHomeTeamAdvantage(this Team team, Fixture fixture)
+        {
+            if (team.ID == fixture.HomeTeam.Team.ID)
+                return true;
             return false;
         }
 
@@ -69,7 +78,47 @@ namespace FantasySimulator.Simulator.Soccer
             return res;
         }
 
+        public static GameWinState GetTeamWinState(this LeagueTeam team, Fixture fixture)
+        {
+            var res = GameWinState.None;
+            if (!fixture.Statistics.GameFinished)
+                res = GameWinState.Undetermined;
+            else
+            {
+                if (fixture.Statistics.Score.GoalsForHomeTeam == fixture.Statistics.Score.GoalsForAwayTeam)
+                    res = GameWinState.Draw;
+                else
+                {
+                    var teamIsHome = team.Team.ID == fixture.HomeTeam.Team.ID;
+                    var teamIsAway = team.Team.ID == fixture.AwayTeam.Team.ID;
 
+                    if (fixture.Statistics.Score.GoalsForHomeTeam > fixture.Statistics.Score.GoalsForAwayTeam)
+                        res = teamIsHome
+                            ? GameWinState.Win
+                            : teamIsAway
+                                ? GameWinState.Loss
+                                : GameWinState.Undetermined;
+                    else
+                        res = teamIsHome
+                            ? GameWinState.Loss
+                            : teamIsAway
+                                ? GameWinState.Win
+                                : GameWinState.Undetermined;
+                }
+            }
+            return res;
+        }
+
+
+        public static IEnumerable<Fixture> GetFixturesFromLeagueTeam(this LeagueTeam team)
+        {
+            var fixtures = team.League.Gameweeks
+                .SelectMany(x => x.Fixtures)
+                .Where(x => x.HomeTeam.Team.ID == team.Team.ID || x.AwayTeam.Team.ID == team.Team.ID);
+            return fixtures;
+        }
+
+        [Obsolete("Improve method")]
         public static Fixture[] GetFixturesByTeam(this LeagueTeam team, IEnumerable<Fixture> fixtures)
         {
             var result = fixtures.Where(x => x.HomeTeam.Team.ID == team.Team.ID || x.AwayTeam.Team.ID == team.Team.ID);
@@ -90,11 +139,10 @@ namespace FantasySimulator.Simulator.Soccer
             return fixtures;
         }
 
+        [Obsolete("Use specific implementation where is needed, where GameFinished, Count is specified...")]
         public static IEnumerable<Fixture> GetRecentFixtures(this LeagueTeam team, int count = 5)
         {
-            var fixtures = team.League.Gameweeks
-                .SelectMany(x => x.Fixtures)
-                .Where(x => x.HomeTeam.Team.ID == team.Team.ID || x.AwayTeam.Team.ID == team.Team.ID)
+            var fixtures = GetFixturesFromLeagueTeam(team)
                 .Where(x => x.Statistics.GameStarted)
                 //.Where(x => x.Statistics.GameFinished)
                 .OrderByDescending(x => x.Time)

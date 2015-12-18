@@ -5,7 +5,7 @@ using FantasySimulator.Core.Classes;
 
 namespace FantasySimulator.Simulator.Soccer.Structs
 {
-    public class Range<TMapping> : IXmlConfigurable
+    public class Range<TMapping> : IXmlConfigurable, IHasProperties
         where TMapping : RangeMapping, new()
     {
         public Range()

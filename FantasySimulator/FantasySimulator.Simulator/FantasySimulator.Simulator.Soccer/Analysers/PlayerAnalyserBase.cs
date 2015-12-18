@@ -9,7 +9,7 @@ using FantasySimulator.Core.Diagnostics;
 
 namespace FantasySimulator.Simulator.Soccer.Analysers
 {
-    public abstract class PlayerAnalyserBase
+    public abstract class PlayerAnalyserBase : IHasProperties
     {
         private static readonly ILog _log = Log.GetLog(MethodBase.GetCurrentMethod().DeclaringType);
 

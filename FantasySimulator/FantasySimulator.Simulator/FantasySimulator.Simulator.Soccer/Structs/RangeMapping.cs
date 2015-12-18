@@ -9,7 +9,7 @@ using FantasySimulator.Core.Diagnostics;
 
 namespace FantasySimulator.Simulator.Soccer.Structs
 {
-    public class RangeMapping : IXmlConfigurable
+    public class RangeMapping : IXmlConfigurable, IHasProperties
     {
         private static readonly ILog _log = Log.GetLog(MethodBase.GetCurrentMethod().DeclaringType);
 

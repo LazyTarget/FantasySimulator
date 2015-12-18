@@ -33,4 +33,13 @@ namespace FantasySimulator.Simulator.Soccer
         HomeTeam,
         AwayTeam,
     }
+
+    public enum GameWinState
+    {
+        None,
+        Undetermined,
+        Win,
+        Draw,
+        Loss,
+    }
 }
