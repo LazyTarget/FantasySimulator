@@ -11,7 +11,7 @@ namespace FantasySimulator.Simulator.Soccer
         {
             DefaultAnalysers = new List<Analysers.PlayerAnalyserBase>
             {
-                new Analysers.HomeTeamAdvantagePlayerAnalyser(),
+                new Analysers.PlayerUnavailablePlayerAnalyser(),
                 new Analysers.ChanceOfPlayingNextFixturePlayerAnalyser(),
 
             }.ToArray();

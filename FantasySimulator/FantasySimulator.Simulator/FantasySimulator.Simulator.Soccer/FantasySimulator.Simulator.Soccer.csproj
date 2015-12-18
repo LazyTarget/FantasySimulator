@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysers\ChanceOfPlayingNextFixturePlayerAnalyser.cs" />
+    <Compile Include="Analysers\PlayerUnavailablePlayerAnalyser.cs" />
     <Compile Include="Analysers\HomeTeamAdvantagePlayerAnalyser.cs" />
     <Compile Include="Analysers\PlaytimePlayerAnalyser.cs" />
     <Compile Include="Interfaces\IFixtureOddsProvider.cs" />
