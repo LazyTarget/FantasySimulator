@@ -107,6 +107,23 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
         public override void ConfigureDefault()
         {
             base.ConfigureDefault();
+
+            MinGamesPlayed = 5;
+            NumberOfRecentGames = 5;
+            PointsRange = new PointsRange();
+            PointsRange.Mappings.Add(new PointRangeMapping
+            {
+                Predicates = new List<RangePredicate>
+                {
+                    new RangePredicate
+                    {
+                        Operator = ComparisonOperator.GreaterOrEqualThan,
+                        Value = 2,
+                        Unit = "points-per-game",
+                    }
+                },
+                Points = 2,
+            });
         }
         
     }

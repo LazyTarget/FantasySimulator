@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FantasySimulator.Simulator.Soccer.Analysers;
 
 namespace FantasySimulator.Simulator.Soccer
 {
@@ -12,6 +13,6 @@ namespace FantasySimulator.Simulator.Soccer
         int MinimumFixturesForFormRecommendationBonus { get; }
         int LengthOfFormWhenSimulating { get; }
         bool CalculateOddsWhenSimulating { get; }
-        Analysers.PlayerAnalyserBase[] PlayerAnalysers { get; }
+        IList<PlayerAnalyserBase> PlayerAnalysers { get; }
     }
 }
