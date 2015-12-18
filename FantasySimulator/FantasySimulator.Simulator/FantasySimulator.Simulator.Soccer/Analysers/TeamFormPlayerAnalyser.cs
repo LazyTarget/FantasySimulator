@@ -71,9 +71,9 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
                         : fixt.Statistics.Score.PointsForAwayTeam);
 
                 var valueMap = new ValueMap();
-                valueMap["team-wins"] = recentFixtures.Count(x => playerTeam.GetTeamWinState(fixture) == GameWinState.Win);
-                valueMap["team-draws"] = recentFixtures.Count(x => playerTeam.GetTeamWinState(fixture) == GameWinState.Draw);
-                valueMap["team-losses"] = recentFixtures.Count(x => playerTeam.GetTeamWinState(fixture) == GameWinState.Loss);
+                valueMap["team-wins"] = recentFixtures.Count(x => playerTeam.GetTeamFixtureOutcome(fixture) == TeamFixtureOutcome.Win);
+                valueMap["team-draws"] = recentFixtures.Count(x => playerTeam.GetTeamFixtureOutcome(fixture) == TeamFixtureOutcome.Draw);
+                valueMap["team-losses"] = recentFixtures.Count(x => playerTeam.GetTeamFixtureOutcome(fixture) == TeamFixtureOutcome.Loss);
                 valueMap["games-played"] = recentFixtures.Count;
                 valueMap["total-games-played"] = leagueFixtures.Where(x => x.Statistics.GameFinished);
                 valueMap["points"] = points;

@@ -39,8 +39,8 @@ namespace FantasySimulator.Simulator.Soccer
         public void UpdateStatisticsBasedOnFixture(Fixture fixture)
         {
             // Statistics are updated only when the game has ended
-            var fixtureWinner = fixture.GetFixtureLeader();
-            if (fixtureWinner == FixtureWinner.Undetermined)
+            var fixtureWinner = fixture.GetFixtureOutcome();
+            if (fixtureWinner == FixtureOutcome.Undetermined)
                 return;
 
 
@@ -60,26 +60,26 @@ namespace FantasySimulator.Simulator.Soccer
             
             switch (fixtureWinner)
             {
-                case FixtureWinner.HomeTeam:
+                case FixtureOutcome.HomeTeam:
                     if (isHome)
                         Statistics.WonGames++;
                     else
                         Statistics.LostGames++;
                     break;
 
-                case FixtureWinner.AwayTeam:
+                case FixtureOutcome.AwayTeam:
                     if (isHome)
                         Statistics.LostGames++;
                     else
                         Statistics.WonGames++;
                     break;
 
-                case FixtureWinner.Draw:
+                case FixtureOutcome.Draw:
                     Statistics.DrawGames++;
                     break;
 
-                case FixtureWinner.None:
-                case FixtureWinner.Undetermined:
+                case FixtureOutcome.None:
+                case FixtureOutcome.Undetermined:
                     throw new NotSupportedException("Cannot update statistics, when game has not ended");
 
                 default:

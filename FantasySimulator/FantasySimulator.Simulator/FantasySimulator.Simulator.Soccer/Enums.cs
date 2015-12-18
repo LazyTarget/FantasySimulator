@@ -25,16 +25,17 @@ namespace FantasySimulator.Simulator.Soccer
         Forward,
     }
 
-    public enum FixtureWinner
+    public enum FixtureOutcome
     {
         None,
-        Undetermined,
         Draw,
         HomeTeam,
         AwayTeam,
+        Undetermined,
+        Postponed,
     }
 
-    public enum GameWinState
+    public enum TeamFixtureOutcome
     {
         None,
         Undetermined,

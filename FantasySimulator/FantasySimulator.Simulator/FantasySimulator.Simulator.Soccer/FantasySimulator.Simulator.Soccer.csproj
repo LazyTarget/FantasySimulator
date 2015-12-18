@@ -51,9 +51,7 @@
     <Compile Include="Analysers\TeamFormPlayerAnalyser.cs" />
     <Compile Include="Analysers\PlaytimePlayerAnalyser.cs" />
     <Compile Include="Interfaces\IFixtureOddsProvider.cs" />
-    <Compile Include="Interfaces\IHasProperties.cs" />
     <Compile Include="Interfaces\ISoccerSimulatorSettings.cs" />
-    <Compile Include="Interfaces\IXmlConfigurable.cs" />
     <Compile Include="Models\TransferDetails.cs" />
     <Compile Include="Models\FantasyPlayer.cs" />
     <Compile Include="Models\FixtureScore.cs" />

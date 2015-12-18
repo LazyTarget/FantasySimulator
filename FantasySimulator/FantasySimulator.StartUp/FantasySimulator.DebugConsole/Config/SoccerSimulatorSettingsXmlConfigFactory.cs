@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Linq;
 using FantasySimulator.Core;
 using FantasySimulator.Core.Diagnostics;
+using FantasySimulator.Interfaces;
 using FantasySimulator.Simulator.Soccer;
 using FantasySimulator.Simulator.Soccer.Analysers;
 

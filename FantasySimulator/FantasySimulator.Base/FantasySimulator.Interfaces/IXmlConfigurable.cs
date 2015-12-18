@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace FantasySimulator.Simulator.Soccer
+namespace FantasySimulator.Interfaces
 {
     public interface IXmlConfigurable
     {

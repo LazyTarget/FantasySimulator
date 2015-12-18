@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FantasySimulator.Simulator.Soccer
+namespace FantasySimulator.Interfaces
 {
     public interface IHasProperties
     {

@@ -58,35 +58,35 @@ namespace FantasySimulator.Simulator.Soccer
 
 
 
-        public static FixtureWinner GetFixtureLeader(this Fixture fixture)
+        public static FixtureOutcome GetFixtureOutcome(this Fixture fixture)
         {
-            var res = FixtureWinner.None;
+            var res = FixtureOutcome.None;
             if (!fixture.Statistics.GameFinished)
-                res = FixtureWinner.Undetermined;
+                res = FixtureOutcome.Undetermined;
             else
             {
                 if (fixture.Statistics.Score.GoalsForHomeTeam == fixture.Statistics.Score.GoalsForAwayTeam)
-                    res = FixtureWinner.Draw;
+                    res = FixtureOutcome.Draw;
                 else
                 {
                     if (fixture.Statistics.Score.GoalsForHomeTeam > fixture.Statistics.Score.GoalsForAwayTeam)
-                        res = FixtureWinner.HomeTeam;
+                        res = FixtureOutcome.HomeTeam;
                     else
-                        res = FixtureWinner.AwayTeam;
+                        res = FixtureOutcome.AwayTeam;
                 }
             }
             return res;
         }
 
-        public static GameWinState GetTeamWinState(this LeagueTeam team, Fixture fixture)
+        public static TeamFixtureOutcome GetTeamFixtureOutcome(this LeagueTeam team, Fixture fixture)
         {
-            var res = GameWinState.None;
+            var res = TeamFixtureOutcome.None;
             if (!fixture.Statistics.GameFinished)
-                res = GameWinState.Undetermined;
+                res = TeamFixtureOutcome.Undetermined;
             else
             {
                 if (fixture.Statistics.Score.GoalsForHomeTeam == fixture.Statistics.Score.GoalsForAwayTeam)
-                    res = GameWinState.Draw;
+                    res = TeamFixtureOutcome.Draw;
                 else
                 {
                     var teamIsHome = team.Team.ID == fixture.HomeTeam.Team.ID;
@@ -94,16 +94,16 @@ namespace FantasySimulator.Simulator.Soccer
 
                     if (fixture.Statistics.Score.GoalsForHomeTeam > fixture.Statistics.Score.GoalsForAwayTeam)
                         res = teamIsHome
-                            ? GameWinState.Win
+                            ? TeamFixtureOutcome.Win
                             : teamIsAway
-                                ? GameWinState.Loss
-                                : GameWinState.Undetermined;
+                                ? TeamFixtureOutcome.Loss
+                                : TeamFixtureOutcome.Undetermined;
                     else
                         res = teamIsHome
-                            ? GameWinState.Loss
+                            ? TeamFixtureOutcome.Loss
                             : teamIsAway
-                                ? GameWinState.Win
-                                : GameWinState.Undetermined;
+                                ? TeamFixtureOutcome.Win
+                                : TeamFixtureOutcome.Undetermined;
                 }
             }
             return res;

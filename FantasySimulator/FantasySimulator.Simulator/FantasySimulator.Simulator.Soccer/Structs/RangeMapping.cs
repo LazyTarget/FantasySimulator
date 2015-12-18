@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using FantasySimulator.Core;
 using FantasySimulator.Core.Classes;
 using FantasySimulator.Core.Diagnostics;
+using FantasySimulator.Interfaces;
 
 namespace FantasySimulator.Simulator.Soccer.Structs
 {
