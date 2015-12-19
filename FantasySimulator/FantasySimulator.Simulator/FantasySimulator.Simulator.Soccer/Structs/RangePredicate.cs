@@ -7,31 +7,31 @@ namespace FantasySimulator.Simulator.Soccer.Structs
 {
     public class RangePredicate : ValuePredicate<double>
     {
-        //public ComparisonOperator Operator { get; set; }
-        //public double Value { get; set; }
-        //public string Unit { get; set; }
-
-        
         public override void Configure(XElement element)
         {
             base.Configure(element);
 
             foreach (var e in element.Elements())
             {
-                if (string.Equals(e.Name.LocalName, "operator", StringComparison.OrdinalIgnoreCase))
-                    Operator = (e.GetAttributeValue("value") ?? e.Value).SafeConvert<ComparisonOperator>();
-                else if (string.Equals(e.Name.LocalName, "value", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(e.Name.LocalName, "value", StringComparison.OrdinalIgnoreCase) ||
+                    (string.Equals(e.Name.LocalName, "property", StringComparison.OrdinalIgnoreCase) &&
+                     string.Equals(e.GetAttributeValue("name") ?? "", "value", StringComparison.OrdinalIgnoreCase)))
                 {
                     var parser = new SimpleMathParser();
                     var expression = (e.GetAttributeValue("value") ?? e.Value);
                     Value = parser.Parse(expression);
                 }
-                //else if (string.Equals(e.Name.LocalName, "unit", StringComparison.OrdinalIgnoreCase))
-                //    Unit = (e.GetAttributeValue("value") ?? e.Value).SafeConvert<string>();
             }
         }
 
-
+        public override bool Test(object value)
+        {
+            var val = (double) value;
+            //var val = value.SafeConvert<double>();
+            var res = Test(val);
+            return res;
+        }
+        
         public override bool Test(double value)
         {
             var c = value.CompareTo(Value);

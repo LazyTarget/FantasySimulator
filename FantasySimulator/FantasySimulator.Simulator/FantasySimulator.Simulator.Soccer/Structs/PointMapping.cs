@@ -3,7 +3,7 @@ using FantasySimulator.Core;
 
 namespace FantasySimulator.Simulator.Soccer.Structs
 {
-    public class PointRangeMapping : RangeMapping
+    public class PointMapping : RangeMapping
     {
         public double Points
         {

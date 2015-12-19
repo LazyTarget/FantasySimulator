@@ -7,19 +7,25 @@ using System.Xml.Linq;
 
 namespace FantasySimulator.Simulator.Soccer.Analysers
 {
-    public class PlaytimePlayerAnalyser : PlayerAnalyserBase
+    public class PositionPlayerAnalyser : PlayerAnalyserBase
     {
-        public PlaytimePlayerAnalyser()
+        public PositionPlayerAnalyser()
         {
             
         }
 
-        public override string Name { get { return nameof(PlaytimePlayerAnalyser); } }
+        public override string Name { get { return nameof(PositionPlayerAnalyser); } }
 
         public PointMapper PointMapper
         {
-            get { return Properties["PointMapper"].SafeConvert<PointMapper>(); }
-            set { Properties["PointMapper"] = value; }
+            get { return Properties["PointRange"].SafeConvert<PointMapper>(); }
+            set { Properties["PointRange"] = value; }
+        }
+
+        public Mapper<Mapping<RangePredicate>> Mapper
+        {
+            get { return Properties["Mapper"].SafeConvert<Mapper<Mapping<RangePredicate>>>(); }
+            set { Properties["Mapper"] = value; }
         }
 
 

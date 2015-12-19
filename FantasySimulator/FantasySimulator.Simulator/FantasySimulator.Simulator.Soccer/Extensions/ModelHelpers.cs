@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace FantasySimulator.Simulator.Soccer
 {
-    public static class Extensions
+    public static class ModelHelpers
     {
         public static bool HasHomeTeamAdvantage(this Player player, Fixture fixture)
         {

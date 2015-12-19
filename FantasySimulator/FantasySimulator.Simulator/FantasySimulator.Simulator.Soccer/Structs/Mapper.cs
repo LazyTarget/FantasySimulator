@@ -10,19 +10,19 @@ using FantasySimulator.Interfaces;
 
 namespace FantasySimulator.Simulator.Soccer.Structs
 {
-    public class Range<TMapping> : IXmlConfigurable, IHasProperties
-        where TMapping : RangeMapping, new()
+    public class Mapper<TMapping> : IXmlConfigurable, IHasProperties
+        where TMapping : Mapping, new()
     {
         private static readonly ILog _log = Log.GetLog(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public Range()
+        public Mapper()
         {
             Properties = new DictionaryEx<string, object>();
-            Mappings = new List<TMapping>();
             MappingMode = MappingMode.FirstMatch;
+            Mappings = new List<TMapping>();
         }
 
-        public IList<TMapping> Mappings { get; set; }
+        public IDictionary<string, object> Properties { get; private set; }
 
         public MappingMode MappingMode
         {
@@ -30,7 +30,7 @@ namespace FantasySimulator.Simulator.Soccer.Structs
             set { Properties["MappingMode"] = value; }
         }
 
-        public IDictionary<string, object> Properties { get; private set; }
+        public IList<TMapping> Mappings { get; private set; }
 
 
         protected virtual TMapping InstanciateMapping()
@@ -38,7 +38,7 @@ namespace FantasySimulator.Simulator.Soccer.Structs
             return new TMapping();
         }
         
-        public void Configure(XElement element)
+        public virtual void Configure(XElement element)
         {
             var propertyElems = element.Elements("property").Where(x => x != null).ToList();
             if (propertyElems.Any())

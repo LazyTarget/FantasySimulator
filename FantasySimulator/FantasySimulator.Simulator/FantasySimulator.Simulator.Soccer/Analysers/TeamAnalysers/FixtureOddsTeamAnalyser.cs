@@ -21,17 +21,17 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
         public override string Name { get { return nameof(FixtureOddsTeamAnalyser); } }
         
 
-        public PointRange PointRange
+        public PointMapper PointMapper
         {
-            get { return Properties["PointRange"].SafeConvert<PointRange>(); }
-            set { Properties["PointRange"] = value; }
+            get { return Properties["PointMapper"].SafeConvert<PointMapper>(); }
+            set { Properties["PointMapper"] = value; }
         }
 
 
         public override IEnumerable<TeamRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context)
         {
-            if (PointRange == null)
-                throw new ArgumentException("Invalid property", nameof(PointRange));
+            if (PointMapper == null)
+                throw new ArgumentException("Invalid property", nameof(PointMapper));
 
             var res = new TeamRecommendation();
             res.Type = TeamRecommendationType.FixtureOdds;
@@ -62,7 +62,7 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
                 yield break;
             }
 
-            res.Points = PointRange.Test(valueMap).Sum(x => x.Points);
+            res.Points = PointMapper.Test(valueMap).Sum(x => x.Points);
             yield return res;
         }
 

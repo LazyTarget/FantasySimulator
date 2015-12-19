@@ -29,17 +29,17 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
             set { Properties["NumberOfRecentGames"] = value; }
         }
 
-        public PointRange PointRange
+        public PointMapper PointMapper
         {
-            get { return Properties["PointRange"].SafeConvert<PointRange>(); }
-            set { Properties["PointRange"] = value; }
+            get { return Properties["PointMapper"].SafeConvert<PointMapper>(); }
+            set { Properties["PointMapper"] = value; }
         }
 
 
         public override IEnumerable<TeamRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context)
         {
-            if (PointRange == null)
-                throw new ArgumentException("Invalid property", nameof(PointRange));
+            if (PointMapper == null)
+                throw new ArgumentException("Invalid property", nameof(PointMapper));
 
             var res = new TeamRecommendation();
             res.Type = TeamRecommendationType.TeamForm;
@@ -81,7 +81,7 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
                 valueMap["total-points"] = totalPoints;
                 valueMap["total-points-per-game"] = totalPoints / recentFixtures.Count;
                 
-                res.Points = PointRange.Test(valueMap).Sum(x => x.Points);
+                res.Points = PointMapper.Test(valueMap).Sum(x => x.Points);
                 yield return res;
             }
         }
@@ -98,8 +98,8 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
 
             MinGamesPlayed = 5;
             NumberOfRecentGames = 5;
-            PointRange = new PointRange();
-            PointRange.Mappings.Add(new PointRangeMapping
+            PointMapper = new PointMapper();
+            PointMapper.Mappings.Add(new PointMapping
             {
                 Predicates = new List<RangePredicate>
                 {

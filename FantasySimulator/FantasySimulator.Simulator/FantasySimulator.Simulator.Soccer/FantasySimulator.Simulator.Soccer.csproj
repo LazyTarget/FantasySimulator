@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysers\AnalyserBase.cs" />
+    <Compile Include="Analysers\PlayerAnalysers\PositionPlayerAnalyser.cs" />
     <Compile Include="Analysers\TeamAnalyserBase.cs" />
     <Compile Include="Analysers\PlayerAnalysers\ChanceOfPlayingNextFixturePlayerAnalyser.cs" />
     <Compile Include="Analysers\PlayerAnalysers\PlayerUnavailablePlayerAnalyser.cs" />
@@ -71,10 +72,11 @@
     <Compile Include="Analysers\Recommendations.cs" />
     <Compile Include="SimulationContext.cs" />
     <Compile Include="Structs\Enums.cs" />
-    <Compile Include="Structs\StructExtensions.cs" />
-    <Compile Include="Structs\PointRangeMapping.cs" />
-    <Compile Include="Structs\PointRange.cs" />
-    <Compile Include="Structs\Range.cs" />
+    <Compile Include="Structs\Mapper.cs" />
+    <Compile Include="Structs\Mapping.cs" />
+    <Compile Include="Extensions\StructExtensions.cs" />
+    <Compile Include="Structs\PointMapping.cs" />
+    <Compile Include="Structs\PointMapper.cs" />
     <Compile Include="Structs\RangeMapping.cs" />
     <Compile Include="Structs\ValuePredicate.cs" />
     <Compile Include="Structs\RangePredicate.cs" />
@@ -83,7 +85,7 @@
     <Compile Include="XmlHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions.cs" />
+    <Compile Include="Extensions\ModelHelpers.cs" />
     <Compile Include="Models\Fixture.cs" />
     <Compile Include="Models\Gameweek.cs" />
     <Compile Include="Models\FixtureOdds.cs" />
