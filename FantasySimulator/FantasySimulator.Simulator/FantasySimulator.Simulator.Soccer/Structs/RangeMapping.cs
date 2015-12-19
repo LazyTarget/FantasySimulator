@@ -1,4 +1,7 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Linq;
+using System.Xml.Linq;
+using FantasySimulator.Interfaces;
 
 namespace FantasySimulator.Simulator.Soccer.Structs
 {
@@ -6,7 +9,13 @@ namespace FantasySimulator.Simulator.Soccer.Structs
     {
         protected override RangePredicate InstanciatePredicate(XElement elem)
         {
-            return new RangePredicate();
+            var obj = elem.InstantiateElement();
+            if (!(obj is IXmlConfigurable))
+            {
+                obj = new RangePredicate().InstantiateConfigurable(elem);
+            }
+            var pred = (RangePredicate) obj;
+            return pred;
         }
     }
 }

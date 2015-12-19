@@ -16,7 +16,7 @@ namespace FantasySimulator.Simulator.Soccer.Structs
         protected ValuePredicate()
         {
             Properties = new Dictionary<string, object>();
-        } 
+        }
 
 
         public IDictionary<string, object> Properties { get; private set; }
@@ -42,25 +42,7 @@ namespace FantasySimulator.Simulator.Soccer.Structs
 
         public virtual void Configure(XElement element)
         {
-            var propertyElems = element.Elements("property").Where(x => x != null).ToList();
-            if (propertyElems.Any())
-            {
-                foreach (var elem in propertyElems)
-                {
-                    var propertyName = elem.GetAttributeValue("name");
-                    if (string.IsNullOrWhiteSpace(propertyName))
-                        continue;
-                    try
-                    {
-                        object value = elem.InstantiateElement();
-                        Properties[propertyName] = value;
-                    }
-                    catch (Exception ex)
-                    {
-                        _log.Error($"Error instantiating property '{propertyName}'", ex);
-                    }
-                }
-            }
+
         }
 
         public abstract bool Test(object value);

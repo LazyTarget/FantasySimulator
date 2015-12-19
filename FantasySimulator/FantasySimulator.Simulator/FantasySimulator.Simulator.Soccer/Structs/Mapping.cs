@@ -30,25 +30,7 @@ namespace FantasySimulator.Simulator.Soccer.Structs
 
         public virtual void Configure(XElement element)
         {
-            var propertyElems = element.Elements("property").Where(x => x != null).ToList();
-            if (propertyElems.Any())
-            {
-                foreach (var elem in propertyElems)
-                {
-                    var propertyName = elem.GetAttributeValue("name");
-                    if (string.IsNullOrWhiteSpace(propertyName))
-                        continue;
-                    try
-                    {
-                        object value = elem.InstantiateElement();
-                        Properties[propertyName] = value;
-                    }
-                    catch (Exception ex)
-                    {
-                        _log.Error($"Error instantiating property '{propertyName}'", ex);
-                    }
-                }
-            }
+            
         }
         
         public abstract bool Test(ValueMap values);
@@ -57,7 +39,7 @@ namespace FantasySimulator.Simulator.Soccer.Structs
 
 
 
-    public abstract class Mapping<TPredicate> : Mapping
+    public abstract class Mapping<TPredicate> : Mapping, IPredicateGroup<TPredicate>
         where TPredicate : ValuePredicate
     {
         private static readonly ILog _log = Log.GetLog(MethodBase.GetCurrentMethod().DeclaringType);
@@ -84,7 +66,6 @@ namespace FantasySimulator.Simulator.Soccer.Structs
                 foreach (var elem in predicateElems)
                 {
                     var pred = InstanciatePredicate(elem);
-                    pred.Configure(elem);
                     Predicates.Add(pred);
                 }
             }

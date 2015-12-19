@@ -358,6 +358,7 @@ namespace FantasySimulator.DebugConsole.Data
                     Form                            = GetProperty<double>(playerData, propMapping, "form"),
                     PenaltiesMissed                 = GetProperty<int>(playerData, propMapping, "penalties_missed"),
                     PenaltiesSaved                  = GetProperty<int>(playerData, propMapping, "penalties_scored"),
+                    Saves                           = GetProperty<int>(playerData, propMapping, "saves"),
                     TotalPoints                     = GetProperty<int>(playerData, propMapping, "total_points"),
                     CleanSheets                     = GetProperty<int>(playerData, propMapping, "clean_sheets"),
                     PointsPerGame                   = GetProperty<double>(playerData, propMapping, "points_per_game"),

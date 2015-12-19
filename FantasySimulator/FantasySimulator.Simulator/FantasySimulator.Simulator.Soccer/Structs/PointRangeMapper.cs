@@ -1,19 +1,31 @@
 using System;
 using System.Xml.Linq;
-using FantasySimulator.Core;
+using FantasySimulator.Interfaces;
 
 namespace FantasySimulator.Simulator.Soccer.Structs
 {
     public class PointRangeMapper : Mapper<PointRangeMapping>
     {
-        protected override PointRangeMapping InstanciateMapping(XElement elem)
+        protected override IMappingGroup<PointRangeMapping> InstanciateMappingGroup(XElement elem)
         {
-            var predicateType = elem.GetAttributeValue("type");
-            if (!string.IsNullOrWhiteSpace(predicateType))
+            var obj = elem.InstantiateElement();
+            if (!(obj is IXmlConfigurable))
             {
-                throw new Exception($"Type '{nameof(PointRangeMapping)}' doesn't support specifying the mapping type, as: <mapping type=\"{nameof(PointRangeMapping)}\">");
+                obj = new MappingGroup<PointRangeMapping>(this).InstantiateConfigurable(elem);
             }
-            return new PointRangeMapping();
+            var mapGroup = (IMappingGroup<PointRangeMapping>)obj;
+            return mapGroup;
+        }
+
+        protected internal override PointRangeMapping InstanciateMapping(XElement elem)
+        {
+            var obj = elem.InstantiateElement();
+            if (!(obj is IXmlConfigurable))
+            {
+                obj = new PointRangeMapping().InstantiateConfigurable(elem);
+            }
+            var map = (PointRangeMapping) obj;
+            return map;
         }
     }
 }

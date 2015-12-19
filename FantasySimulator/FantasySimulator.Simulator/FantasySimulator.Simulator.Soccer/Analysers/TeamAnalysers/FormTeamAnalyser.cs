@@ -31,8 +31,8 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
 
         public PointMapper PointMapper
         {
-            get { return Properties["PointMapper"].SafeConvert<PointMapper>(); }
-            set { Properties["PointMapper"] = value; }
+            get { return Properties["Mapper"].SafeConvert<PointMapper>(); }
+            set { Properties["Mapper"] = value; }
         }
 
 

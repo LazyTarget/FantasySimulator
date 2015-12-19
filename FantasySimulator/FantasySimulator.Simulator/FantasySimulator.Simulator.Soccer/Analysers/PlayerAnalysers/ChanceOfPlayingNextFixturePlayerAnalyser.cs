@@ -17,17 +17,17 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
 
         public override string Name { get { return nameof(ChanceOfPlayingNextFixturePlayerAnalyser); } }
         
-        public PointMapper PointMapper
+        public PointMapper Mapper
         {
-            get { return Properties["PointMapper"].SafeConvert<PointMapper>(); }
-            set { Properties["PointMapper"] = value; }
+            get { return Properties["Mapper"].SafeConvert<PointMapper>(); }
+            set { Properties["Mapper"] = value; }
         }
 
 
         public override IEnumerable<PlayerRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context)
         {
-            if (PointMapper == null)
-                throw new ArgumentException("Invalid property", nameof(PointMapper));
+            if (Mapper == null)
+                throw new ArgumentException("Invalid property", nameof(Mapper));
 
 
             var res = new PlayerRecommendation();
@@ -52,7 +52,7 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
             var valueMap = new ValueMap();
             valueMap["percentage"] = player.Fantasy.ChanceOfPlayingNextFixture;
 
-            res.Points = PointMapper.Test(valueMap).Sum(x => x.Points);
+            res.Points = Mapper.Test(valueMap).Sum(x => x.Points);
             yield return res;
         }
 

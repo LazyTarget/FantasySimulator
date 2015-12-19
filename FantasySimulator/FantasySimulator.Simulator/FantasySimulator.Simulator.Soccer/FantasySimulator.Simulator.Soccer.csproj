@@ -57,6 +57,9 @@
     <Compile Include="DefaultSoccerSimulatorSettingsFactory.cs" />
     <Compile Include="Interfaces\IAnalyserRecommendation.cs" />
     <Compile Include="Interfaces\IFixtureOddsProvider.cs" />
+    <Compile Include="Interfaces\IHasMappingGroups.cs" />
+    <Compile Include="Interfaces\IMappingGroup.cs" />
+    <Compile Include="Interfaces\IPredicateGroup.cs" />
     <Compile Include="Interfaces\ISoccerSimulatorSettings.cs" />
     <Compile Include="Interfaces\ISoccerSimulatorSettingsFactory.cs" />
     <Compile Include="Models\TransferDetails.cs" />
@@ -72,6 +75,7 @@
     <Compile Include="Analysers\Recommendations.cs" />
     <Compile Include="SimulationContext.cs" />
     <Compile Include="Structs\Enums.cs" />
+    <Compile Include="Structs\MappingGroup.cs" />
     <Compile Include="Structs\Mapper.cs" />
     <Compile Include="Structs\Mapping.cs" />
     <Compile Include="Extensions\StructExtensions.cs" />

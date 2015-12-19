@@ -52,6 +52,8 @@
 
         public int Offsides { get; set; }
 
+        public int Saves { get; set; }
+
         public int PenaltiesSaved { get; set; }
 
         public int PenaltiesShoot { get { return PenaltiesScored + PenaltiesMissed; } }

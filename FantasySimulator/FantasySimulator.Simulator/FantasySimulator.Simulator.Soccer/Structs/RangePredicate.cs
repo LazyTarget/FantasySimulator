@@ -21,6 +21,7 @@ namespace FantasySimulator.Simulator.Soccer.Structs
                         continue;
                     if (propertyName == "value")
                     {
+                        // Custom implementation...
                         var parser = new SimpleMathParser();
                         var expression = elem.GetAttributeValue("value");
                         Value = parser.Parse(expression);
