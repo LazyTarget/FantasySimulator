@@ -5,9 +5,9 @@ namespace FantasySimulator.Simulator.Soccer.Structs
 {
     public class PointRangeMapping : RangeMapping
     {
-        public int Points
+        public double Points
         {
-            get { return Properties["Points"].SafeConvert<int>(); }
+            get { return Properties["Points"].SafeConvert<double>(); }
             set { Properties["Points"] = value; }
         }
 
@@ -19,7 +19,7 @@ namespace FantasySimulator.Simulator.Soccer.Structs
             foreach (var e in element.Elements())
             {
                 if (e.Name.LocalName == "points")
-                    Points = (e.GetAttributeValue("value") ?? e.Value).SafeConvert<int>();
+                    Points = (e.GetAttributeValue("value") ?? e.Value).SafeConvert<double>();
             }
         }
     }

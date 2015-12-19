@@ -31,7 +31,7 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
 
 
             var res = new PlayerRecommendation();
-            res.Type = RecommendationType.ChanceOfPlaying;
+            res.Type = PlayerRecommendationType.ChanceOfPlaying;
 
 
             // old:

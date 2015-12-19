@@ -57,8 +57,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\DefaultSoccerSimulatorSettingsFactory.cs" />
-    <Compile Include="Config\ISoccerSimulatorSettingsFactory.cs" />
     <Compile Include="Config\SoccerSimulatorSettingsXmlConfigFactory.cs" />
     <Compile Include="Config\SoccerSimulatorConfigurationSectionHandler.cs" />
     <Compile Include="Data\OpenFootballDB.cs" />

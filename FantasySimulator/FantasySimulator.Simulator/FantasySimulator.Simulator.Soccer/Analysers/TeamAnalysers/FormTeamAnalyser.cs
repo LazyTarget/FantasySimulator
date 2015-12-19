@@ -7,14 +7,14 @@ using System.Xml.Linq;
 
 namespace FantasySimulator.Simulator.Soccer.Analysers
 {
-    public class TeamFormPlayerAnalyser : PlayerAnalyserBase
+    public class FormTeamAnalyser : TeamAnalyserBase
     {
-        public TeamFormPlayerAnalyser()
+        public FormTeamAnalyser()
         {
             
         }
 
-        public override string Name { get { return nameof(TeamFormPlayerAnalyser); } }
+        public override string Name { get { return nameof(FormTeamAnalyser); } }
 
 
         public int MinGamesPlayed
@@ -36,13 +36,13 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
         }
 
 
-        public override IEnumerable<PlayerRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context)
+        public override IEnumerable<TeamRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context)
         {
             if (PointRange == null)
                 throw new ArgumentException("Invalid property", nameof(PointRange));
 
-            var res = new PlayerRecommendation();
-            res.Type = RecommendationType.TeamForm;
+            var res = new TeamRecommendation();
+            res.Type = TeamRecommendationType.TeamForm;
             
             var playerTeam = player.GetLeagueTeam(fixture);
 

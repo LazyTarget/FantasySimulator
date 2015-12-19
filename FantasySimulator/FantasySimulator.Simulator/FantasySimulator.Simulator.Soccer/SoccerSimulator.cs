@@ -13,8 +13,6 @@ namespace FantasySimulator.Simulator.Soccer
 
         public SoccerSimulator()
         {
-            Settings = SoccerSimulatorSettings.Default;
-
             TypeContainer = new TypeContainer();
             TypeContainer.SetInstance<IFixtureOddsProvider>(new ThirdParty.Kambi.KambiAPI());
         }
@@ -149,9 +147,28 @@ namespace FantasySimulator.Simulator.Soccer
                         {
                             foreach (var r in rec)
                             {
-                                if (r == null || r.Type == RecommendationType.None)
+                                if (r == null || r.Type == PlayerRecommendationType.None)
                                     continue;
-                                res.AddRecommendation(r.Type, r.Points);
+                                res.AddRecommendation(r);
+                            }
+                        }
+                    }
+                }
+
+                if (Settings.TeamAnalysers != null)
+                {
+                    foreach (var analyser in Settings.TeamAnalysers)
+                    {
+                        if (!analyser.Enabled)
+                            continue;
+                        var rec = analyser.Analyse(player, fixture, context);
+                        if (rec != null)
+                        {
+                            foreach (var r in rec)
+                            {
+                                if (r == null || r.Type == TeamRecommendationType.None)
+                                    continue;
+                                res.AddRecommendation(r);
                             }
                         }
                     }
@@ -278,17 +295,7 @@ namespace FantasySimulator.Simulator.Soccer
                 #endregion
 
             }
-
-
-            //////if (Settings.IgnoreRecommendationTypes != null && Settings.IgnoreRecommendationTypes.AnyMatching())
-            //////{
-            //////    foreach (var type in Settings.IgnoreRecommendationTypes)
-            //////    {
-            //////        res.Recommendations.Remove(type);
-            //////    }
-            //////}
-
-
+            
             return res;
         }
         

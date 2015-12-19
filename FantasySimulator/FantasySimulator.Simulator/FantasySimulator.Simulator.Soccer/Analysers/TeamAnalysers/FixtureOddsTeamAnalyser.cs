@@ -9,16 +9,16 @@ using FantasySimulator.Core.Diagnostics;
 
 namespace FantasySimulator.Simulator.Soccer.Analysers
 {
-    public class FixtureOddsPlayerAnalyser : PlayerAnalyserBase
+    public class FixtureOddsTeamAnalyser : TeamAnalyserBase
     {
         private static readonly ILog _log = Log.GetLog(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public FixtureOddsPlayerAnalyser()
+        public FixtureOddsTeamAnalyser()
         {
             
         }
 
-        public override string Name { get { return nameof(FixtureOddsPlayerAnalyser); } }
+        public override string Name { get { return nameof(FixtureOddsTeamAnalyser); } }
         
 
         public PointRange PointRange
@@ -28,13 +28,13 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
         }
 
 
-        public override IEnumerable<PlayerRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context)
+        public override IEnumerable<TeamRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context)
         {
             if (PointRange == null)
                 throw new ArgumentException("Invalid property", nameof(PointRange));
 
-            var res = new PlayerRecommendation();
-            res.Type = RecommendationType.FixtureOdds;
+            var res = new TeamRecommendation();
+            res.Type = TeamRecommendationType.FixtureOdds;
 
             var playerTeam = player.GetLeagueTeam(fixture);
             

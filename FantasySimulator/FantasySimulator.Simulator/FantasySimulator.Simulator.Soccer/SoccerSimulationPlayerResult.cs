@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using FantasySimulator.Simulator.Soccer.Analysers;
 
 namespace FantasySimulator.Simulator.Soccer
 {
@@ -7,34 +8,52 @@ namespace FantasySimulator.Simulator.Soccer
     {
         public SoccerSimulationPlayerResult()
         {
-            Recommendations = new Dictionary<RecommendationType, int>();
+            PlayerRecommendations = new List<PlayerRecommendation>();
+            TeamRecommendations = new List<TeamRecommendation>();
         }
 
-        public SoccerSimulationPlayerResult(Player player, IDictionary<RecommendationType, int> recommendations)
-            : this()
-        {
-            Player = player;
-            Recommendations = recommendations;
-        }
+
+        //public SoccerSimulationPlayerResult(Player player, IDictionary<PlayerRecommendationType, int> playerRecommendations)
+        //    : this()
+        //{
+        //    Player = player;
+        //    PlayerRecommendations = playerRecommendations;
+        //}
 
 
         public Player Player { get; set; }
 
-        public IDictionary<RecommendationType, int> Recommendations { get; set; } 
+        public IList<PlayerRecommendation> PlayerRecommendations { get; private set; }
+
+        public IList<TeamRecommendation> TeamRecommendations { get; private set; }
+
 
         public int EstimatedPoints { get; set; }
 
-        public int RecommendationPoints
+        public double RecommendationPoints
         {
-            get { return Recommendations?.Where(x => x.Key != RecommendationType.None).Sum(x => x.Value) ?? 0; }
+            get
+            {
+                var player = PlayerRecommendations?.Sum(x => x.Points) ?? 0;
+                var team = TeamRecommendations?.Sum(x => x.Points) ?? 0;
+                var sum = player + team;
+                return sum;
+            }
         }
 
 
-        public void AddRecommendation(RecommendationType type, int value)
+        public void AddRecommendation(PlayerRecommendation recommendation)
         {
-            if (!Recommendations.ContainsKey(type))
-                Recommendations.Add(type, 0);
-            Recommendations[type] += value;
+            //if (!PlayerRecommendations.ContainsKey(type))
+            //    PlayerRecommendations.Add(type, 0);
+            //PlayerRecommendations[type] += value;
+
+            PlayerRecommendations.Add(recommendation);
+        }
+
+        public void AddRecommendation(TeamRecommendation recommendation)
+        {
+            TeamRecommendations.Add(recommendation);
         }
 
 

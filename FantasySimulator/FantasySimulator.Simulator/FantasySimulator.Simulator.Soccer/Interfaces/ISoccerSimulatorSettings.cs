@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using FantasySimulator.Simulator.Soccer.Analysers;
 
 namespace FantasySimulator.Simulator.Soccer
@@ -8,11 +10,8 @@ namespace FantasySimulator.Simulator.Soccer
         bool SimulateFinishedGames { get; }
         int TopRecommendationsPerPosition { get; }
         bool FilterUnavailablePlayers { get; }
-        RecommendationType[] IgnoreRecommendationTypes { get; }
-        int MinimumFixturesForPlaytimeRecommendationBonus { get; }
-        int MinimumFixturesForFormRecommendationBonus { get; }
-        int LengthOfFormWhenSimulating { get; }
         bool CalculateOddsWhenSimulating { get; }
         IList<PlayerAnalyserBase> PlayerAnalysers { get; }
+        IList<TeamAnalyserBase> TeamAnalysers { get; }
     }
 }

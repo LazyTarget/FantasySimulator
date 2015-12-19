@@ -4,14 +4,14 @@ using FantasySimulator.Core;
 
 namespace FantasySimulator.Simulator.Soccer.Analysers
 {
-    public class HomeTeamAdvantagePlayerAnalyser : PlayerAnalyserBase
+    public class PlayerUnavailablePlayerAnalyser : PlayerAnalyserBase
     {
-        public HomeTeamAdvantagePlayerAnalyser()
+        public PlayerUnavailablePlayerAnalyser()
         {
-            Points = 1;
+            Points = -10;
         }
 
-        public override string Name { get { return nameof(HomeTeamAdvantagePlayerAnalyser); } }
+        public override string Name { get { return nameof(PlayerUnavailablePlayerAnalyser); } }
 
         public int Points
         {
@@ -22,10 +22,10 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
         public override IEnumerable<PlayerRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context)
         {
             var res = new PlayerRecommendation();
-            res.Type = RecommendationType.HomeTeamAdvantage;
+            res.Type = PlayerRecommendationType.PlayerUnavailable;
 
-            var homeTeamAdvantage = player.HasHomeTeamAdvantage(fixture);
-            if (homeTeamAdvantage)
+            var unavailable = player.Fantasy.Unavailable;
+            if (unavailable)
                 res.Points = Points;
             yield return res;
         }

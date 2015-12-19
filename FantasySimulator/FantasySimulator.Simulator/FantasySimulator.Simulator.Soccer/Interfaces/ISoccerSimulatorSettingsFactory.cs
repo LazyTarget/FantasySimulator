@@ -1,6 +1,4 @@
-﻿using FantasySimulator.Simulator.Soccer;
-
-namespace FantasySimulator.DebugConsole.Config
+﻿namespace FantasySimulator.Simulator.Soccer
 {
     public interface ISoccerSimulatorSettingsFactory
     {

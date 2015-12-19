@@ -1,22 +1,29 @@
 namespace FantasySimulator.Simulator.Soccer
 {
-    public enum RecommendationType
+    public enum PlayerRecommendationType
     {
         None,
-        TeamQuality,
-        TeamForm,
         PlayerQuality,
         PlayerCost,
         PlayerForm,
         PlayerPlaytime,
+        PlayerUnavailable,
+        ChanceOfPlaying,
+    }
+
+    public enum TeamRecommendationType
+    {
+        None,
+        TeamQuality,
+        TeamForm,
         FixtureRatingDiff,
         MultipleFixturesInGameweek,
         HomeTeamAdvantage,
-        PlayerUnavailable,
-        ChanceOfPlaying,
         FixtureOdds,
     }
 
+
+    // a bit focused on Fantasy Premier League...
     public enum PlayerPosition
     {
         None,

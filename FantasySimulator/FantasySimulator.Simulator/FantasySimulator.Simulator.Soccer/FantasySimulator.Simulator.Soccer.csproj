@@ -45,14 +45,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analysers\ChanceOfPlayingNextFixturePlayerAnalyser.cs" />
-    <Compile Include="Analysers\PlayerUnavailablePlayerAnalyser.cs" />
-    <Compile Include="Analysers\HomeTeamAdvantagePlayerAnalyser.cs" />
-    <Compile Include="Analysers\FixtureOddsPlayerAnalyser.cs" />
-    <Compile Include="Analysers\TeamFormPlayerAnalyser.cs" />
-    <Compile Include="Analysers\PlaytimePlayerAnalyser.cs" />
+    <Compile Include="Analysers\AnalyserBase.cs" />
+    <Compile Include="Analysers\TeamAnalyserBase.cs" />
+    <Compile Include="Analysers\PlayerAnalysers\ChanceOfPlayingNextFixturePlayerAnalyser.cs" />
+    <Compile Include="Analysers\PlayerAnalysers\PlayerUnavailablePlayerAnalyser.cs" />
+    <Compile Include="Analysers\TeamAnalysers\HomeAdvantageTeamAnalyser.cs" />
+    <Compile Include="Analysers\TeamAnalysers\FixtureOddsTeamAnalyser.cs" />
+    <Compile Include="Analysers\TeamAnalysers\FormTeamAnalyser.cs" />
+    <Compile Include="Analysers\PlayerAnalysers\PlaytimePlayerAnalyser.cs" />
+    <Compile Include="DefaultSoccerSimulatorSettingsFactory.cs" />
+    <Compile Include="Interfaces\IAnalyserRecommendation.cs" />
     <Compile Include="Interfaces\IFixtureOddsProvider.cs" />
     <Compile Include="Interfaces\ISoccerSimulatorSettings.cs" />
+    <Compile Include="Interfaces\ISoccerSimulatorSettingsFactory.cs" />
     <Compile Include="Models\TransferDetails.cs" />
     <Compile Include="Models\FantasyPlayer.cs" />
     <Compile Include="Models\FixtureScore.cs" />
@@ -63,7 +68,7 @@
     <Compile Include="Models\LeagueTeam.cs" />
     <Compile Include="Models\TeamStatistics.cs" />
     <Compile Include="Analysers\PlayerAnalyserBase.cs" />
-    <Compile Include="PlayerRecommendation.cs" />
+    <Compile Include="Analysers\Recommendations.cs" />
     <Compile Include="SimulationContext.cs" />
     <Compile Include="Structs\Enums.cs" />
     <Compile Include="Structs\StructExtensions.cs" />

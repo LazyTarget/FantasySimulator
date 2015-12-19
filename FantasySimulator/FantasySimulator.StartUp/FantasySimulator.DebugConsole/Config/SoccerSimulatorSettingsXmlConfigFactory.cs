@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -126,7 +127,8 @@ namespace FantasySimulator.DebugConsole.Config
 
             public SoccerSimulatorXmlSettings()
             {
-                //PlayerAnalysers = new PlayerAnalyserBase[0];
+                //PlayerAnalysers = new List<PlayerAnalyserBase>();
+                //TeamAnalysers = new List<TeamAnalyserBase>();
             }
             
 
@@ -145,12 +147,12 @@ namespace FantasySimulator.DebugConsole.Config
                         }
                         else
                         {
-                        
+                            
                         }
                     }
                 }
 
-            
+                
                 var playerAnalysersNode = element.Element("playerAnalysers");
                 if (playerAnalysersNode != null)
                 {
@@ -160,11 +162,30 @@ namespace FantasySimulator.DebugConsole.Config
                             continue;
                         if (childNode.Name == "analyser")
                         {
-                            ApplyAnalyser(childNode);
+                            ApplyPlayerAnalyser(childNode);
                         }
                         else
                         {
-                        
+                            
+                        }
+                    }
+                }
+
+
+                var teamAnalysersNode = element.Element("teamAnalysers");
+                if (teamAnalysersNode != null)
+                {
+                    foreach (var childNode in teamAnalysersNode.Elements())
+                    {
+                        if (childNode == null || string.IsNullOrWhiteSpace(childNode.Name.LocalName))
+                            continue;
+                        if (childNode.Name == "analyser")
+                        {
+                            ApplyTeamAnalyser(childNode);
+                        }
+                        else
+                        {
+
                         }
                     }
                 }
@@ -202,27 +223,49 @@ namespace FantasySimulator.DebugConsole.Config
             }
 
 
-            protected virtual void ApplyAnalyser(XElement element)
+            protected virtual void ApplyPlayerAnalyser(XElement element)
             {
+                var typeName = element.GetAttributeValue("type");
                 try
                 {
-                    var typeName = element.GetAttributeValue("type");
                     if (string.IsNullOrWhiteSpace(typeName))
                         throw new FormatException("Invalid analyser type name");
                     var type = Type.GetType(typeName, true);
                     if (!(typeof (PlayerAnalyserBase).IsAssignableFrom(type)))
-                        throw new Exception("Specified type doesn't inherit PlayerAnalyserBase");
+                        throw new Exception($"Specified type doesn't inherit '{nameof(PlayerAnalyserBase)}'");
 
-                    var analyser = (PlayerAnalyserBase) Activator.CreateInstance(type);
-                    analyser.Configure(element);
-                    //PlayerAnalysers = PlayerAnalysers.Where(x => x.Name != analyser.Name)
-                    //                                 .Concat(new[] {analyser})
-                    //                                 .ToArray();
+                    //var analyser = (PlayerAnalyserBase) Activator.CreateInstance(type);
+                    //analyser.Configure(element);
+                    //PlayerAnalysers.Add(analyser);
+
+                    var obj = element.InstantiateElement();
+                    var analyser = (PlayerAnalyserBase) obj;
                     PlayerAnalysers.Add(analyser);
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"Error when applying analyser", ex);
+                    _log.Error($"Error when applying player analyser", ex);
+                }
+            }
+
+            protected virtual void ApplyTeamAnalyser(XElement element)
+            {
+                var typeName = element.GetAttributeValue("type");
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(typeName))
+                        throw new FormatException("Invalid analyser type name");
+                    var type = Type.GetType(typeName, true);
+                    if (!(typeof(TeamAnalyserBase).IsAssignableFrom(type)))
+                        throw new Exception($"Specified type doesn't inherit '{nameof(TeamAnalyserBase)}'");
+                    
+                    var obj = element.InstantiateElement();
+                    var analyser = (TeamAnalyserBase)obj;
+                    TeamAnalysers.Add(analyser);
+                }
+                catch (Exception ex)
+                {
+                    _log.Error($"Error when applying team analyser", ex);
                 }
             }
         }

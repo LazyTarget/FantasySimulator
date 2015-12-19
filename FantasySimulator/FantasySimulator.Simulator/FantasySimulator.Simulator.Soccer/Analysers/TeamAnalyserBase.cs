@@ -10,18 +10,18 @@ using FantasySimulator.Interfaces;
 
 namespace FantasySimulator.Simulator.Soccer.Analysers
 {
-    public abstract class PlayerAnalyserBase : AnalyserBase, IXmlConfigurable, IHasProperties
+    public abstract class TeamAnalyserBase : AnalyserBase, IXmlConfigurable, IHasProperties
     {
         private static readonly ILog _log = Log.GetLog(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected PlayerAnalyserBase()
+        protected TeamAnalyserBase()
         {
 
         }
 
 
-        // todo: implement Player analysers, which estimate what players that have the edge...
-        public abstract IEnumerable<PlayerRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context);
+        // todo: implement Team analysers, which estimate what team that wins/relegates...
+        public abstract IEnumerable<TeamRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context);
 
 
         public override void Configure(XElement element)

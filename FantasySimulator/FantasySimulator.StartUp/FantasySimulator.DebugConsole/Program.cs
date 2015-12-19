@@ -12,16 +12,22 @@ namespace FantasySimulator.DebugConsole
 {
     class Program
     {
-        //private static ISoccerSimulationDataFactory DataFactory = new SampleDataFactory();
-        private static ISoccerSimulationDataFactory DataFactory = new FantasyPremierLeagueDataFactory();
-        //private static ISoccerSimulatorSettingsFactory SettingsFactory = new DefaultSoccerSimulatorSettingsFactory();
-        private static ISoccerSimulatorSettingsFactory SettingsFactory = new SoccerSimulatorSettingsXmlConfigFactory();
+        private static ISoccerSimulationDataFactory DataFactory;
+        private static ISoccerSimulatorSettingsFactory SettingsFactory;
 
 
         private static readonly ILog _log = Log.GetLog(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly ILog _unhandledLog = Log.GetLog("Logger.UnhandledExceptions");
         private static readonly ILog _firstChanceLog = Log.GetLog("Logger.FirstChanceExceptions");
 
+
+        static Program()
+        {
+            //DataFactory = new SampleDataFactory();
+            DataFactory = new FantasyPremierLeagueDataFactory();
+            //SettingsFactory = new DefaultSoccerSimulatorSettingsFactory();
+            SettingsFactory = new SoccerSimulatorSettingsXmlConfigFactory();
+        }
 
         static void Main(string[] args)
         {
@@ -47,15 +53,24 @@ namespace FantasySimulator.DebugConsole
                     Console.WriteLine("Position: {0}", group.Key);
                     foreach (var playerRes in group)
                     {
-                        var ptsStr = "";
-                        foreach (var recType in playerRes.Recommendations.Keys)
+                        var playerRecPtsStr = "";
+                        var teamRecPtsStr = "";
+                        foreach (var rec in playerRes.PlayerRecommendations)
                         {
-                            var pts = playerRes.Recommendations[recType];
-                            ptsStr += string.Format("{0}: {1}  |  ", recType, pts);
+                            playerRecPtsStr += string.Format("{0}: {1}  |  ", rec.Type, rec.Points);
                         }
-
+                        playerRecPtsStr = playerRecPtsStr.Substring(0, playerRecPtsStr.LastIndexOf("  |  "));
+                        foreach (var rec in playerRes.TeamRecommendations)
+                        {
+                            teamRecPtsStr += string.Format("{0}: {1}  |  ", rec.Type, rec.Points);
+                        }
+                        teamRecPtsStr = teamRecPtsStr.Substring(0, teamRecPtsStr.LastIndexOf("  |  "));
+                        
                         //Console.WriteLine("{0} [{1}] \t\t--- rec.pts: {2}", playerRes.Player.DisplayName, playerRes.Player.Rating, playerRes.RecommendationPoints);
-                        Console.WriteLine("{0} [{1}] \t\t--- rec.pts: {2} \t\t\t\t--- {3}", playerRes.Player.DisplayName, playerRes.Player.Rating, playerRes.RecommendationPoints, ptsStr);
+                        //Console.WriteLine("{0} [{1}] \t\t--- rec.pts: {2} \t\t\t\t--- {3}", playerRes.Player.DisplayName, playerRes.Player.Rating, playerRes.RecommendationPoints, playerRecPtsStr);
+                        //Console.WriteLine("{0} [{1}] \t\t--- rec.pts: {2} \t\t\t\t--- P.Rec: {3}\t--- T.Rec: {4}", playerRes.Player.DisplayName, playerRes.Player.Rating, playerRes.RecommendationPoints, playerRecPtsStr, teamRecPtsStr);
+                        var msg = $"{playerRes.Player.DisplayName} [{playerRes.Player.Rating}] \t\t-- rec.pts: {playerRes.RecommendationPoints} \t\t-- P.Rec: {playerRecPtsStr}\t-- T.Rec: {teamRecPtsStr}";
+                        Console.WriteLine(msg);
                     }
                     Console.WriteLine();
                 }

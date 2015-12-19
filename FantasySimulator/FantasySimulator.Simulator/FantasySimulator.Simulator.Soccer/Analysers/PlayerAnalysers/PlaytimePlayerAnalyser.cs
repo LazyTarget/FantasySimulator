@@ -29,7 +29,7 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
                 throw new ArgumentException("Invalid property", nameof(PointRange));
 
             var res = new PlayerRecommendation();
-            res.Type = RecommendationType.PlayerPlaytime;
+            res.Type = PlayerRecommendationType.PlayerPlaytime;
 
             var playerTeam = player.GetLeagueTeam(fixture);
             double teamPlayedMinutes = playerTeam.GetPlayedMinutesBeforeFixtureForTeam(fixture);
