@@ -13,8 +13,8 @@ namespace FantasySimulator.Simulator.Soccer
 
         public SoccerSimulator()
         {
-            TypeContainer = new TypeContainer();
-            TypeContainer.SetInstance<IFixtureOddsProvider>(new ThirdParty.Kambi.KambiAPI());
+            //TypeContainer = new TypeContainer();
+            //TypeContainer.SetInstance<IFixtureOddsProvider>(new ThirdParty.Kambi.KambiAPI());
         }
 
 
@@ -95,7 +95,8 @@ namespace FantasySimulator.Simulator.Soccer
         private FixtureOdds CalculateOdds(Fixture fixture)
         {
             FixtureOdds odds = null;
-            var provider = TypeContainer.GetInstance<IFixtureOddsProvider>();
+            //var provider = TypeContainer.GetInstance<IFixtureOddsProvider>();
+            var provider = _settings.FixtureOddsProvider;
             if (provider != null)
             {
                 odds = provider.GetFixtureOdds(fixture).WaitForResult();

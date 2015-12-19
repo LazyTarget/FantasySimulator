@@ -73,7 +73,9 @@ namespace FantasySimulator.Core
             object result = null;
             try
             {
-                var defaultValue = Activator.CreateInstance(targetType.Type);
+                var defaultValue = targetType.Type.IsInterface
+                    ? null
+                    : Activator.CreateInstance(targetType.Type);
                 result = SafeConvertDynamic(value, targetType.Type, defaultValue);
                 return result;
             }

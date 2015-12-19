@@ -32,6 +32,11 @@ namespace FantasySimulator.Simulator.Soccer
                         temp.InstantiateConfigurable(element);
                         value = temp;
                     }
+                    else if (!type.IsPrimitive)
+                    {
+                        var temp = Activator.CreateInstance(type);
+                        value = temp;
+                    }
                     else
                     {
                         value = str.SafeConvertDynamic(type);

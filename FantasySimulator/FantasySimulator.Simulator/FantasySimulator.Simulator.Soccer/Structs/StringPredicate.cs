@@ -30,8 +30,7 @@ namespace FantasySimulator.Simulator.Soccer.Structs
 
         public override bool Test(object value)
         {
-            var val = (string) value;
-            //var val = value.SafeConvert<double>();
+            var val = value.SafeConvert<string>();
             var res = Test(val);
             return res;
         }

@@ -13,6 +13,7 @@ namespace FantasySimulator.Simulator.Soccer
             CalculateOddsWhenSimulating = true;
             PlayerAnalysers = new List<Analysers.PlayerAnalyserBase>();
             TeamAnalysers = new List<Analysers.TeamAnalyserBase>();
+            //FixtureOddsProvider = new KambiAPI();
         }
         
         public bool SimulateFinishedGames { get; set; }
@@ -21,5 +22,6 @@ namespace FantasySimulator.Simulator.Soccer
         public bool CalculateOddsWhenSimulating { get; set; }
         public IList<Analysers.PlayerAnalyserBase> PlayerAnalysers { get; set; }
         public IList<Analysers.TeamAnalyserBase> TeamAnalysers { get; set; }
+        public IFixtureOddsProvider FixtureOddsProvider { get; set; }
     }
 }

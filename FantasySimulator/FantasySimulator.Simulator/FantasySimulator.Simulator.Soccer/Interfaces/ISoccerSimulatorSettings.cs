@@ -13,5 +13,6 @@ namespace FantasySimulator.Simulator.Soccer
         bool CalculateOddsWhenSimulating { get; }
         IList<PlayerAnalyserBase> PlayerAnalysers { get; }
         IList<TeamAnalyserBase> TeamAnalysers { get; }
+        IFixtureOddsProvider FixtureOddsProvider { get; }
     }
 }
