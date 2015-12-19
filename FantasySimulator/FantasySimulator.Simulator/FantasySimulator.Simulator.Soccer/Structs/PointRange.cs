@@ -2,7 +2,7 @@ using System.Linq;
 
 namespace FantasySimulator.Simulator.Soccer.Structs
 {
-    public class PointsRange : Range<PointRangeMapping>
+    public class PointRange : Range<PointRangeMapping>
     {
         protected override PointRangeMapping InstanciateMapping()
         {

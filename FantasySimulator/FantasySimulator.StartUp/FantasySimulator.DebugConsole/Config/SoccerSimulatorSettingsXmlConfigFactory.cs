@@ -186,6 +186,7 @@ namespace FantasySimulator.DebugConsole.Config
                             //var value = str.SafeConvertDynamic(propertyInfo.PropertyType);
 
                             var value = element.InstantiateElement();
+                            value = value.SafeConvertDynamic(propertyInfo.PropertyType);
                             propertyInfo.SetValue(this, value);
                         }
                         else

@@ -2,6 +2,7 @@
 using FantasySimulator.Core;
 using FantasySimulator.Simulator.Soccer.Structs;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace FantasySimulator.Simulator.Soccer.Analysers
@@ -15,17 +16,17 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
 
         public override string Name { get { return nameof(PlaytimePlayerAnalyser); } }
 
-        public PointsRange PointsRange
+        public PointRange PointRange
         {
-            get { return Properties["PointsRange"].SafeConvert<PointsRange>(); }
-            set { Properties["PointsRange"] = value; }
+            get { return Properties["PointRange"].SafeConvert<PointRange>(); }
+            set { Properties["PointRange"] = value; }
         }
 
 
         public override IEnumerable<PlayerRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context)
         {
-            if (PointsRange == null)
-                throw new ArgumentException("Invalid property", nameof(PointsRange));
+            if (PointRange == null)
+                throw new ArgumentException("Invalid property", nameof(PointRange));
 
             var res = new PlayerRecommendation();
             res.Type = RecommendationType.PlayerPlaytime;
@@ -45,19 +46,7 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
             //valueMap["substitutes-out"] = ;
             // todo: add more data points (subs, recent playtime (5 last team games), recent subs)
 
-            res.Points = 0;
-            foreach (var mapping in PointsRange.Mappings)
-            {
-                if (mapping == null)
-                    continue;
-
-                var valid = mapping.Test(valueMap);
-                if (valid)
-                {
-                    res.Points = mapping.Points;
-                    break;
-                }
-            }
+            res.Points = PointRange.Test(valueMap).Sum(x => x.Points);
             yield return res;
         }
 

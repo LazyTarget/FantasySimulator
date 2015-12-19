@@ -48,6 +48,7 @@
     <Compile Include="Analysers\ChanceOfPlayingNextFixturePlayerAnalyser.cs" />
     <Compile Include="Analysers\PlayerUnavailablePlayerAnalyser.cs" />
     <Compile Include="Analysers\HomeTeamAdvantagePlayerAnalyser.cs" />
+    <Compile Include="Analysers\FixtureOddsPlayerAnalyser.cs" />
     <Compile Include="Analysers\TeamFormPlayerAnalyser.cs" />
     <Compile Include="Analysers\PlaytimePlayerAnalyser.cs" />
     <Compile Include="Interfaces\IFixtureOddsProvider.cs" />
@@ -65,8 +66,9 @@
     <Compile Include="PlayerRecommendation.cs" />
     <Compile Include="SimulationContext.cs" />
     <Compile Include="Structs\Enums.cs" />
+    <Compile Include="Structs\StructExtensions.cs" />
     <Compile Include="Structs\PointRangeMapping.cs" />
-    <Compile Include="Structs\PointsRange.cs" />
+    <Compile Include="Structs\PointRange.cs" />
     <Compile Include="Structs\Range.cs" />
     <Compile Include="Structs\RangeMapping.cs" />
     <Compile Include="Structs\ValuePredicate.cs" />

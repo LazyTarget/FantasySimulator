@@ -16,4 +16,12 @@
         All,
         Any,
     }
+
+    public enum MappingMode
+    {
+        None,
+        FirstMatch,
+        LastMatch,
+        AllMatching,
+    }
 }

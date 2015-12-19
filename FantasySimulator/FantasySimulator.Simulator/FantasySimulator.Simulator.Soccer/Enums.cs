@@ -14,6 +14,7 @@ namespace FantasySimulator.Simulator.Soccer
         HomeTeamAdvantage,
         PlayerUnavailable,
         ChanceOfPlaying,
+        FixtureOdds,
     }
 
     public enum PlayerPosition

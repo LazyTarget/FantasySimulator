@@ -61,7 +61,7 @@ namespace FantasySimulator.Simulator.Soccer
                         if (Settings.FilterUnavailablePlayers)
                         {
                             if (player.Fantasy.Unavailable)
-                                break;
+                                continue;
                         }
 
                         var res = AnalysePlayerResult(player, gameweek, context);
@@ -280,7 +280,7 @@ namespace FantasySimulator.Simulator.Soccer
             }
 
 
-            //////if (Settings.IgnoreRecommendationTypes != null && Settings.IgnoreRecommendationTypes.Any())
+            //////if (Settings.IgnoreRecommendationTypes != null && Settings.IgnoreRecommendationTypes.AnyMatching())
             //////{
             //////    foreach (var type in Settings.IgnoreRecommendationTypes)
             //////    {

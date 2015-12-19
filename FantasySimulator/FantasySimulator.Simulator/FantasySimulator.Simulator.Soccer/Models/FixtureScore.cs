@@ -4,25 +4,15 @@ namespace FantasySimulator.Simulator.Soccer
 {
     public struct FixtureScore
     {
-        private int _goalsForHomeTeam;
-        private int _goalsForAwayTeam;
+        public int GoalsForHomeTeam { get; private set; }
 
-
-        public int GoalsForHomeTeam
-        {
-            get { return _goalsForHomeTeam; }
-            private set { _goalsForHomeTeam = Math.Max(0, value); }
-        }
-
-        public int GoalsForAwayTeam
-        {
-            get { return _goalsForAwayTeam; }
-            private set { _goalsForAwayTeam = Math.Max(0, value); }
-        }
+        public int GoalsForAwayTeam { get; private set; }
 
         public int PointsForHomeTeam { get; private set; }
 
         public int PointsForAwayTeam { get; private set; }
+
+        public FixtureOutcome Outcome { get; private set; }
 
 
         public override string ToString()
@@ -33,33 +23,59 @@ namespace FantasySimulator.Simulator.Soccer
 
         public static FixtureScore Create(int goalsForHomeTeam, int goalsForAwayTeam)
         {
-            var score = new FixtureScore
-            {
-                GoalsForHomeTeam = goalsForHomeTeam,
-                GoalsForAwayTeam = goalsForAwayTeam,
-            };
-            
-            score.PointsForHomeTeam = score.GoalsForHomeTeam == score.GoalsForAwayTeam
-                ? 1
-                : score.GoalsForHomeTeam > score.GoalsForAwayTeam
-                    ? 3
-                    : 0;
-            score.PointsForAwayTeam = score.GoalsForHomeTeam == score.GoalsForAwayTeam
-                ? 1
-                : score.GoalsForHomeTeam > score.GoalsForAwayTeam
-                    ? 0
-                    : 3;
+            goalsForHomeTeam = Math.Max(0, goalsForHomeTeam);
+            goalsForAwayTeam = Math.Max(0, goalsForAwayTeam);
+
+            var draw = goalsForHomeTeam == goalsForAwayTeam;
+            var homeWin = goalsForHomeTeam > goalsForAwayTeam;
+            var awayWin = goalsForHomeTeam < goalsForAwayTeam;
+            var ptsForHome = draw ? 1 : homeWin ? 3 : 0;
+            var ptsForAway = draw ? 1 : awayWin ? 3 : 0;
+            var outcome = draw
+                ? FixtureOutcome.Draw
+                : homeWin
+                    ? FixtureOutcome.HomeTeam
+                    : awayWin
+                        ? FixtureOutcome.AwayTeam
+                        : FixtureOutcome.Undetermined;
+
+            var score = Create(goalsForHomeTeam, goalsForAwayTeam, ptsForHome, ptsForAway, outcome);
             return score;
         }
 
+
         public static FixtureScore Create(int goalsForHomeTeam, int goalsForAwayTeam, int pointsForHomeTeam, int pointsForAwayTeam)
         {
+            goalsForHomeTeam = Math.Max(0, goalsForHomeTeam);
+            goalsForAwayTeam = Math.Max(0, goalsForAwayTeam);
+
+            var draw = goalsForHomeTeam == goalsForAwayTeam;
+            var homeWin = goalsForHomeTeam > goalsForAwayTeam;
+            var awayWin = goalsForHomeTeam < goalsForAwayTeam;
+            var outcome = draw
+                ? FixtureOutcome.Draw
+                : homeWin
+                    ? FixtureOutcome.HomeTeam
+                    : awayWin
+                        ? FixtureOutcome.AwayTeam
+                        : FixtureOutcome.Undetermined;
+
+            var score = Create(goalsForHomeTeam, goalsForAwayTeam, pointsForHomeTeam, pointsForAwayTeam, outcome);
+            return score;
+        }
+
+        public static FixtureScore Create(int goalsForHomeTeam, int goalsForAwayTeam, int pointsForHomeTeam, int pointsForAwayTeam, FixtureOutcome fixtureOutcome)
+        {
+            goalsForHomeTeam = Math.Max(0, goalsForHomeTeam);
+            goalsForAwayTeam = Math.Max(0, goalsForAwayTeam);
+
             var score = new FixtureScore
             {
                 GoalsForHomeTeam = goalsForHomeTeam,
                 GoalsForAwayTeam = goalsForAwayTeam,
                 PointsForHomeTeam = pointsForHomeTeam,
                 PointsForAwayTeam = pointsForAwayTeam,
+                Outcome = fixtureOutcome,
             };
             return score;
         }

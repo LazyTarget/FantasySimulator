@@ -85,14 +85,6 @@ namespace FantasySimulator.Simulator.Soccer.Structs
                         if (valid)
                             numberOfValid++;
 
-                        //if (PredicateMode == PredicateMode.Any)
-                        //{
-                        //    if (valid)
-                        //        return true;
-                        //}
-                        //else if (!valid)
-                        //    return false;
-
                         if (PredicateMode == PredicateMode.Any)
                         {
                             if (valid)
@@ -115,7 +107,7 @@ namespace FantasySimulator.Simulator.Soccer.Structs
                 else
                 {
                     result = false;     // not implemented
-                    throw new NotSupportedException($"PredicateMode {PredicateMode} not supported");
+                    throw new NotSupportedException($"PredicateMode '{PredicateMode}' is not supported here");
                 }
             }
             return result;

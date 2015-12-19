@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FantasySimulator.Simulator.Soccer.Analysers;
 
 namespace FantasySimulator.Simulator.Soccer
 {
@@ -36,6 +37,7 @@ namespace FantasySimulator.Simulator.Soccer
 
             //PlayerAnalysers = new Analysers.PlayerAnalyserBase[DefaultAnalysers.Length];
             //DefaultAnalysers.CopyTo(PlayerAnalysers, 0);
+            PlayerAnalysers = new List<PlayerAnalyserBase>();
         }
         
         public bool SimulateFinishedGames { get; set; }
