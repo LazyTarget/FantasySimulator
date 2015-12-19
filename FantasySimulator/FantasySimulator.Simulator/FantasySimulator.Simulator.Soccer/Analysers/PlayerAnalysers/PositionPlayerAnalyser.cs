@@ -15,27 +15,21 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
         }
 
         public override string Name { get { return nameof(PositionPlayerAnalyser); } }
-
-        public PointMapper PointMapper
+        
+        public PointRangeMapper Mapper
         {
-            get { return Properties["PointRange"].SafeConvert<PointMapper>(); }
-            set { Properties["PointRange"] = value; }
-        }
-
-        public Mapper<Mapping<RangePredicate>> Mapper
-        {
-            get { return Properties["Mapper"].SafeConvert<Mapper<Mapping<RangePredicate>>>(); }
+            get { return Properties["Mapper"].SafeConvert<PointRangeMapper>(); }
             set { Properties["Mapper"] = value; }
         }
 
 
         public override IEnumerable<PlayerRecommendation> Analyse(Player player, Fixture fixture, SimulationContext context)
         {
-            if (PointMapper == null)
-                throw new ArgumentException("Invalid property", nameof(PointMapper));
+            if (Mapper == null)
+                throw new ArgumentException("Invalid property", nameof(Mapper));
 
             var res = new PlayerRecommendation();
-            res.Type = PlayerRecommendationType.PlayerPlaytime;
+            res.Type = PlayerRecommendationType.PlayerPosition;
 
             var playerTeam = player.GetLeagueTeam(fixture);
             double teamPlayedMinutes = playerTeam.GetPlayedMinutesBeforeFixtureForTeam(fixture);
@@ -43,16 +37,41 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
             var percentage = teamPlayedMinutes > 0
                 ? playerMinutes / teamPlayedMinutes
                 : 0;
+            var playedLeagueFixtues = playerTeam.GetFixturesFromLeagueTeam()
+                .Where(x => x.Statistics.GameStarted && x.Statistics.GameFinished)
+                .OrderBy(x => x.Time)
+                .ToList();
+
+
+            double cleansheets = playedLeagueFixtues.Count(fixt =>
+            {
+                var isHome = playerTeam.Team.HasHomeTeamAdvantage(fixt);
+                var goalsAgainst = isHome
+                    ? fixt.Statistics.Score.GoalsForAwayTeam
+                    : fixt.Statistics.Score.GoalsForHomeTeam;
+                return goalsAgainst == 0;
+            });
+            double cleansheetsPer = cleansheets / playedLeagueFixtues.Count;
 
             var valueMap = new ValueMap();
             valueMap["minutes"] = playerMinutes;
             valueMap["percentage"] = percentage;
+            valueMap["player-fantasy-value"] = player.Fantasy.CurrentPrice;
+            valueMap["player-position"] = player.Fantasy.Position.ToString();
+            valueMap["player-cleansheets"] = cleansheets;
+            valueMap["player-cleansheets-percentage"] = cleansheetsPer;
             //valueMap["playedgames"] = ;
             //valueMap["substitutes-in"] = ;
             //valueMap["substitutes-out"] = ;
             // todo: add more data points (subs, recent playtime (5 last team games), recent subs)
 
-            res.Points = PointMapper.Test(valueMap).Sum(x => x.Points);
+
+            //res.Points = PointMapper.Test(valueMap).Sum(x => x.Points);
+
+            var pointRanges = Mapper.Test(valueMap).ToList();
+            var pointMappers = pointRanges.Select(x => x.PointMapper).ToList();
+            var pointMappings = pointMappers.SelectMany(x => x.Test(valueMap)).ToList();
+            res.Points = pointMappings.Sum(x => x.Points);
             yield return res;
         }
 

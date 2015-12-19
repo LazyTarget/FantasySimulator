@@ -9,6 +9,7 @@ namespace FantasySimulator.Simulator.Soccer
         PlayerPlaytime,
         PlayerUnavailable,
         ChanceOfPlaying,
+        PlayerPosition,
     }
 
     public enum TeamRecommendationType

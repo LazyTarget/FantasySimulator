@@ -5,7 +5,7 @@ using FantasySimulator.Core;
 
 namespace FantasySimulator.Simulator.Soccer.Structs
 {
-    public class RangePredicate : ValuePredicate<double>
+    public class StringPredicate : ValuePredicate<string>
     {
         public override void Configure(XElement element)
         {
@@ -21,9 +21,7 @@ namespace FantasySimulator.Simulator.Soccer.Structs
                         continue;
                     if (propertyName == "value")
                     {
-                        var parser = new SimpleMathParser();
-                        var expression = elem.GetAttributeValue("value");
-                        Value = parser.Parse(expression);
+                        
                     }
                 }
             }
@@ -32,13 +30,13 @@ namespace FantasySimulator.Simulator.Soccer.Structs
 
         public override bool Test(object value)
         {
-            var val = (double) value;
+            var val = (string) value;
             //var val = value.SafeConvert<double>();
             var res = Test(val);
             return res;
         }
         
-        public override bool Test(double value)
+        public override bool Test(string value)
         {
             var c = value.CompareTo(Value);
             switch (Operator)

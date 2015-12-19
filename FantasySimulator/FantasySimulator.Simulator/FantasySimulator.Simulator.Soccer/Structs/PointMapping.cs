@@ -10,17 +10,5 @@ namespace FantasySimulator.Simulator.Soccer.Structs
             get { return Properties["Points"].SafeConvert<double>(); }
             set { Properties["Points"] = value; }
         }
-
-
-        public override void Configure(XElement element)
-        {
-            base.Configure(element);
-
-            foreach (var e in element.Elements())
-            {
-                if (e.Name.LocalName == "points")
-                    Points = (e.GetAttributeValue("value") ?? e.Value).SafeConvert<double>();
-            }
-        }
     }
 }

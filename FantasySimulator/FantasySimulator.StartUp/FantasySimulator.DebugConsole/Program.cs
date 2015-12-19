@@ -55,16 +55,23 @@ namespace FantasySimulator.DebugConsole
                     {
                         var playerRecPtsStr = "";
                         var teamRecPtsStr = "";
-                        foreach (var rec in playerRes.PlayerRecommendations)
+                        if (playerRes.PlayerRecommendations.Any())
                         {
-                            playerRecPtsStr += string.Format("{0}: {1}  |  ", rec.Type, rec.Points);
+                            foreach (var rec in playerRes.PlayerRecommendations)
+                            {
+                                playerRecPtsStr += string.Format("{0}: {1}  |  ", rec.Type, rec.Points);
+                            }
+                            playerRecPtsStr = playerRecPtsStr.Substring(0, playerRecPtsStr.LastIndexOf("  |  "));
                         }
-                        playerRecPtsStr = playerRecPtsStr.Substring(0, playerRecPtsStr.LastIndexOf("  |  "));
-                        foreach (var rec in playerRes.TeamRecommendations)
+
+                        if (playerRes.TeamRecommendations.Any())
                         {
-                            teamRecPtsStr += string.Format("{0}: {1}  |  ", rec.Type, rec.Points);
+                            foreach (var rec in playerRes.TeamRecommendations)
+                            {
+                                teamRecPtsStr += string.Format("{0}: {1}  |  ", rec.Type, rec.Points);
+                            }
+                            teamRecPtsStr = teamRecPtsStr.Substring(0, teamRecPtsStr.LastIndexOf("  |  "));
                         }
-                        teamRecPtsStr = teamRecPtsStr.Substring(0, teamRecPtsStr.LastIndexOf("  |  "));
                         
                         //Console.WriteLine("{0} [{1}] \t\t--- rec.pts: {2}", playerRes.Player.DisplayName, playerRes.Player.Rating, playerRes.RecommendationPoints);
                         //Console.WriteLine("{0} [{1}] \t\t--- rec.pts: {2} \t\t\t\t--- {3}", playerRes.Player.DisplayName, playerRes.Player.Rating, playerRes.RecommendationPoints, playerRecPtsStr);

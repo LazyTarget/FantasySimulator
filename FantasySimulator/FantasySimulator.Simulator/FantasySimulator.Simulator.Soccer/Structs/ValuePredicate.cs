@@ -42,32 +42,23 @@ namespace FantasySimulator.Simulator.Soccer.Structs
 
         public virtual void Configure(XElement element)
         {
-            foreach (var e in element.Elements())
+            var propertyElems = element.Elements("property").Where(x => x != null).ToList();
+            if (propertyElems.Any())
             {
-                if (string.Equals(e.Name.LocalName, "operator", StringComparison.OrdinalIgnoreCase))
-                    Operator = (e.GetAttributeValue("value") ?? e.Value).SafeConvert<ComparisonOperator>();
-                else if (string.Equals(e.Name.LocalName, "value", StringComparison.OrdinalIgnoreCase))
-                    Value = (e.GetAttributeValue("value") ?? e.Value).SafeConvert<object>();
-                else if (string.Equals(e.Name.LocalName, "unit", StringComparison.OrdinalIgnoreCase))
-                    Unit = (e.GetAttributeValue("value") ?? e.Value).SafeConvert<string>();
-                else if (string.Equals(e.Name.LocalName, "property", StringComparison.OrdinalIgnoreCase))
+                foreach (var elem in propertyElems)
                 {
-                    var propertyName = e.GetAttributeValue("name");
+                    var propertyName = elem.GetAttributeValue("name");
                     if (string.IsNullOrWhiteSpace(propertyName))
                         continue;
                     try
                     {
-                        object value = e.InstantiateElement();
+                        object value = elem.InstantiateElement();
                         Properties[propertyName] = value;
                     }
                     catch (Exception ex)
                     {
                         _log.Error($"Error instantiating property '{propertyName}'", ex);
                     }
-                }
-                else
-                {
-                    
                 }
             }
         }

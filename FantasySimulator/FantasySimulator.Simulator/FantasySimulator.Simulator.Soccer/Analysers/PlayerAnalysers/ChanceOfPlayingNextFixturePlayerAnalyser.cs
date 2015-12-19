@@ -66,66 +66,6 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
         public override void ConfigureDefault()
         {
             base.ConfigureDefault();
-
-            
-            var mappings = new List<PointMapping>
-            {
-                new PointMapping
-                {
-                    Points = -10,
-                    Predicates = new List<RangePredicate>
-                    {
-                        new RangePredicate
-                        {
-                            Value = 0d,
-                            Operator = ComparisonOperator.LessOrEqualThan,
-                            Unit = "percentage",
-                        },
-                    }.ToArray(),
-                },
-                new PointMapping
-                {
-                    Points = -3,
-                    Predicates = new List<RangePredicate>
-                    {
-                        new RangePredicate
-                        {
-                            Value = 0.25d,
-                            Operator = ComparisonOperator.LessOrEqualThan,
-                            Unit = "percentage",
-                        },
-                    }.ToArray(),
-                },
-                new PointMapping
-                {
-                    Points = -2,
-                    Predicates = new List<RangePredicate>
-                    {
-                        new RangePredicate
-                        {
-                            Value = 0.5d,
-                            Operator = ComparisonOperator.LessOrEqualThan,
-                            Unit = "percentage",
-                        },
-                    }.ToArray(),
-                },
-                new PointMapping
-                {
-                    Points = -1,
-                    Predicates = new List<RangePredicate>
-                    {
-                        new RangePredicate
-                        {
-                            Value = 0.75d,
-                            Operator = ComparisonOperator.LessOrEqualThan,
-                            Unit = "percentage",
-                        },
-                    }.ToArray(),
-                },
-            }.ToArray();
-
-            var range = new PointMapper();
-            range.Mappings = mappings;
         }
         
     }

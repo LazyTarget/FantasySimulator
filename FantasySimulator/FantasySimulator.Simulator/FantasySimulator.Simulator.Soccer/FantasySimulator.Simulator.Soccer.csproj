@@ -75,9 +75,12 @@
     <Compile Include="Structs\Mapper.cs" />
     <Compile Include="Structs\Mapping.cs" />
     <Compile Include="Extensions\StructExtensions.cs" />
+    <Compile Include="Structs\PointRangeMapper.cs" />
+    <Compile Include="Structs\PointRangeMapping.cs" />
     <Compile Include="Structs\PointMapping.cs" />
     <Compile Include="Structs\PointMapper.cs" />
     <Compile Include="Structs\RangeMapping.cs" />
+    <Compile Include="Structs\StringPredicate.cs" />
     <Compile Include="Structs\ValuePredicate.cs" />
     <Compile Include="Structs\RangePredicate.cs" />
     <Compile Include="Structs\ValueMap.cs" />

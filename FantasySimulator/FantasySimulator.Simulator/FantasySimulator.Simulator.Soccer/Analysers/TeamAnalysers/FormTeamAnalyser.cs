@@ -98,20 +98,6 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
 
             MinGamesPlayed = 5;
             NumberOfRecentGames = 5;
-            PointMapper = new PointMapper();
-            PointMapper.Mappings.Add(new PointMapping
-            {
-                Predicates = new List<RangePredicate>
-                {
-                    new RangePredicate
-                    {
-                        Operator = ComparisonOperator.GreaterOrEqualThan,
-                        Value = 2,
-                        Unit = "points-per-game",
-                    }
-                },
-                Points = 2,
-            });
         }
         
     }

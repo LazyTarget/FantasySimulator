@@ -57,8 +57,8 @@ namespace FantasySimulator.Simulator.Soccer.Structs
 
 
 
-    public class Mapping<TPredicate> : Mapping
-        where TPredicate : ValuePredicate, new()
+    public abstract class Mapping<TPredicate> : Mapping
+        where TPredicate : ValuePredicate
     {
         private static readonly ILog _log = Log.GetLog(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -70,20 +70,20 @@ namespace FantasySimulator.Simulator.Soccer.Structs
         public IList<TPredicate> Predicates { get; private set; }
 
 
-        protected virtual TPredicate InstanciatePredicate()
-        {
-            return new TPredicate();
-        }
+        protected abstract TPredicate InstanciatePredicate(XElement elem);
+
 
         public override void Configure(XElement element)
         {
+            base.Configure(element);
+
             var predicateElems = element.Elements("predicate").ToList();
             if (predicateElems.Any())
             {
                 Predicates.Clear();
                 foreach (var elem in predicateElems)
                 {
-                    var pred = InstanciatePredicate();
+                    var pred = InstanciatePredicate(elem);
                     pred.Configure(elem);
                     Predicates.Add(pred);
                 }
