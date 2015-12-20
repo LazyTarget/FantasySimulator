@@ -28,6 +28,8 @@ namespace FantasySimulator.Simulator.Soccer
                     }
                     else if (TypeWrapper.IsAssignableFrom(typeof(IXmlConfigurable), type))
                     {
+                        // todo: use xml attributes use for CreateInstance with args
+
                         var temp = (IXmlConfigurable)Activator.CreateInstance(type);
                         temp.InstantiateConfigurable(element);
                         value = temp;

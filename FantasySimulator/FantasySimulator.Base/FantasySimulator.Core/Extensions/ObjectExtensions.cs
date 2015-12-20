@@ -17,6 +17,14 @@ namespace FantasySimulator.Core
 
         public static T SafeConvert<T>(this object value, T defaultValue)
         {
+            bool success;
+            var result = SafeConvert<T>(value, defaultValue, out success);
+            return result;
+        }
+
+        public static T SafeConvert<T>(this object value, T defaultValue, out bool success)
+        {
+            success = true;
             var result = defaultValue;
             try
             {
@@ -63,6 +71,7 @@ namespace FantasySimulator.Core
             }
             catch (Exception ex)
             {
+                success = false;
                 return result;
             }
         }

@@ -50,18 +50,21 @@
     <Compile Include="Analysers\TeamAnalyserBase.cs" />
     <Compile Include="Analysers\PlayerAnalysers\ChanceOfPlayingNextFixturePlayerAnalyser.cs" />
     <Compile Include="Analysers\PlayerAnalysers\PlayerUnavailablePlayerAnalyser.cs" />
+    <Compile Include="Analysers\TeamAnalysers\FixtureEloTeamAnalyser.cs" />
     <Compile Include="Analysers\TeamAnalysers\HomeAdvantageTeamAnalyser.cs" />
     <Compile Include="Analysers\TeamAnalysers\FixtureOddsTeamAnalyser.cs" />
     <Compile Include="Analysers\TeamAnalysers\FormTeamAnalyser.cs" />
     <Compile Include="Analysers\PlayerAnalysers\PlaytimePlayerAnalyser.cs" />
     <Compile Include="DefaultSoccerSimulatorSettingsFactory.cs" />
     <Compile Include="Interfaces\IAnalyserRecommendation.cs" />
+    <Compile Include="Interfaces\IEloProvider.cs" />
     <Compile Include="Interfaces\IFixtureOddsProvider.cs" />
     <Compile Include="Interfaces\IHasMappingGroups.cs" />
     <Compile Include="Interfaces\IMappingGroup.cs" />
     <Compile Include="Interfaces\IPredicateGroup.cs" />
     <Compile Include="Interfaces\ISoccerSimulatorSettings.cs" />
     <Compile Include="Interfaces\ISoccerSimulatorSettingsFactory.cs" />
+    <Compile Include="Models\EloRating.cs" />
     <Compile Include="Models\TransferDetails.cs" />
     <Compile Include="Models\FantasyPlayer.cs" />
     <Compile Include="Models\FixtureScore.cs" />
@@ -88,6 +91,7 @@
     <Compile Include="Structs\ValuePredicate.cs" />
     <Compile Include="Structs\RangePredicate.cs" />
     <Compile Include="Structs\ValueMap.cs" />
+    <Compile Include="ThirdParty\ClubElo\ClubElo.cs" />
     <Compile Include="ThirdParty\Kambi\KambiAPI.cs" />
     <Compile Include="XmlHelpers.cs" />
   </ItemGroup>

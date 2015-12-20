@@ -89,12 +89,20 @@ namespace FantasySimulator.Simulator.Soccer.Structs
 
     public class ValueMapKeys
     {
-        // Team
+        // League / Gameweek
 
         public const string GameweekStarted                                 = "gameweek-started";
         public const string GameweekEnded                                   = "gameweek-ended";
+        
+
+        // Fixture
+        
         public const string FixtureStarted                                  = "fixture-started";
         public const string FixtureEnded                                    = "fixture-ended";
+        public const string EloRatingPlayerTeam                             = "elo-player-team";
+        public const string EloRatingOpposingTeam                           = "elo-opposing-team";
+        public const string EloRatingTeamDifferance                         = "elo-team-differance";
+        public const string EloRatingTeamDifferancePercentage               = "elo-team-differance-percentage";
 
 
         // Team
@@ -150,8 +158,5 @@ namespace FantasySimulator.Simulator.Soccer.Structs
         public const string FantasyPlayerTotalBonusPoints                   = "fantasyplayer-total-bonus";
         public const string FantasyPlayerRecentBonusPoints                  = "fantasyplayer-recent-bonus";
         public const string FantasyPlayerRecentForm                         = "fantasyplayer-recent-form";
-
-
-
     }
 }
