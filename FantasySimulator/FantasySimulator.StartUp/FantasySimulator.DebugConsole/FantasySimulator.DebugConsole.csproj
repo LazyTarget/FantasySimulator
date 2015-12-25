@@ -57,14 +57,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\SoccerSimulatorSettingsXmlConfigFactory.cs" />
+    <Compile Include="Config\SoccerSimulatorXmlConfigFactory.cs" />
     <Compile Include="Config\SoccerSimulatorConfigurationSectionHandler.cs" />
+    <Compile Include="Data\XmlConfigFactoryBase.cs" />
+    <Compile Include="Data\XmlLeagueDataFactory.cs" />
     <Compile Include="Data\OpenFootballDB.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Data\FantasyPremierLeagueDataFactory.cs" />
     <Content Include="Data\SampleDataFactory.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
-    <Compile Include="Interfaces\ISoccerSimulationDataFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -111,6 +112,9 @@
     <None Include="App_Data\TransfersPage_201512190203.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="App_Data\Premier League.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -134,7 +138,9 @@
       <Name>FantasySimulator.Simulator.Soccer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

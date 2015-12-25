@@ -11,6 +11,7 @@ namespace FantasySimulator.Simulator.Soccer
         public LeagueTeam HomeTeam { get; set; }
         public LeagueTeam AwayTeam { get; set; }
         public DateTime Time { get; set; }
+        public Venue Venue { get; set; }
         public FixtureOdds Odds { get; set; }
         public FixtureStatistics Statistics { get; set; }
 

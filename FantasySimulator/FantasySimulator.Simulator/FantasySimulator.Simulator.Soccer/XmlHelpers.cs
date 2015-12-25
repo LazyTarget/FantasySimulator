@@ -57,13 +57,13 @@ namespace FantasySimulator.Simulator.Soccer
 
         public static IXmlConfigurable InstantiateConfigurable(this IXmlConfigurable configurable, XElement element)
         {
-            configurable.ConfigureExtra(element);
+            configurable.ConfigureProperties(element);
             configurable.Configure(element);
             return configurable;
         }
 
 
-        public static void ConfigureExtra(this IXmlConfigurable configurable, XElement element)
+        public static void ConfigureProperties(this IXmlConfigurable configurable, XElement element)
         {
             if (configurable is IHasProperties)
             {

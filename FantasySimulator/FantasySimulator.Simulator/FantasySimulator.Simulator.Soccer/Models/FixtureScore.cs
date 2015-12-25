@@ -44,7 +44,7 @@ namespace FantasySimulator.Simulator.Soccer
         }
 
 
-        public static FixtureScore Create(int goalsForHomeTeam, int goalsForAwayTeam, int pointsForHomeTeam, int pointsForAwayTeam)
+        public static FixtureScore Create(int goalsForHomeTeam, int goalsForAwayTeam, int? pointsForHomeTeam, int? pointsForAwayTeam)
         {
             goalsForHomeTeam = Math.Max(0, goalsForHomeTeam);
             goalsForAwayTeam = Math.Max(0, goalsForAwayTeam);
@@ -64,17 +64,37 @@ namespace FantasySimulator.Simulator.Soccer
             return score;
         }
 
-        public static FixtureScore Create(int goalsForHomeTeam, int goalsForAwayTeam, int pointsForHomeTeam, int pointsForAwayTeam, FixtureOutcome fixtureOutcome)
+        public static FixtureScore Create(int goalsForHomeTeam, int goalsForAwayTeam, int? pointsForHomeTeam, int? pointsForAwayTeam, FixtureOutcome fixtureOutcome)
         {
             goalsForHomeTeam = Math.Max(0, goalsForHomeTeam);
             goalsForAwayTeam = Math.Max(0, goalsForAwayTeam);
+
+
+            if (!pointsForHomeTeam.HasValue && !pointsForAwayTeam.HasValue)
+            {
+                switch (fixtureOutcome)
+                {
+                    case FixtureOutcome.HomeTeam:
+                        pointsForHomeTeam = 3;
+                        pointsForAwayTeam = 1;
+                        break;
+                    case FixtureOutcome.AwayTeam:
+                        pointsForHomeTeam = 1;
+                        pointsForAwayTeam = 3;
+                        break;
+                    case FixtureOutcome.Draw:
+                        pointsForHomeTeam = 1;
+                        pointsForAwayTeam = 1;
+                        break;
+                }
+            }
 
             var score = new FixtureScore
             {
                 GoalsForHomeTeam = goalsForHomeTeam,
                 GoalsForAwayTeam = goalsForAwayTeam,
-                PointsForHomeTeam = pointsForHomeTeam,
-                PointsForAwayTeam = pointsForAwayTeam,
+                PointsForHomeTeam = pointsForHomeTeam ?? 0,
+                PointsForAwayTeam = pointsForAwayTeam ?? 0,
                 Outcome = fixtureOutcome,
             };
             return score;

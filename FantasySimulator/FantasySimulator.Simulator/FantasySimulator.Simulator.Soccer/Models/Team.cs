@@ -26,6 +26,10 @@ namespace FantasySimulator.Simulator.Soccer
 
         public League[] Leagues { get; set; }
 
+        public Manager Manager { get; set; }
+
+        public Venue Stadium { get; set; }
+
 
         public bool MatchName(string name)
         {

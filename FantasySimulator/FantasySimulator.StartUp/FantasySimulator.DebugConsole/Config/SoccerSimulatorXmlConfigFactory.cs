@@ -5,119 +5,148 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using FantasySimulator.Core;
 using FantasySimulator.Core.Diagnostics;
+using FantasySimulator.DebugConsole.Data;
 using FantasySimulator.Interfaces;
 using FantasySimulator.Simulator.Soccer;
 using FantasySimulator.Simulator.Soccer.Analysers;
 
 namespace FantasySimulator.DebugConsole.Config
 {
-    public class SoccerSimulatorSettingsXmlConfigFactory : ISoccerSimulatorSettingsFactory
+    public class SoccerSimulatorXmlConfigFactory : XmlConfigFactoryBase<SoccerSimulatorXmlConfigFactory.SoccerSimulatorXmlConfig>, ISoccerSimulatorSettingsFactory
     {
         private static readonly ILog _log = Log.GetLog(MethodBase.GetCurrentMethod().DeclaringType);
         
-        public SoccerSimulatorSettingsXmlConfigFactory()
+        public SoccerSimulatorXmlConfigFactory()
         {
-            var configPath = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
-            configPath = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath;
-
-            ConfigUri = new Uri(configPath);
             RootElementName = "soccerSimulator";
         }
 
 
-        public string RootElementName { get; set; }
-
-        public Uri ConfigUri { get; set; }
-
+        public virtual SoccerSimulatorXmlConfig GetConfig()
+        {
+            var config = new SoccerSimulatorXmlConfig();
+            using (var stream = GetConfigStream(ConfigUri))
+            {
+                ConfigureFromStream(stream, config);
+            }
+            return config;
+        }
 
         public virtual ISoccerSimulatorSettings GetSettings()
         {
-            var settings = new SoccerSimulatorXmlSettings();
-            using (var stream = GetConfigStream(ConfigUri))
-            {
-                ConfigureFromStream(stream, settings);
-            }
+            var config = GetConfig();
+            var settings = config?.Settings;
             return settings;
         }
-
-
-        protected virtual Stream GetConfigStream(Uri configUri)
+        
+        protected override void ConfigureFromXml(XElement rootElement, SoccerSimulatorXmlConfig result)
         {
-            if (configUri.IsFile)
-            {
-                var fileInfo = new FileInfo(configUri.LocalPath);
-                if (fileInfo.Exists)
-                {
-                    var fileStream = File.Open(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.Read);
-                    return fileStream;
-                }
-                else
-                {
-                    throw new FileNotFoundException("Config file not found", fileInfo.FullName);
-                }
-            }
-            else
-            {
-                var client = new HttpClient();
-                try
-                {
-                    var task = client.GetAsync(configUri);
-                    var response = task.WaitForResult();
-                    response.EnsureSuccessStatusCode();
+            result.Configure(rootElement);
+        }
 
-                    var task2 = response.Content.ReadAsStreamAsync();
-                    var stream = task2.WaitForResult();
-                    return stream;
-                }
-                catch (Exception ex)
+
+
+        
+
+
+        public class SoccerSimulatorXmlConfig : SoccerSimulatorConfig, IXmlConfigurable
+        {
+            private static readonly ILog _log = Log.GetLog(MethodBase.GetCurrentMethod().DeclaringType);
+
+
+            public SoccerSimulatorXmlConfig()
+            {
+                
+            }
+
+            
+
+            public virtual void Configure(XElement element)
+            {
+                var dataFactoryElem = element.Element("dataFactory");
+                if (dataFactoryElem != null)
                 {
-                    throw;
+                    var type = dataFactoryElem.GetAttributeValue("type");
+                    if (!string.IsNullOrWhiteSpace(type))
+                    {
+                        var obj = dataFactoryElem.InstantiateElement();
+                        var dataFactory = (ISoccerSimulationDataFactory) obj;
+                        DataFactory = dataFactory;
+                    }
+                    else
+                    {
+                        var obj = new SoccerSimulatorXmlDataFactory();
+                        obj.InstantiateConfigurable(dataFactoryElem);
+                        DataFactory = obj;
+                    }
                 }
-                throw new NotImplementedException("Network paths not implemented");
+
+                var settingsElem = element.Element("settings");
+                if (settingsElem != null)
+                {
+                    var xmlSettings = Settings as SoccerSimulatorXmlSettings ?? new SoccerSimulatorXmlSettings();
+                    xmlSettings.InstantiateConfigurable(settingsElem);
+                    Settings = xmlSettings;
+                }
             }
         }
 
 
-        private void ConfigureFromStream(Stream stream, SoccerSimulatorXmlSettings settings)
+        protected class SoccerSimulatorXmlDataFactory : IXmlConfigurable, IHasProperties, ISoccerSimulationDataFactory
         {
-            XDocument xdoc;
-            try
-            {
-                var xmlReaderSettings = new XmlReaderSettings();
-                xmlReaderSettings.DtdProcessing = DtdProcessing.Parse;
+            private readonly IList<ISoccerSimulationDataFactory> _factories;
 
-                using (var xmlReader = XmlReader.Create(stream, xmlReaderSettings))
+            public SoccerSimulatorXmlDataFactory()
+            {
+                Properties = new Dictionary<string, object>();
+                _factories = new List<ISoccerSimulationDataFactory>();
+            }
+
+            public IDictionary<string, object> Properties { get; private set; }
+            
+
+            public void Configure(XElement element)
+            {
+                var dataFactoriesElems = element.Elements("factory").Where(x => x != null).ToList();
+                if (dataFactoriesElems.Any())
                 {
-                    xdoc = XDocument.Load(xmlReader);
-                    var elements = xdoc.Elements(RootElementName);
-                    var configElem = xdoc.Element("configuration");
-                    if (configElem != null)
-                        elements = elements.Concat(configElem.Elements(RootElementName));
-                    foreach (var elem in elements)
+                    _factories.Clear();
+                    foreach (var elem in dataFactoriesElems)
                     {
-                        ConfigureFromXml(elem, settings);
+                        var obj = elem.InstantiateElement();
+                        var dataFactory = (ISoccerSimulationDataFactory)obj;
+                        var factory = dataFactory;
+                        _factories.Add(factory);
                     }
                 }
             }
-            catch (Exception ex)
+            
+            public async Task<SoccerSimulationData> Generate()
             {
-                xdoc = null;
-                throw;
+                if (_factories != null)
+                {
+                    var data = new SoccerSimulationData();
+                    foreach (var factory in _factories)
+                    {
+                        var data2 = await factory.Generate();
+                        MergeData(data, data2);
+                    }
+                    return data;
+                }
+                return null;
+            }
+
+            protected virtual void MergeData(SoccerSimulationData data1, SoccerSimulationData data2)
+            {
+                data1.Leagues = data1.Leagues ?? new League[0];
+                data1.Leagues = data1.Leagues.Concat(data2.Leagues ?? new League[0]).ToArray();
             }
         }
-
-
-        protected virtual void ConfigureFromXml(XElement rootElement, SoccerSimulatorXmlSettings settings)
-        {
-            settings.Configure(rootElement);
-        }
-
-
-
 
 
         protected class SoccerSimulatorXmlSettings : SoccerSimulatorSettings, IXmlConfigurable
@@ -127,17 +156,18 @@ namespace FantasySimulator.DebugConsole.Config
 
             public SoccerSimulatorXmlSettings()
             {
-                //PlayerAnalysers = new List<PlayerAnalyserBase>();
-                //TeamAnalysers = new List<TeamAnalyserBase>();
+                
             }
+
             
 
             public virtual void Configure(XElement element)
             {
-                var settingsNode = element.Element("settings");
-                if (settingsNode != null)
+                //var settingsElem = element.Element("settings");
+                var settingsElem = element;
+                if (settingsElem != null)
                 {
-                    foreach (var childNode in settingsNode.Elements())
+                    foreach (var childNode in settingsElem.Elements())
                     {
                         if (childNode == null || string.IsNullOrWhiteSpace(childNode.Name.LocalName))
                             continue;

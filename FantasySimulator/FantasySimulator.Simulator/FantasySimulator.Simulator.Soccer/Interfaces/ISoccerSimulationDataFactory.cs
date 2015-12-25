@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using FantasySimulator.Simulator.Soccer;
 
-namespace FantasySimulator.DebugConsole
+namespace FantasySimulator.Simulator.Soccer
 {
     public interface ISoccerSimulationDataFactory
     {

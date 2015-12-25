@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace FantasySimulator.Simulator.Soccer
 {
-    public class Player
+    public class Player// : IPerson
     {
         public string ID { get; set; }
 

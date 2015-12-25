@@ -13,7 +13,8 @@ namespace FantasySimulator.DebugConsole
     class Program
     {
         private static ISoccerSimulationDataFactory DataFactory;
-        private static ISoccerSimulatorSettingsFactory SettingsFactory;
+        //private static ISoccerSimulatorSettingsFactory SettingsFactory;
+        private static SoccerSimulatorXmlConfigFactory SettingsFactory;
 
 
         private static readonly ILog _log = Log.GetLog(MethodBase.GetCurrentMethod().DeclaringType);
@@ -26,7 +27,7 @@ namespace FantasySimulator.DebugConsole
             //DataFactory = new SampleDataFactory();
             DataFactory = new FantasyPremierLeagueDataFactory();
             //SettingsFactory = new DefaultSoccerSimulatorSettingsFactory();
-            SettingsFactory = new SoccerSimulatorSettingsXmlConfigFactory();
+            SettingsFactory = new SoccerSimulatorXmlConfigFactory();
         }
 
         static void Main(string[] args)
@@ -36,8 +37,17 @@ namespace FantasySimulator.DebugConsole
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_OnFirstChanceException;
 
 
+            var config = SettingsFactory.GetConfig();
+
             var simulator = new SoccerSimulator();
-            simulator.Settings = SettingsFactory.GetSettings();
+            //simulator.Settings = SettingsFactory.GetSettings();
+            simulator.Settings = config.Settings;
+
+            if (config.DataFactory != null)
+            {
+                DataFactory = config.DataFactory;
+            }
+
             var simulationData = DataFactory.Generate().WaitForResult();
             var result = simulator.Simulate(simulationData);
             
