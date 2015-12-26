@@ -128,13 +128,19 @@ namespace FantasySimulator.DebugConsole.Config
             
             public async Task<SoccerSimulationData> Generate()
             {
+                var data = new XmlLeagueDataFactory.SoccerSimulationDataXml();
+                data = (XmlLeagueDataFactory.SoccerSimulationDataXml) await GenerateApplyTo(data);
+                return data;
+            }
+
+            public async Task<SoccerSimulationData> GenerateApplyTo(SoccerSimulationData data)
+            {
                 if (_factories != null)
                 {
-                    var data = new SoccerSimulationData();
                     foreach (var factory in _factories)
                     {
-                        var data2 = await factory.Generate();
-                        MergeData(data, data2);
+                        data = await factory.GenerateApplyTo(data);
+                        //MergeData(data, data2);
                     }
                     return data;
                 }
@@ -143,6 +149,23 @@ namespace FantasySimulator.DebugConsole.Config
 
             protected virtual void MergeData(SoccerSimulationData data1, SoccerSimulationData data2)
             {
+                data1.Teams = data1.Teams ?? new Team[0];
+                if (data2.Teams != null)
+                {
+                    foreach (var team in data2.Teams)
+                    {
+                        data1.Teams = data1.Teams ?? new Team[0];
+
+                        if (data1.Teams.Any(x => x.MatchName(team.Name)))
+                        {
+                            // todo: merge Team data?
+                        
+                        }
+                        else
+                            data1.Teams = data1.Teams.Concat(new[] {team}).ToArray();
+                    }
+                }
+
                 data1.Leagues = data1.Leagues ?? new League[0];
                 data1.Leagues = data1.Leagues.Concat(data2.Leagues ?? new League[0]).ToArray();
             }

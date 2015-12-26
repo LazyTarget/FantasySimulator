@@ -96,6 +96,9 @@ namespace FantasySimulator.DebugConsole
                 Console.WriteLine();
             }
 
+            Console.WriteLine("Done simulating...");
+
+
             // todo: export as csv/excel? detailed report, with the team-vs-team, estimated points, recommendation points
 
             Console.ReadLine();

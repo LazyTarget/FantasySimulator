@@ -20,17 +20,29 @@ namespace FantasySimulator.DebugConsole.Data
         }
 
         
-        public virtual async Task<SoccerSimulationData> Generate()
+        public async Task<SoccerSimulationData> Generate()
         {
-            var data = new SoccerSimulationDataXml();
+            var data = new SoccerSimulationData();
+            data = await GenerateApplyTo(data);
+            return data;
+        }
+
+        public virtual async Task<SoccerSimulationData> GenerateApplyTo(SoccerSimulationData data)
+        {
+            data = await _GenerateApplyTo((SoccerSimulationDataXml) data);
+            return data;
+        }
+
+        private async Task<SoccerSimulationData> _GenerateApplyTo(SoccerSimulationDataXml data)
+        {
             using (var stream = GetConfigStream(ConfigUri))
             {
                 ConfigureFromStream(stream, data);
             }
             return data;
         }
-        
-        
+
+
         protected override void ConfigureFromXml(XElement rootElement, SoccerSimulationDataXml result)
         {
             result.Configure(rootElement);
@@ -44,11 +56,8 @@ namespace FantasySimulator.DebugConsole.Data
 
             public SoccerSimulationDataXml()
             {
-                Teams = new Team[0];
+                
             }
-            
-
-            public Team[] Teams { get; set; }
 
 
             public virtual void Configure(XElement element)
@@ -72,7 +81,7 @@ namespace FantasySimulator.DebugConsole.Data
                 var leaguesElem = element.Element("leagues");
                 if (leaguesElem != null)
                 {
-                    var leagueElems = element.Elements("league").Where(x => x != null).ToList();
+                    var leagueElems = leaguesElem.Elements("league").Where(x => x != null).ToList();
                     if (leagueElems.Any())
                     {
                         Leagues = new League[0];
@@ -118,7 +127,7 @@ namespace FantasySimulator.DebugConsole.Data
                         team.Players = new Player[0];
                         foreach (var playerElem in playerElems)
                         {
-                            var player = ParsePlayer(playerElem);
+                            var player = ParsePlayer(playerElem, team);
                             team.Players = team.Players.Concat(new[] { player }).ToArray();
                         }
                     }
@@ -147,7 +156,7 @@ namespace FantasySimulator.DebugConsole.Data
             }
 
 
-            private Player ParsePlayer(XElement element)
+            private Player ParsePlayer(XElement element, Team team)
             {
                 var player = new Player();
                 player.ID = element.GetAttributeValue("id");
@@ -155,7 +164,7 @@ namespace FantasySimulator.DebugConsole.Data
                 player.FirstName = element.GetAttributeValue("firstname");
                 player.LastName = element.GetAttributeValue("lastname");
                 //player.FullName = element.GetAttributeValue("fullname");
-
+                player.Team = team;
                 
                 player.Age = element.GetAttributeValue("age").SafeConvert<int>();
 
@@ -178,6 +187,7 @@ namespace FantasySimulator.DebugConsole.Data
                 var league = new League();
                 league.ID = element.GetAttributeValue("id");
                 league.Name = element.GetAttributeValue("name");
+                league.Season = element.GetAttributeValue("season");
 
 
                 var leagueTeamsElem = element.Elements("teams");
@@ -192,12 +202,15 @@ namespace FantasySimulator.DebugConsole.Data
                             var teamName = leagueTeamElem.GetAttributeValue("name");
                             if (string.IsNullOrWhiteSpace(teamName))
                                 continue;
-                            var team = Teams.FirstOrDefault(x => x.MatchName(teamName));
+                            var team = Teams?.FirstOrDefault(x => x.MatchName(teamName));
                             if (team == null)
                                 continue;
                             
                             var leagueTeam = new LeagueTeam(league, team);
-                            league.Teams = league.Teams.Concat(new[] { leagueTeam }).ToArray();
+                            if (!league.Teams.Contains(leagueTeam))
+                                league.Teams = league.Teams.Concat(new[] {leagueTeam}).ToArray();
+                            if (!team.Leagues.Contains(league))
+                                team.Leagues = team.Leagues.Concat(new[] {league}).ToArray();
                         }
                     }
                 }
@@ -206,14 +219,15 @@ namespace FantasySimulator.DebugConsole.Data
                 var gameweeksElem = element.Element("gameweeks");
                 if (gameweeksElem != null)
                 {
-                    var gameweekElems = element.Elements("gameweek").Where(x => x != null).ToList();
+                    var gameweekElems = gameweeksElem.Elements("gameweek").Where(x => x != null).ToList();
                     if (gameweekElems.Any())
                     {
                         league.Gameweeks = new Gameweek[0];
                         foreach (var gameweekElem in gameweekElems)
                         {
                             var gameweek = ParseGameweek(gameweekElem, league);
-                            league.Gameweeks = league.Gameweeks.Concat(new[] { gameweek }).ToArray();
+                            if (!league.Gameweeks.Contains(gameweek))
+                                league.Gameweeks = league.Gameweeks.Concat(new[] {gameweek}).ToArray();
                         }
                     }
                 }
@@ -229,14 +243,15 @@ namespace FantasySimulator.DebugConsole.Data
                 var fixturesElem = element.Element("fixtures");
                 if (fixturesElem != null)
                 {
-                    var fixtureElems = element.Elements("fixture").Where(x => x != null).ToList();
+                    var fixtureElems = fixturesElem.Elements("fixture").Where(x => x != null).ToList();
                     if (fixtureElems.Any())
                     {
                         gameweek.Fixtures = new Fixture[0];
                         foreach (var fixtureElem in fixtureElems)
                         {
                             var fixture = ParseFixture(fixtureElem, gameweek);
-                            gameweek.Fixtures = gameweek.Fixtures.Concat(new[] { fixture }).ToArray();
+                            if (!gameweek.Fixtures.Contains(fixture))
+                                gameweek.Fixtures = gameweek.Fixtures.Concat(new[] {fixture}).ToArray();
                         }
                     }
                 }

@@ -64,6 +64,9 @@
     <Compile Include="Data\OpenFootballDB.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Data\FantasyPremierLeagueDataFactory.cs" />
+    <None Include="App_Data\Teams.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Data\SampleDataFactory.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Program.cs" />

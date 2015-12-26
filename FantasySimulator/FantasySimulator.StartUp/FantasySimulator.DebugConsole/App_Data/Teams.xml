@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<soccerSimulatorData>
+
+  <teams>
+
+    <team id="1" name="Arsenal" shortname="ARS" alias="Arsenal FC,Arsenal">
+      <manager name="Arsene Vanger" />
+      <statistics>
+
+      </statistics>
+    </team>
+
+    <team id="2" name="Southampton" shortname="SOU" alias="Southampton FC">
+      <manager name="Kouman" />
+      <players>
+        <player name="Olivier Giroud" birthday="" age="23">
+
+        </player>
+
+      </players>
+    </team>
+
+  </teams>
+
+</soccerSimulatorData>

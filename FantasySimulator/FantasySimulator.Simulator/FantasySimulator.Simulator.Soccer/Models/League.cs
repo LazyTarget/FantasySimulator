@@ -16,6 +16,8 @@ namespace FantasySimulator.Simulator.Soccer
 
         public string Name { get; set; }
 
+        public string Season { get; set; }
+
         public LeagueTeam[] Teams { get; set; }
 
         public Gameweek[] Gameweeks { get; set; }
@@ -28,10 +30,14 @@ namespace FantasySimulator.Simulator.Soccer
 
         public int NumberOfGames { get { return Gameweeks?.Sum(x => x.Fixtures?.Length ?? 0) ?? 0; } }
 
+        public int NumberOfGameweeks { get { return Gameweeks?.Count() ?? 0; } }
+
 
         public override string ToString()
         {
-            return Name;
+            if (!string.IsNullOrWhiteSpace(Season))
+                return string.Format("{0} {1}", Name, Season);
+            return string.Format("{0}", Name);
         }
     }
 }

@@ -22,7 +22,15 @@ namespace FantasySimulator.DebugConsole.Data
         private List<Team> _ukClubs;
 
 
+
         public async Task<SoccerSimulationData> Generate()
+        {
+            var data = new SoccerSimulationData();
+            data = await GenerateApplyTo(data);
+            return data;
+        }
+
+        public async Task<SoccerSimulationData> GenerateApplyTo(SoccerSimulationData data)
         {
             try
             {
@@ -59,7 +67,7 @@ namespace FantasySimulator.DebugConsole.Data
                 // todo: include in simulation: players playing in multiple leagues => tired, playtime, etc.
 
 
-                var data = new SoccerSimulationData();
+                data.Teams = (data.Teams ?? new Team[0]).Concat(teams).ToArray();
                 data.Leagues = data.Leagues.Append(premierLeague);
                 //data.Leagues = data.Leagues.Append(faCup);
                 return data;
@@ -69,7 +77,6 @@ namespace FantasySimulator.DebugConsole.Data
                 throw;
             }
         }
-
 
 
         private async Task<bool> UpdateFixturesTextFile()

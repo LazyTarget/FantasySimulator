@@ -47,7 +47,7 @@ namespace FantasySimulator.DebugConsole.Data
                     return (Uri) temp;
                 }
                 var str = temp.SafeConvert<string>();
-                var uri = new Uri(str);
+                var uri = new Uri(str, UriKind.RelativeOrAbsolute);
                 return uri;
             }
             set { Properties["ConfigUri"] = value; }
@@ -62,6 +62,12 @@ namespace FantasySimulator.DebugConsole.Data
 
         protected virtual Stream GetConfigStream(Uri configUri)
         {
+            if (!configUri.IsAbsoluteUri)
+            {
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configUri.ToString());
+                configUri = new Uri(path);
+            }
+
             if (configUri.IsFile)
             {
                 var fileInfo = new FileInfo(configUri.LocalPath);

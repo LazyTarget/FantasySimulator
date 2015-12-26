@@ -9,6 +9,7 @@ namespace FantasySimulator.Simulator.Soccer
         public Team()
         {
             Players = new List<Player>().ToArray();
+            Leagues = new List<League>().ToArray();
         }
 
 

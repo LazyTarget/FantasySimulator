@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <soccerSimulatorData>
 
-  <teams>
+  <!--<teams>
 
     <team id="1" name="Arsenal" shortname="ARS" alias="Arsenal FC,Arsenal">
       <manager name="Arsene Vanger" />
@@ -20,90 +20,93 @@
       </players>
     </team>
 
-  </teams>
-  
+  </teams>-->
+
 
   <leagues>
-    <league>
+    <league name="Premier League" season="2015/16">
       <teams>
         <team name="Arsenal" />
         <team name="Southampton" />
       </teams>
-      
+
       <gameweeks>
         <gameweek number="1">
 
-          <fixture>
-            <startTime value="2015-12-26T16:00:00Z" />
-            <homeTeam name="Arsenal" />
-            <awayTeam name="Southampton" />
-            <venue>
-              <name value="Emirates Stadium" />
-              <capacity value="60432" />
-              <attendance value="60053" />
-            </venue>
-            <odds>
-              <homeTeamWin value="1.4" />
-              <draw value="3.0" />
-              <awayTeamWin value="2.5" />
-            </odds>
-            <state>
-              <started value="true" />
-              <ended value="true" />
-              <time value="92" />
-              <period value="FT" /><!-- HF, FT, AET, PEN, POST, Cancl -->
-            </state>
-            <score>
-              <goalsForHomeTeam value="3" />
-              <goalsForAwayTeam value="1" />
-              <pointsForHomeTeam value="3" />
-              <pointsForAwayTeam value="0" />
-              <outcome value="HomeTeam" />
-            </score>
-            <events>
-              <goal>
-                <minute value="33" />
-                <team value="Arsenal" />
-                <scorer value="Olivier Giroud" />
-                <assister value="Mesut Özil" />
-              </goal>
-              <yellow-card>
-                <team value="Southampton" />
-                <minute value="63" />
-                <player value="Ryan Bertrand" />
-              </yellow-card>
-              <substitution>
-                <minute value="70" />
-                <team value="Arsenal" />
-                <player value="Kieran Gibbs" />
-              </substitution>
-            </events>
-            <statistics>
-              <homeTeam>
-                <possession value="62.7" />
-                <corners value="8" />
-              </homeTeam>
-              <awayTeam>
-                <possession value="37.3" />
-                <corners value="4" />
-              </awayTeam>
-            </statistics>
-            <line-ups>
-              <homeTeam>
-                <formation value="4-2-3-1" />
-                <players>
-                  <goalkeeper name="Petr Cech" captain="true" />
-                  <defender name="Bellerin" />
-                </players>
-              </homeTeam>
-              <awayTeam>
-                <formation value="4-4-2" />
-                <players>
-                  <goalkeeper name="Tim Howard" />
-                </players>
-              </awayTeam>
-            </line-ups>
-          </fixture>
+          <fixtures>
+            <fixture>
+              <startTime value="2015-12-26T16:00:00Z" />
+              <homeTeam name="Arsenal" />
+              <awayTeam name="Southampton" />
+              <venue>
+                <name value="Emirates Stadium" />
+                <capacity value="60432" />
+                <attendance value="60053" />
+              </venue>
+              <odds>
+                <homeTeamWin value="1.4" />
+                <draw value="3.0" />
+                <awayTeamWin value="2.5" />
+              </odds>
+              <state>
+                <started value="true" />
+                <ended value="true" />
+                <time value="92" />
+                <period value="FT" />
+                <!-- HF, FT, AET, PEN, POST, Cancl -->
+              </state>
+              <score>
+                <goalsForHomeTeam value="3" />
+                <goalsForAwayTeam value="1" />
+                <pointsForHomeTeam value="3" />
+                <pointsForAwayTeam value="0" />
+                <outcome value="HomeTeam" />
+              </score>
+              <events>
+                <goal>
+                  <minute value="33" />
+                  <team value="Arsenal" />
+                  <scorer value="Olivier Giroud" />
+                  <assister value="Mesut Özil" />
+                </goal>
+                <yellow-card>
+                  <team value="Southampton" />
+                  <minute value="63" />
+                  <player value="Ryan Bertrand" />
+                </yellow-card>
+                <substitution>
+                  <minute value="70" />
+                  <team value="Arsenal" />
+                  <player value="Kieran Gibbs" />
+                </substitution>
+              </events>
+              <statistics>
+                <homeTeam>
+                  <possession value="62.7" />
+                  <corners value="8" />
+                </homeTeam>
+                <awayTeam>
+                  <possession value="37.3" />
+                  <corners value="4" />
+                </awayTeam>
+              </statistics>
+              <line-ups>
+                <homeTeam>
+                  <formation value="4-2-3-1" />
+                  <players>
+                    <goalkeeper name="Petr Cech" captain="true" />
+                    <defender name="Bellerin" />
+                  </players>
+                </homeTeam>
+                <awayTeam>
+                  <formation value="4-4-2" />
+                  <players>
+                    <goalkeeper name="Tim Howard" />
+                  </players>
+                </awayTeam>
+              </line-ups>
+            </fixture>
+          </fixtures>
 
         </gameweek>
       </gameweeks>
