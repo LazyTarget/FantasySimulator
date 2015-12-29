@@ -7,6 +7,7 @@ using FantasySimulator.Core.Diagnostics;
 using FantasySimulator.DebugConsole.Config;
 using FantasySimulator.DebugConsole.Data;
 using FantasySimulator.Interfaces;
+using FantasySimulator.Simulator.Poker;
 using FantasySimulator.Simulator.Soccer;
 
 namespace FantasySimulator.DebugConsole
@@ -59,8 +60,11 @@ namespace FantasySimulator.DebugConsole
                 Console.WriteLine("Starting Simulator '{0}'", simulator.GetType().Name);
 
                 var soccerSimulator = simulator as SoccerSimulator;
+                var pokerSimulator = simulator as PokerSimulator;
                 if (soccerSimulator != null)
                     RunSoccerSimulator(soccerSimulator, configElement);
+                else if (pokerSimulator != null)
+                    RunPokerSimulator(pokerSimulator, configElement);
                 else
                 {
                     // todo: Implement
@@ -76,6 +80,7 @@ namespace FantasySimulator.DebugConsole
             _log.Info("Program exited...");
 #endif
         }
+
 
         private static void RunSoccerSimulator(SoccerSimulator simulator, SimulatorConfigElement simulatorConfigElement)
         {
@@ -144,6 +149,21 @@ namespace FantasySimulator.DebugConsole
 
             // todo: export as csv/excel? detailed report, with the team-vs-team, estimated points, recommendation points
 
+        }
+
+
+        private static void RunPokerSimulator(PokerSimulator simulator, SimulatorConfigElement simulatorConfigElement)
+        {
+            var configFactory = new PokerSimulatorXmlConfigFactory();
+            if (!string.IsNullOrWhiteSpace(simulatorConfigElement.ConfigUri))
+                configFactory.SetConfigUri(simulatorConfigElement.ConfigUri);
+            if (!string.IsNullOrWhiteSpace(simulatorConfigElement.RootElementName))
+                configFactory.RootElementName = simulatorConfigElement.RootElementName;
+
+            var config = configFactory.GetConfig();
+            var data = config.DataFactory.Generate().WaitForResult();
+
+            var result = simulator.Simulate(data);
         }
 
 

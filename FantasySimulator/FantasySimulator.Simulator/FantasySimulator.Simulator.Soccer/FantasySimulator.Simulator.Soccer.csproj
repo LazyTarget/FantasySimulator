@@ -97,7 +97,6 @@
     <Compile Include="Structs\ValueMap.cs" />
     <Compile Include="ThirdParty\ClubElo\ClubElo.cs" />
     <Compile Include="ThirdParty\Kambi\KambiAPI.cs" />
-    <Compile Include="XmlHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\ModelHelpers.cs" />

@@ -2,11 +2,10 @@
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
-using FantasySimulator.Core;
 using FantasySimulator.Core.Diagnostics;
 using FantasySimulator.Interfaces;
 
-namespace FantasySimulator.Simulator.Soccer
+namespace FantasySimulator.Core
 {
     public static class XmlHelpers
     {
@@ -57,7 +56,27 @@ namespace FantasySimulator.Simulator.Soccer
 
         public static IXmlConfigurable InstantiateConfigurable(this IXmlConfigurable configurable, XElement element)
         {
-            configurable.ConfigureProperties(element);
+            var attr = configurable.GetType().GetCustomAttribute<AutoConfigurePropertiesAttribute>(inherit: true);
+
+            bool autoConfigureProps;
+            if (attr != null)
+                autoConfigureProps = attr.AutoConfigure;
+            else
+            {
+                autoConfigureProps = false;
+                autoConfigureProps = true;      // todo: remove when AutoConfigurePropertiesAttribute added to all classes needed
+            }
+
+            //var autoConfigureProps = attr?.AutoConfigure;
+            if (autoConfigureProps)
+            {
+                configurable.ConfigureProperties(element);
+            }
+            else
+            {
+                
+            }
+
             configurable.Configure(element);
             return configurable;
         }
@@ -65,30 +84,44 @@ namespace FantasySimulator.Simulator.Soccer
 
         public static void ConfigureProperties(this IXmlConfigurable configurable, XElement element)
         {
-            if (configurable is IHasProperties)
+            var propertyElems = element.Elements("property").Where(x => x != null).ToList();
+            if (propertyElems.Any())
             {
-                var hasProps = (IHasProperties) configurable;
-                var propertyElems = element.Elements("property").Where(x => x != null).ToList();
-                if (propertyElems.Any())
+                foreach (var elem in propertyElems)
                 {
-                    foreach (var elem in propertyElems)
+                    var propertyName = elem.GetAttributeValue("name");
+                    if (string.IsNullOrWhiteSpace(propertyName))
+                        continue;
+                    try
                     {
-                        var propertyName = elem.GetAttributeValue("name");
-                        if (string.IsNullOrWhiteSpace(propertyName))
-                            continue;
-                        try
+                        object value = elem.InstantiateElement();
+                        if (configurable is IHasProperties)
                         {
-                            object value = elem.InstantiateElement();
+                            var hasProps = (IHasProperties) configurable;
                             hasProps.Properties[propertyName] = value;
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            _log.Error($"Error instantiating property '{propertyName}'", ex);
+                            var propertyInfo = configurable.GetType().GetProperty(propertyName);
+                            if (propertyInfo != null)
+                            {
+                                value = value.SafeConvertDynamic(propertyInfo.PropertyType);
+                                propertyInfo.SetValue(configurable, value);
+                            }
+                            else
+                                throw new Exception($"Property not found {propertyName}");
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.Error($"Error instantiating property '{propertyName}'", ex);
                     }
                 }
             }
-
+            else
+            {
+                
+            }
         }
 
     }

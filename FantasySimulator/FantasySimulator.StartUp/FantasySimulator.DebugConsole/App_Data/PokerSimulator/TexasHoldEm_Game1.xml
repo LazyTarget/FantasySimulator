@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pokerSimulatorData>
+
+  <game type="TexasHoldEm">
+    <blinds>
+      <smallBlind value="250" />
+      <bigBlind value="500" />
+    </blinds>
+
+    <communityCards>
+      <card value="2H" />
+      <card value="10D" />
+      <card value="3S" />
+    </communityCards>
+
+
+    <players>
+      <player name="Player1">
+        <blindType value="Dealer" />
+
+        <events>
+          <event order="1" type="dealer-button" />
+          <event order="4" type="raise" value="1000" />
+        </events>
+      </player>
+
+      <player name="Player2">
+        <blindType value="SmallBlind" />
+        <cards></cards>
+
+        <events>
+          <event order="2" type="big-blind" value="500" />
+          <event order="5" type="call" value="1000" />
+        </events>
+      </player>
+
+      <player name="Player3">
+        <blindType value="BigBlind" />
+
+        <events>
+          <event order="3" type="small-blind" value="250" />
+          <event order="5" type="fold" value="1000" />
+        </events>
+      </player>
+    </players>
+  </game>
+
+</pokerSimulatorData>

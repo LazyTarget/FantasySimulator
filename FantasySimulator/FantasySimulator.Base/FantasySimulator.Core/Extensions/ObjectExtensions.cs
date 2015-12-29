@@ -46,6 +46,10 @@ namespace FantasySimulator.Core
                         var index = values.FindIndex(x => string.Equals(x, str, StringComparison.OrdinalIgnoreCase));
                         if (index >= 0)
                             str = values.ElementAt(index);
+                        else if (str.IndexOf('|') > 0)
+                        {
+                            str = str.Replace('|', ',');
+                        }
                     }
                     var obj = Enum.Parse(typeof(T), str);
                     result = (T)obj;

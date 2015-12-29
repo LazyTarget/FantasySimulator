@@ -60,13 +60,18 @@
     <Compile Include="Config\SimulatorConfigElement.cs" />
     <Compile Include="Config\SimulatorConfigElementCollection.cs" />
     <Compile Include="Config\SimulatorRunnerConfigSection.cs" />
+    <Compile Include="Config\PokerSimulatorXmlConfigFactory.cs" />
     <Compile Include="Config\SoccerSimulatorXmlConfigFactory.cs" />
     <Compile Include="Config\SoccerSimulatorConfigurationSectionHandler.cs" />
     <Compile Include="Data\XmlConfigFactoryBase.cs" />
+    <Compile Include="Data\XmlPokerDataFactory.cs" />
     <Compile Include="Data\XmlLeagueDataFactory.cs" />
     <Compile Include="Data\OpenFootballDB.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Data\FantasyPremierLeagueDataFactory.cs" />
+    <None Include="App_Data\PokerSimulator\TexasHoldEm_Game1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Data\SampleDataFactory.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Program.cs" />
@@ -84,6 +89,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="pokerSimulator.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="soccerSimulator.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -149,6 +158,10 @@
     <ProjectReference Include="..\..\FantasySimulator.Base\FantasySimulator.Models\FantasySimulator.Models.csproj">
       <Project>{4bfa8b87-54b5-4939-9dc0-9f0b22241856}</Project>
       <Name>FantasySimulator.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FantasySimulator.Simulator\FantasySimulator.Simulator.Poker\FantasySimulator.Simulator.Poker.csproj">
+      <Project>{df428819-c349-4362-9b7d-817c9a6f90ca}</Project>
+      <Name>FantasySimulator.Simulator.Poker</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\FantasySimulator.Simulator\FantasySimulator.Simulator.Soccer\FantasySimulator.Simulator.Soccer.csproj">
       <Project>{894b95a9-2911-4ecb-92fa-a6d1eae302d6}</Project>

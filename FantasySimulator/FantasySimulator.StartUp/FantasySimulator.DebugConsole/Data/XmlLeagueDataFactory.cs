@@ -62,7 +62,7 @@ namespace FantasySimulator.DebugConsole.Data
 
             public virtual void Configure(XElement element)
             {
-                var teamsElem = element.Elements("teams");
+                var teamsElem = element.Element("teams");
                 if (teamsElem != null)
                 {
                     var teamElems = teamsElem.Elements("team").Where(x => x != null).ToList();

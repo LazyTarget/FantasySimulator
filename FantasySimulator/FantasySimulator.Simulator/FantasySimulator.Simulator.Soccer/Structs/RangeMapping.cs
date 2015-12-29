@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using FantasySimulator.Core;
 using FantasySimulator.Interfaces;
 
 namespace FantasySimulator.Simulator.Soccer.Structs
