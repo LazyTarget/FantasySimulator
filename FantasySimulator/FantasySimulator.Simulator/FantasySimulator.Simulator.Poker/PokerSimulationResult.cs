@@ -2,5 +2,6 @@
 {
     public class PokerSimulationResult
     {
+        public PokerGameResult[] Results { get; set; }
     }
 }

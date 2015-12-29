@@ -164,6 +164,53 @@ namespace FantasySimulator.DebugConsole
             var data = config.DataFactory.Generate().WaitForResult();
 
             var result = simulator.Simulate(data);
+
+            for (int i = 0; i < result.Results.Length; i++)
+            {
+                var pokerGameResult = result.Results[i];
+                Console.WriteLine("Game #{0}", i);
+
+                Console.WriteLine("Community cards: {0}", string.Join(", ", pokerGameResult.Game.CommunityCards));
+
+                if (pokerGameResult.BestAvailableHands.Length > 0)
+                {
+                    Console.WriteLine("Best available hands:");
+                    for (int j = 0; j < pokerGameResult.BestAvailableHands.Length; j++)
+                    {
+                        var bestAvailableHand = pokerGameResult.BestAvailableHands[j];
+                        var playerID = !string.IsNullOrWhiteSpace(bestAvailableHand.Player?.Name)
+                            ? $"\"{bestAvailableHand.Player.Name}\""
+                            : $"#{j + 1}";
+                        Console.WriteLine($"Player {playerID}. [{bestAvailableHand.Strength}]: {string.Join(", ", bestAvailableHand.Cards)}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No best available hands...");
+                }
+
+
+                if (pokerGameResult.BestPossibleHands.Length > 0)
+                {
+                    Console.WriteLine("Best possible hands:");
+                    for (int j = 0; j < pokerGameResult.BestPossibleHands.Length; j++)
+                    {
+                        var bestPossibleHand = pokerGameResult.BestPossibleHands[j];
+                        var playerID = !string.IsNullOrWhiteSpace(bestPossibleHand.Player?.Name)
+                            ? $"\"{bestPossibleHand.Player.Name}\""
+                            : $"#{j + 1}";
+                        Console.WriteLine($"Player {playerID}. [{bestPossibleHand.Strength}]:\t\t@{bestPossibleHand.Probability.ToString("P2")} {string.Join(", ", bestPossibleHand.Cards)}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No best possible hands...");
+                }
+
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
         }
 
 

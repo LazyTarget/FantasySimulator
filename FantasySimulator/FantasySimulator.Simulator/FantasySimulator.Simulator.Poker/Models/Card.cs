@@ -17,6 +17,11 @@ namespace FantasySimulator.Simulator.Poker.Models
             get { return Denomination != CardDenomination.None && Suit != Suits.None; }
         }
 
+        public override string ToString()
+        {
+            return String.Format("{0}{1}", (int) Denomination, Suit);
+        }
+
         public void Configure(XElement element)
         {
             var value = element.GetAttributeValue("value");

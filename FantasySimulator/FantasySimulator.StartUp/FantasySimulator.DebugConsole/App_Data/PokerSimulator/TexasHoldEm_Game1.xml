@@ -17,6 +17,10 @@
     <players>
       <player name="Player1">
         <blindType value="Dealer" />
+        <cards>
+          <card value="6S" />
+          <card value="8C" />
+        </cards>
 
         <events>
           <event order="1" type="dealer-button" />
@@ -26,7 +30,10 @@
 
       <player name="Player2">
         <blindType value="SmallBlind" />
-        <cards></cards>
+        <cards>
+          <card value="14S" />
+          <card value="8S" />
+        </cards>
 
         <events>
           <event order="2" type="big-blind" value="500" />
@@ -36,6 +43,10 @@
 
       <player name="Player3">
         <blindType value="BigBlind" />
+        <cards>
+          <card value="4S" />
+          <card value="10S" />
+        </cards>
 
         <events>
           <event order="3" type="small-blind" value="250" />
