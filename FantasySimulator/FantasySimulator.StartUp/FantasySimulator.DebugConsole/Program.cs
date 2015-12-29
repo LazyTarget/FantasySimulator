@@ -6,6 +6,7 @@ using System.Runtime.ExceptionServices;
 using FantasySimulator.Core.Diagnostics;
 using FantasySimulator.DebugConsole.Config;
 using FantasySimulator.DebugConsole.Data;
+using FantasySimulator.Interfaces;
 using FantasySimulator.Simulator.Soccer;
 
 namespace FantasySimulator.DebugConsole
@@ -36,10 +37,55 @@ namespace FantasySimulator.DebugConsole
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_OnUnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_OnFirstChanceException;
 
+            
+            var configSection = SimulatorRunnerConfigSection.LoadFromConfig();
+            foreach (SimulatorConfigElement configElement in configSection.Runners)
+            {
+                if (!configElement.Enabled)
+                {
+                    Console.WriteLine("Ignoring Simulator '{0}' as it has Enabled set to false", configElement.Type);
+                    continue;
+                }
+                var type = Type.GetType(configElement.Type);
+                if (type == null)
+                {
+                    Console.WriteLine("Ignoring Simulator '{0}' as it could not find the Type", configElement.Type);
+                    continue;
+                }
+                var inst = Activator.CreateInstance(type);
+                var simulator = (ISimulator) inst;
+
+
+                Console.WriteLine("Starting Simulator '{0}'", simulator.GetType().Name);
+
+                var soccerSimulator = simulator as SoccerSimulator;
+                if (soccerSimulator != null)
+                    RunSoccerSimulator(soccerSimulator, configElement);
+                else
+                {
+                    // todo: Implement
+                    Console.WriteLine("Simulator '{0}', not implemented", simulator.GetType().Name);
+                }
+
+                Console.WriteLine("Simulator '{0}' complete", simulator.GetType().Name);
+
+            }
+
+#if DEBUG
+            Console.ReadLine();
+            _log.Info("Program exited...");
+#endif
+        }
+
+        private static void RunSoccerSimulator(SoccerSimulator simulator, SimulatorConfigElement simulatorConfigElement)
+        {
+            if (!string.IsNullOrWhiteSpace(simulatorConfigElement.ConfigUri))
+                SettingsFactory.SetConfigUri(simulatorConfigElement.ConfigUri);
+            if (!string.IsNullOrWhiteSpace(simulatorConfigElement.RootElementName))
+                SettingsFactory.RootElementName = simulatorConfigElement.RootElementName;
 
             var config = SettingsFactory.GetConfig();
 
-            var simulator = new SoccerSimulator();
             //simulator.Settings = SettingsFactory.GetSettings();
             simulator.Settings = config.Settings;
 
@@ -96,13 +142,8 @@ namespace FantasySimulator.DebugConsole
                 Console.WriteLine();
             }
 
-            Console.WriteLine("Done simulating...");
-
-
             // todo: export as csv/excel? detailed report, with the team-vs-team, estimated points, recommendation points
 
-            Console.ReadLine();
-            _log.Info("Program exited...");
         }
 
 

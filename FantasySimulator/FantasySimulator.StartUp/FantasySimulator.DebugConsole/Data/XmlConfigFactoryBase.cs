@@ -47,10 +47,19 @@ namespace FantasySimulator.DebugConsole.Data
                     return (Uri) temp;
                 }
                 var str = temp.SafeConvert<string>();
-                var uri = new Uri(str, UriKind.RelativeOrAbsolute);
+                //var uri = new Uri(str, UriKind.RelativeOrAbsolute);
+                //return uri;
+                var uri = SetConfigUri(str);
                 return uri;
             }
             set { Properties["ConfigUri"] = value; }
+        }
+
+        public Uri SetConfigUri(string uri)
+        {
+            var res = new Uri(uri, UriKind.RelativeOrAbsolute);
+            ConfigUri = res;
+            return res;
         }
 
 

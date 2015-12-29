@@ -57,6 +57,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\SimulatorConfigElement.cs" />
+    <Compile Include="Config\SimulatorConfigElementCollection.cs" />
+    <Compile Include="Config\SimulatorRunnerConfigSection.cs" />
     <Compile Include="Config\SoccerSimulatorXmlConfigFactory.cs" />
     <Compile Include="Config\SoccerSimulatorConfigurationSectionHandler.cs" />
     <Compile Include="Data\XmlConfigFactoryBase.cs" />
@@ -64,6 +67,10 @@
     <Compile Include="Data\OpenFootballDB.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Data\FantasyPremierLeagueDataFactory.cs" />
+    <None Include="soccerSimulator.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="App_Data\Teams.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
