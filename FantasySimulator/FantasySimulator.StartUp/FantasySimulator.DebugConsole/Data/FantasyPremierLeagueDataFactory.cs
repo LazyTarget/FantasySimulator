@@ -112,7 +112,7 @@ namespace FantasySimulator.DebugConsole.Data
                     .Replace("West Ham United FC",          "West Ham");
 
                 // Write to file
-                var path = Path.Combine(Environment.CurrentDirectory, "App_Data/Fixtures.json");
+                var path = Path.Combine(Environment.CurrentDirectory, "App_Data/SoccerSimulator/Fixtures.json");
                 var exists = File.Exists(path);
                 using (var stream = File.Open(path, exists ? FileMode.Truncate : FileMode.CreateNew, FileAccess.Write))
                 {
@@ -144,7 +144,7 @@ namespace FantasySimulator.DebugConsole.Data
             try
             {
                 string json;
-                var path = Path.Combine(Environment.CurrentDirectory, "App_Data/Fixtures.json");
+                var path = Path.Combine(Environment.CurrentDirectory, "App_Data/SoccerSimulator/Fixtures.json");
                 using (var stream = File.Open(path, FileMode.Open, FileAccess.Read))
                 {
                     var streamReader = new StreamReader(stream);
@@ -188,7 +188,7 @@ namespace FantasySimulator.DebugConsole.Data
             try
             {
                 string json;
-                var path = Path.Combine(Environment.CurrentDirectory, "App_Data/", TransfersPageJsonFilename);
+                var path = Path.Combine(Environment.CurrentDirectory, "App_Data/SoccerSimulator/", TransfersPageJsonFilename);
                 using (var stream = File.Open(path, FileMode.Open, FileAccess.Read))
                 {
                     var streamReader = new StreamReader(stream);
