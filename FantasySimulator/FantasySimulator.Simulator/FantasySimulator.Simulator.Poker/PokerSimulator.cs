@@ -58,6 +58,10 @@ namespace FantasySimulator.Simulator.Poker
                 {
                     result.BestPossibleHands = result.BestPossibleHands.Concat(new[] { playerBestPossible }).ToArray();
                 }
+
+
+                // todo: calculate player win percentages
+                //result.PlayerWinPercentages
             }
             return result;
         }

@@ -204,8 +204,11 @@ namespace FantasySimulator.Simulator.Poker
         {
             //var hand = hands.OrderByDescending(x => (int)x.Strength).FirstOrDefault();
 
-            // todo: order by best kicker
-            var hand = hands.OrderByDescending(x => (int) x.Strength).ThenByDescending(x => x.Cards.Sum(c => (int) c.Denomination)).FirstOrDefault();
+            // order by best kicker
+            var hand = hands.OrderByDescending(x => (int) x.Strength)
+                .ThenByDescending(
+                    x => x.Cards.OrderByDescending(c => (int) c.Denomination).Take(5).Sum(c => (int) c.Denomination))
+                .FirstOrDefault();
             return hand;
         }
     }

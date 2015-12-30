@@ -181,7 +181,10 @@ namespace FantasySimulator.DebugConsole
                         var playerID = !string.IsNullOrWhiteSpace(bestAvailableHand.Player?.Name)
                             ? $"\"{bestAvailableHand.Player.Name}\""
                             : $"#{j + 1}";
-                        Console.WriteLine($"Player {playerID}. [{bestAvailableHand.Strength}]: {string.Join(", ", bestAvailableHand.Cards)}");
+                        var winPercentage = pokerGameResult.PlayerWinPercentages.ContainsKey(bestAvailableHand.Player)
+                            ? pokerGameResult.PlayerWinPercentages[bestAvailableHand.Player].ToString("P2")
+                            : "N/A";
+                        Console.WriteLine($"Player {playerID}. [{bestAvailableHand.Strength}]:\t\t@{winPercentage} {string.Join(", ", bestAvailableHand.Cards)}");
                     }
                 }
                 else
