@@ -11,7 +11,7 @@ namespace FantasySimulator.Simulator.Poker
         {
             CardComparer = new CardComparer();
         }
-
+        
 
         public IComparer<Card> CardComparer { get; protected set; }
 
@@ -20,7 +20,8 @@ namespace FantasySimulator.Simulator.Poker
         {
             var cards = new List<Card>();
             cards.AddRange(player.Cards.Where(x => x != null));
-            cards.AddRange(communityCards.Where(x => x != null));
+            if (communityCards != null)
+                cards.AddRange(communityCards.Where(x => x != null));
 
             var suitCounts = cards.GroupBy(x => x.Suit).OrderByDescending(x => x.Count()).ToList();
             var denomCounts = cards.GroupBy(x => x.Denomination).OrderByDescending(x => x.Count()).ThenByDescending(x => (int) x.Key).ToList();
@@ -194,9 +195,115 @@ namespace FantasySimulator.Simulator.Poker
             };
         }
 
-        public virtual IEnumerable<PossibleHand> CalculatePossibleHands(Player player, IList<Card> communityCards)
+
+        public virtual IEnumerable<PossibleHand> CalculatePossibleHands(Player player, IList<Card> communityCards, PokerGame game)
         {
-            yield break;
+            var cards = new List<Card>();
+            cards.AddRange(player.Cards.Where(x => x != null));
+            if (communityCards != null)
+                cards.AddRange(communityCards.Where(x => x != null));
+
+            var suitCounts = cards.GroupBy(x => x.Suit).OrderByDescending(x => x.Count()).ToList();
+            var denomCounts = cards.GroupBy(x => x.Denomination).OrderByDescending(x => x.Count()).ThenByDescending(x => (int)x.Key).ToList();
+            var denomList = cards.OrderByDescending(x => (int)x.Denomination).ToList();
+            
+            var otherPlayers = game.Players.Where(x => x != player).ToList();
+
+
+            var strengths = Enum.GetValues(typeof (HandStrength))
+                                .Cast<HandStrength>()
+                                .OrderByDescending(x => (int) x)
+                                .ToList();
+            foreach (var handStrength in strengths)
+            {
+                switch (handStrength)
+                {
+                    case HandStrength.FourOfAKind:
+                    case HandStrength.ThreeOfAKind:
+                    case HandStrength.OnePair:
+                        var cardsNeeded = handStrength == HandStrength.FourOfAKind
+                            ? 4
+                            : handStrength == HandStrength.ThreeOfAKind
+                                ? 3
+                                : 2;
+
+                        var dcl = denomCounts.Where(x => x.Count() >= 1).ToList();
+                        if (dcl.Any())
+                        {
+                            foreach (var dc in dcl)
+                            {
+                                var usedCards = new List<Card>();
+                                usedCards.AddRange(dc);
+
+                                var kickers = denomList.Where(x => !usedCards.Contains(x)).Take(1);
+                                usedCards.AddRange(kickers);
+
+                                var pairStrength = dc.Count();
+                                var remainingCardsNeeded = cardsNeeded - pairStrength;
+                                var remainingCards = Card.GetByDenominator(dc.Key).Where(x => dc.All(y => y.Suit != x.Suit)).ToList();
+                                double probability;
+                                if (remainingCardsNeeded <= 0)
+                                {
+                                    probability = 1.0d;
+                                }
+                                else
+                                {
+                                    var otherPlayerMatchingCards = otherPlayers.SelectMany(x => x.Cards).Where(x => x.Denomination == dc.Key).ToList();
+                                    var deadCards = pairStrength + otherPlayerMatchingCards.Count;
+                                    probability = CalculateOutsProbability(remainingCards.Count, game.CardsInDeck, remainingCardsNeeded, deadCards);
+                                }
+                                //var probability = remainingCardsNeeded > 0
+                                //    ? CalculateOutsProbability(remainingCards.Count, pairStrength)
+                                //    : 1.0d;
+
+                                // todo: 
+                                var combinations = new List<Hand>();
+                                //for(var temp = 0; temp < remainingCards.Count; temp++)
+                                //{
+                                //    var hand = new Hand
+                                //    {
+                                //        Cards = dc.ToArray(),
+                                //        Strength = handStrength,
+                                //    };
+                                //    combinations.Add(hand);
+                                //    for (var x = 0; x < remainingCardsNeeded; x++)
+                                //    {
+                                //        for (var y = 0; y < remainingCards.Count; y++)
+                                //        {
+                                //            var c = remainingCards[y];
+                                //            hand.Cards = hand.Cards.Concat(new[] {c}).ToArray();
+                                //        }
+                                //    }
+                                //}
+
+                                yield return new PossibleHand
+                                {
+                                    Cards = usedCards,
+                                    Player = player,
+                                    Strength = handStrength,
+                                    Outs = remainingCards.Count,
+                                    Probability = probability,
+                                    Combinations = combinations,
+                                };
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+
+
+        public virtual double CalculateOutsProbability(int outs, int cardsInDeck, int cardsToBeDrawn, int numberOfDeadCards)
+        {
+            if (outs == 0)
+                return 1.0d;        // has hit the out
+            if (outs < 0)
+                return 0.0d;        // has no outs to improve the hand
+            double cards = (cardsInDeck - numberOfDeadCards) * cardsToBeDrawn;
+            if (cards <= 0)
+                return 0.0d;        // no cards left
+            var perc = outs / cards;
+            return perc;
         }
 
         

@@ -8,6 +8,9 @@ namespace FantasySimulator.Simulator.Poker.Models
 {
     public class PokerGame : IXmlConfigurable
     {
+        public readonly int NUMBER_OF_CARDS_IN_TEXAS_HOLD_EM = 14 * 4;
+
+
         public PokerGame()
         {
             CommunityCards = new List<Card>();
@@ -24,6 +27,17 @@ namespace FantasySimulator.Simulator.Poker.Models
 
         public IList<Player> Players { get; set; }
 
+
+
+        public int CardsInDeck
+        {
+            get { return NUMBER_OF_CARDS_IN_TEXAS_HOLD_EM - KnownCards; }
+        }
+
+        public int KnownCards
+        {
+            get { return CommunityCards?.Count ?? 0 + Players?.Sum(x => x.Cards.Count) ?? 0; }
+        }
 
         public void Configure(XElement element)
         {

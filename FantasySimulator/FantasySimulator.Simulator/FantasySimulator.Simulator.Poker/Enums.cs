@@ -31,7 +31,7 @@ namespace FantasySimulator.Simulator.Poker
     public enum CardDenomination
     {
         None,
-        Two = 2,
+        Duece = 2,
         Three = 3,
         Four = 4,
         Five = 5,

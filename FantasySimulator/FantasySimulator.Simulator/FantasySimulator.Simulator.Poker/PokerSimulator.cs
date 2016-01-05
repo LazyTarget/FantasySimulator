@@ -52,13 +52,14 @@ namespace FantasySimulator.Simulator.Poker
                     result.BestAvailableHands = result.BestAvailableHands.Concat(new[] { playerBestAvailable }).ToArray();
                 }
                 
-                var playerPossibleHands = HandCalculator.CalculatePossibleHands(player, pokerGame.CommunityCards);
+                var playerPossibleHands = HandCalculator.CalculatePossibleHands(player, pokerGame.CommunityCards, pokerGame);
                 var playerBestPossible = playerPossibleHands.FirstOrDefault();
                 if (playerBestPossible != null)
                 {
                     result.BestPossibleHands = result.BestPossibleHands.Concat(new[] { playerBestPossible }).ToArray();
                 }
 
+                // todo: combine the player outs?
 
                 // todo: calculate player win percentages
                 //result.PlayerWinPercentages
