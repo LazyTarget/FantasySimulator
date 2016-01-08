@@ -1,4 +1,2 @@
 language: csharp
 solution: ./FantasySimulator/FantasySimulator.sln
-script:
-  - xbuild ./FantasySimulator/FantasySimulator.sln /property:"Configuration=Release"
