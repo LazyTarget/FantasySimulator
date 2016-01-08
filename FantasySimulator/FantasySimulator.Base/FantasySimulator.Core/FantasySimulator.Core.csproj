@@ -55,6 +55,7 @@
     <Compile Include="Diagnostics\Loggers\AggregateLog.cs" />
     <Compile Include="Diagnostics\Loggers\Log4NetLog.cs" />
     <Compile Include="Diagnostics\Log4NetLogFactory.cs" />
+    <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\XmlExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
