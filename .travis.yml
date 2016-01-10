@@ -1,0 +1,8 @@
+language: csharp
+solution: ./FantasySimulator/FantasySimulator.sln
+mono:
+  - nightly
+script:
+  - xbuild ./FantasySimulator/FantasySimulator.sln /p:Configuration=Release
+notifications:
+  email: true
