@@ -2,7 +2,11 @@ language: csharp
 solution: ./FantasySimulator/FantasySimulator.sln
 mono:
   - nightly
+install:
+  - nuget restore ./FantasySimulator/FantasySimulator.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
   - xbuild ./FantasySimulator/FantasySimulator.sln /p:Configuration=Release
+  - mono ./testrunner/NUnit.Runners.2.6.4/
 notifications:
   email: true

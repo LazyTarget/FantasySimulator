@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FantasySimulator.Simulator.Poker.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace FantasySimulator.Simulator.Poker.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class HandCalculatorTests
     {
         private HandCalculator GetSUT()
@@ -16,7 +16,7 @@ namespace FantasySimulator.Simulator.Poker.Tests
         }
 
 
-        [TestMethod]
+        [TestCase]
         public void CalculatePossibleHands_PocketAces()
         {
             var sut = GetSUT();
@@ -70,5 +70,6 @@ namespace FantasySimulator.Simulator.Poker.Tests
                 }
             }
         }
+
     }
 }
