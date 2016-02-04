@@ -154,10 +154,13 @@
     <None Include="App_Data\SoccerSimulator\TransfersPage_20160124_0720.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20160225_1934.json">
+    <None Include="App_Data\SoccerSimulator\TransfersPage_20160125_1934.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20160229_1858.json">
+    <None Include="App_Data\SoccerSimulator\TransfersPage_20160129_1858.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\TransfersPage_20160204_0850.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
