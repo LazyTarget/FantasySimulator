@@ -5,4 +5,4 @@ mono:
 script:
   - xbuild ./FantasySimulator/FantasySimulator.sln /p:Configuration=Release
 notifications:
-  email: true
+  email: false
