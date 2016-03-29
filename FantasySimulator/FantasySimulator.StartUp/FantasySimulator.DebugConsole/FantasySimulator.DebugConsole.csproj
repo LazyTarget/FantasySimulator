@@ -211,6 +211,9 @@
     <None Include="App_Data\SoccerSimulator\TransfersPage_20160327_1151.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="App_Data\SoccerSimulator\TransfersPage_20160329_2350.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FantasySimulator.Base\FantasySimulator.Core\FantasySimulator.Core.csproj">
