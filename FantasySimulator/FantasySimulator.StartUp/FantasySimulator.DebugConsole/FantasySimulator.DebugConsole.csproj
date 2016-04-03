@@ -214,11 +214,13 @@
     <None Include="App_Data\SoccerSimulator\TransfersPage_20160329_2350.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-<<<<<<< HEAD
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20160403_0129.json">
-=======
     <None Include="App_Data\SoccerSimulator\TransfersPage_20160401_1223.json">
->>>>>>> origin/master
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\TransfersPage_20160403_0129.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\TransfersPage_20160403_2258.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
