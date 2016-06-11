@@ -78,6 +78,7 @@
     <Compile Include="Config\SimulatorRunnerConfigSection.cs" />
     <Compile Include="Config\SoccerSimulatorXmlConfigFactory.cs" />
     <Compile Include="Config\SoccerSimulatorConfigurationSectionHandler.cs" />
+    <Compile Include="Data\FantasyEuro2016DataFactory.cs" />
     <Compile Include="Data\FantasyPremierLeagueApiDataFactory.cs" />
     <Compile Include="Data\XmlConfigFactoryBase.cs" />
     <Compile Include="Data\XmlLeagueDataFactory.cs" />
