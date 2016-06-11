@@ -22,8 +22,9 @@ namespace FantasySimulator.DebugConsole.Data
         private const string GetFixturesJsonUrl         = "http://eurofantasy.uefa.com/services/api/gameplay/fixtures?language=en";
         private const string GetFormationsJsonUrl       = "http://eurofantasy.uefa.com/services/api/gameplay/formations";
         private const string GetPlayerJsonUrl           = "http://eurofantasy.uefa.com/services/api/gameplay/players?gamedayid=1&language=en";
-        private const string GetFantasyTeamJsonUrl      = "http://eurofantasy.uefa.com/services/api/gameplay/user/3404336E77F8C65CE0530100007F012B/team?vOptType=1&gamedayid=2&phaseid=1&language=en";
         private const string GetPlayerDetailsJsonUrl    = "http://eurofantasy.uefa.com/services/api/feed/popupstats?playerId=1901409";
+        private const string GetFantasyTeamJsonUrl      = "http://eurofantasy.uefa.com/services/api/gameplay/user/3404336E77F8C65CE0530100007F012B/team?vOptType=1&gamedayid=2&phaseid=1&language=en";
+        private const string GetFantasyDailyJsonUrl     = "http://eurofantasy.uefa.com/services/api/daily/gameplay/user/3404336E77F8C65CE0530100007F012B/team?vOptType=2&gamedayid=2&phaseid=1&language=en";
         
 
         public FantasyEuro2016DataFactory()
@@ -31,11 +32,6 @@ namespace FantasySimulator.DebugConsole.Data
             Properties = new Dictionary<string, object>();
 
             UseOfflineData = false;
-            //DataTeamsFileName           = "EuroDataTeams_{DateTime}.json";
-            //DataFixturesFileName        = "EuroDataFixtures_{DateTime}.json";
-            //DataFormationsFileName      = "EuroDataFormations_{DateTime}.json";
-            //DataPlayersFileName         = "EuroDataPlayers_{DateTime}.json";
-
             DataTeamsFileName           = "EuroDataTeams.json";
             DataFixturesFileName        = "EuroDataFixtures.json";
             DataFormationsFileName      = "EuroDataFormations.json";
@@ -54,26 +50,62 @@ namespace FantasySimulator.DebugConsole.Data
 
         public string DataTeamsFileName
         {
-            get { return Properties["DataTeamsFileName"].SafeConvert<string>(); }
-            set { Properties["DataTeamsFileName"] = (value ?? "").Replace("{DateTime}", DateTime.Now.ToString("yyyyMMdd_HHmm")); }
+            get
+            {
+                var tmp = Properties["DataTeamsFileName"].SafeConvert<string>();
+                if (!string.IsNullOrWhiteSpace(tmp) && tmp.IndexOf("{") >= 0)
+                {
+                    tmp = tmp.Replace("{DateTime}", DateTime.Now.ToString("yyyyMMdd_HHmm"));
+                    Properties["DataTeamsFileName"] = tmp;
+                }
+                return tmp;
+            }
+            set { Properties["DataTeamsFileName"] = value; }
         }
 
         public string DataFixturesFileName
         {
-            get { return Properties["DataFixturesFileName"].SafeConvert<string>(); }
-            set { Properties["DataFixturesFileName"] = (value ?? "").Replace("{DateTime}", DateTime.Now.ToString("yyyyMMdd_HHmm")); }
+            get
+            {
+                var tmp = Properties["DataFixturesFileName"].SafeConvert<string>();
+                if (!string.IsNullOrWhiteSpace(tmp) && tmp.IndexOf("{") >= 0)
+                {
+                    tmp = tmp.Replace("{DateTime}", DateTime.Now.ToString("yyyyMMdd_HHmm"));
+                    Properties["DataFixturesFileName"] = tmp;
+                }
+                return tmp;
+            }
+            set { Properties["DataFixturesFileName"] = value; }
         }
 
         public string DataFormationsFileName
         {
-            get { return Properties["DataFormationsFileName"].SafeConvert<string>(); }
-            set { Properties["DataFormationsFileName"] = (value ?? "").Replace("{DateTime}", DateTime.Now.ToString("yyyyMMdd_HHmm")); }
+            get
+            {
+                var tmp = Properties["DataFormationsFileName"].SafeConvert<string>();
+                if (!string.IsNullOrWhiteSpace(tmp) && tmp.IndexOf("{") >= 0)
+                {
+                    tmp = tmp.Replace("{DateTime}", DateTime.Now.ToString("yyyyMMdd_HHmm"));
+                    Properties["DataFormationsFileName"] = tmp;
+                }
+                return tmp;
+            }
+            set { Properties["DataFormationsFileName"] = value; }
         }
 
         public string DataPlayersFileName
         {
-            get { return Properties["DataPlayersFileName"].SafeConvert<string>(); }
-            set { Properties["DataPlayersFileName"] = (value ?? "").Replace("{DateTime}", DateTime.Now.ToString("yyyyMMdd_HHmm")); }
+            get
+            {
+                var tmp = Properties["DataPlayersFileName"].SafeConvert<string>();
+                if (!string.IsNullOrWhiteSpace(tmp) && tmp.IndexOf("{") >= 0)
+                {
+                    tmp = tmp.Replace("{DateTime}", DateTime.Now.ToString("yyyyMMdd_HHmm"));
+                    Properties["DataPlayersFileName"] = tmp;
+                }
+                return tmp;
+            }
+            set { Properties["DataPlayersFileName"] = value; }
         }
 
 

@@ -94,6 +94,10 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataFixtures_20160611_1316.json" />
+    <None Include="App_Data\SoccerSimulator\EuroDataFormations.json" />
+    <None Include="App_Data\SoccerSimulator\EuroDataPlayers_20160611_1316.json" />
+    <None Include="App_Data\SoccerSimulator\EuroDataTeams.json" />
     <None Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
