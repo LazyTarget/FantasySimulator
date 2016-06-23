@@ -341,10 +341,11 @@ namespace FantasySimulator.DebugConsole.Data
 
 
                     // Update Team statistics
-                    if (fixture.HomeTeam != null)
+                    if (fixture.HomeTeam != null && fixture.AwayTeam != null)
+                    {
                         fixture.HomeTeam.UpdateStatisticsBasedOnFixture(fixture);
-                    if (fixture.AwayTeam != null)
                         fixture.AwayTeam.UpdateStatisticsBasedOnFixture(fixture);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -404,13 +405,15 @@ namespace FantasySimulator.DebugConsole.Data
                     player.LastName = playerData.GetPropertyValue<string>("Surname");
                     player.DisplayName = playerData.GetPropertyValue<string>("webName");
                     player.FullName = playerData.GetPropertyValue<string>("webNameAlt");
-                
+                    
                     var teamID = playerData.GetPropertyValue<string>("teamId");
-                    var leagueTeam = league.Teams.Single(x => x.Team.ID == teamID);
-                    //var team = teams.Single(x => x.ID == teamID);
-                    var team = leagueTeam.Team;
+                    var leagueTeam = league.Teams.SingleOrDefault(x => x.Team.ID == teamID);
+                    var team = leagueTeam?.Team;
                     player.Team = team;
-                    team.Players = team.Players.Append(player);
+                    if (team != null)
+                    {
+                        team.Players = team.Players.Append(player);
+                    }
 
                     player.Fantasy                      = new FantasyPlayer
                     {
@@ -435,7 +438,7 @@ namespace FantasySimulator.DebugConsole.Data
 
 
                     var points = playerData.GetPropertyValue<double>("points");
-                    var nrGamesTeamHasPlayed = leagueTeam.PlayedGames;
+                    var nrGamesTeamHasPlayed = leagueTeam?.PlayedGames ?? 0;
 
                     player.Statistics                   = new PlayerStatistics
                     {
