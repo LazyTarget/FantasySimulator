@@ -94,18 +94,51 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="App_Data\SoccerSimulator\EuroDataFixtures_20160611_1316.json" />
-    <None Include="App_Data\SoccerSimulator\EuroDataFixtures_20160621_1650.json" />
-    <None Include="App_Data\SoccerSimulator\EuroDataFixtures_20160624_0019.json" />
-    <None Include="App_Data\SoccerSimulator\EuroDataFixtures_20160630_1817.json" />
-    <None Include="App_Data\SoccerSimulator\EuroDataFormations.json" />
-    <None Include="App_Data\SoccerSimulator\EuroDataPlayers_20160611_1316.json" />
-    <None Include="App_Data\SoccerSimulator\EuroDataPlayers_20160621_1650.json" />
-    <None Include="App_Data\SoccerSimulator\EuroDataPlayers_20160624_0020.json" />
-    <None Include="App_Data\SoccerSimulator\EuroDataPlayers_20160630_1817.json" />
-    <None Include="App_Data\SoccerSimulator\EuroDataTeams_Groupstage.json" />
-    <None Include="App_Data\SoccerSimulator\EuroDataTeams_Ro16.json" />
-    <None Include="App_Data\SoccerSimulator\EuroDataTeams_Quarter.json" />
+    <None Include="App_Data\SoccerSimulator\EuroDataFixtures_20160611_1316.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataFixtures_20160621_1650.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataFixtures_20160624_0019.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataFixtures_20160630_1817.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataFixtures_20160704_1754.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataFormations.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataPlayers_20160611_1316.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataPlayers_20160621_1650.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataPlayers_20160624_0020.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataPlayers_20160630_1817.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataPlayers_20160704_1754.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataTeams_Groupstage.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataTeams_Ro16.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataTeams_Quarter.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataTeams_Semi.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
