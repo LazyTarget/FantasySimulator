@@ -109,6 +109,9 @@
     <None Include="App_Data\SoccerSimulator\EuroDataFixtures_20160704_1754.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataFixtures_20160705_2230.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="App_Data\SoccerSimulator\EuroDataFormations.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -125,6 +128,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="App_Data\SoccerSimulator\EuroDataPlayers_20160704_1754.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\EuroDataPlayers_20160705_2230.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="App_Data\SoccerSimulator\EuroDataTeams_Groupstage.json">
