@@ -79,12 +79,13 @@
     <Compile Include="Config\SoccerSimulatorXmlConfigFactory.cs" />
     <Compile Include="Config\SoccerSimulatorConfigurationSectionHandler.cs" />
     <Compile Include="Data\FantasyEuro2016DataFactory.cs" />
+    <Compile Include="Data\FantasyPremierLeague2016DataFactory.cs" />
     <Compile Include="Data\FantasyPremierLeagueApiDataFactory.cs" />
     <Compile Include="Data\XmlConfigFactoryBase.cs" />
     <Compile Include="Data\XmlLeagueDataFactory.cs" />
     <Compile Include="Data\OpenFootballDB.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
-    <Compile Include="Data\FantasyPremierLeagueDataFactory.cs" />
+    <Compile Include="Data\FantasyPremierLeague2015DataFactory.cs" />
     <Content Include="Data\SampleDataFactory.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Program.cs" />
@@ -249,11 +250,7 @@
       <Name>FantasySimulator.Simulator.Soccer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\SoccerSimulator\Euro 2016\" />
-    <Folder Include="App_Data\SoccerSimulator\FPL 2015-16\" />
-	<Folder Include="App_Data\SoccerSimulator\FPL 2016-17\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

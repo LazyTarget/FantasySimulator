@@ -61,6 +61,7 @@ namespace FantasySimulator.DebugConsole.Data
             var players = api.GetAllPlayers().ToList();
 
             // todo: Convert classes, and append to data
+            throw new NotImplementedException();
 
             return data;
         }

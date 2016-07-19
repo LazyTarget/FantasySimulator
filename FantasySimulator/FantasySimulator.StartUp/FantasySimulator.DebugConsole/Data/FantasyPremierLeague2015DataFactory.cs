@@ -15,7 +15,7 @@ using Newtonsoft.Json.Linq;
 namespace FantasySimulator.DebugConsole.Data
 {
     //[AutoConfigureProperties] todo:
-    public class FantasyPremierLeagueDataFactory : ISoccerSimulationDataFactory, IHasProperties, IXmlConfigurable
+    public class FantasyPremierLeague2015DataFactory : ISoccerSimulationDataFactory, IHasProperties, IXmlConfigurable
     {
         private const string GetTransferDataJsonUrl     = "http://fantasy.premierleague.com/transfers/";
         private const string GetPlayerDataJsonUrl       = "http://fantasy.premierleague.com/web/api/elements/";
@@ -24,7 +24,7 @@ namespace FantasySimulator.DebugConsole.Data
         private List<Team> _ukClubs;
 
 
-        public FantasyPremierLeagueDataFactory()
+        public FantasyPremierLeague2015DataFactory()
         {
             Properties = new Dictionary<string, object>();
         }

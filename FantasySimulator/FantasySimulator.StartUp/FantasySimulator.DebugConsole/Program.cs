@@ -26,7 +26,7 @@ namespace FantasySimulator.DebugConsole
         static Program()
         {
             //DataFactory = new SampleDataFactory();
-            DataFactory = new FantasyPremierLeagueDataFactory();
+            DataFactory = new FantasyPremierLeague2016DataFactory();
             //SettingsFactory = new DefaultSoccerSimulatorSettingsFactory();
             SettingsFactory = new SoccerSimulatorXmlConfigFactory();
         }
