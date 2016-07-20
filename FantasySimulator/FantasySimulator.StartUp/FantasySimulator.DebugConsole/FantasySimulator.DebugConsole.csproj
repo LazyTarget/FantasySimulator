@@ -207,6 +207,9 @@
     <None Include="App_Data\SoccerSimulator\FPL 2016-17\FPL 2016-17 20160719_150600.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2016-17\FPL 2016-17 20160720_145504.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

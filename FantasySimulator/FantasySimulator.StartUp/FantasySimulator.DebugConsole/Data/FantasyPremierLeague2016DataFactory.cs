@@ -21,6 +21,8 @@ namespace FantasySimulator.DebugConsole.Data
 
         private List<Team> _ukClubs;
 
+        private readonly MacroResolver _macroResolver = new MacroResolver();
+
 
         public FantasyPremierLeague2016DataFactory()
         {
@@ -68,13 +70,14 @@ namespace FantasySimulator.DebugConsole.Data
                 _ukClubs.AddRange(wal);
 
 
-                var now = DateTime.UtcNow;
+
+                var macros = new Dictionary<string, Func<string, string, object>>();
+                macros["now"]       = (macro, format) => DateTime.UtcNow.ToString(format);
+                macros["now-utc"]   = (macro, format) => DateTime.UtcNow.ToString(format);
+                macros["now-local"] = (macro, format) => DateTime.Now.ToString(format);
+
                 var fileName = JsonDataOutputFilename;
-                if (fileName.IndexOf("{utc", StringComparison.InvariantCultureIgnoreCase) >= 0)
-                {
-                    // todo: 
-                    // convert {utc:yyyMMdd_HHmmss} to DateTime.ToString(format)
-                }
+                fileName = _macroResolver.Resolve(fileName, macros);
 
                 
                 JObject leagueDataJson;
@@ -128,6 +131,9 @@ namespace FantasySimulator.DebugConsole.Data
                 var path = fileName;
                 if (!Path.IsPathRooted(path))
                     path = Path.Combine(Environment.CurrentDirectory, path);
+                var dir = new DirectoryInfo(Path.GetDirectoryName(path));
+                if (!dir.Exists)
+                    dir.Create();
                 
                 var exists = File.Exists(path);
                 using (var stream = File.Open(path, exists ? FileMode.Truncate : FileMode.CreateNew, FileAccess.Write))
