@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using FantasySimulator.Core;
+using FantasySimulator.Interfaces;
 using FantasySimulator.Simulator.Soccer;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
@@ -12,14 +14,34 @@ using Newtonsoft.Json.Linq;
 
 namespace FantasySimulator.DebugConsole.Data
 {
-    public class FantasyPremierLeagueDataFactory : ISoccerSimulationDataFactory
+    //[AutoConfigureProperties] todo:
+    public class FantasyPremierLeague2015DataFactory : ISoccerSimulationDataFactory, IHasProperties, IXmlConfigurable
     {
-        private static string TransfersPageJsonFilename = System.Configuration.ConfigurationManager.AppSettings.Get("TransfersPageJsonFilename");
         private const string GetTransferDataJsonUrl     = "http://fantasy.premierleague.com/transfers/";
         private const string GetPlayerDataJsonUrl       = "http://fantasy.premierleague.com/web/api/elements/";
         private const string GetFixturesJsonUrl         = "http://api.football-data.org/alpha/soccerseasons/398/fixtures";
 
         private List<Team> _ukClubs;
+
+
+        public FantasyPremierLeague2015DataFactory()
+        {
+            Properties = new Dictionary<string, object>();
+        }
+
+        public IDictionary<string, object> Properties { get; private set; }
+
+        public string TransfersPageJsonFilename
+        {
+            get { return Properties["TransfersPageJsonFilename"].SafeConvert<string>(); }
+            set { Properties["TransfersPageJsonFilename"] = value; }
+        }
+
+
+        public void Configure(XElement element)
+        {
+
+        }
 
 
 

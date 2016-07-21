@@ -127,7 +127,7 @@ namespace FantasySimulator.Simulator.Soccer
             res.Player = player;
             
             
-            var fixtures = gameweek.Fixtures.Where(x => x.HomeTeam.Team.ID == player.Team.ID || x.AwayTeam.Team.ID == player.Team.ID);
+            var fixtures = gameweek.Fixtures.Where(x => x.HomeTeam?.Team?.ID == player.Team.ID || x.AwayTeam?.Team?.ID == player.Team.ID);
             foreach (var fixture in fixtures)
             {
                 if (!Settings.SimulateFinishedGames)

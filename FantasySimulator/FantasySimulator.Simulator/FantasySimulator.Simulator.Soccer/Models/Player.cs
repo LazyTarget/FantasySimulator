@@ -5,13 +5,25 @@ namespace FantasySimulator.Simulator.Soccer
 {
     public class Player// : IPerson
     {
+        private string _fullName;
+
+
         public string ID { get; set; }
 
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
 
-        public string FullName { get { return string.Join(" ", new[] { FirstName, LastName }.Where(x => !string.IsNullOrWhiteSpace(x))); } }
+        public string FullName
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(_fullName))
+                    return _fullName;
+                return string.Join(" ", new[] { FirstName, LastName }.Where(x => !string.IsNullOrWhiteSpace(x)));
+            }
+            set { _fullName = value; }
+        }
 
         public string DisplayName { get; set; }
 

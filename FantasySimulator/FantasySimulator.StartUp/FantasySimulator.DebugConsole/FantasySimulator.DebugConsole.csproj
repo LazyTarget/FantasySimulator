@@ -34,6 +34,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FantasyPremierLeagueApi.Api, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FantasyPremierLeagueApi.Api.1.0.1.0\lib\net40\FantasyPremierLeagueApi.Api.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FantasyPremierLeagueApi.Helpers.Logger, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FantasyPremierLeagueApi.Api.1.0.1.0\lib\net40\FantasyPremierLeagueApi.Helpers.Logger.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FantasyPremierLeagueApi.Helpers.WebRetriever, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FantasyPremierLeagueApi.Api.1.0.1.0\lib\net40\FantasyPremierLeagueApi.Helpers.WebRetriever.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FantasyPremierLeagueApi.Model, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FantasyPremierLeagueApi.Api.1.0.1.0\lib\net40\FantasyPremierLeagueApi.Model.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
@@ -62,15 +78,138 @@
     <Compile Include="Config\SimulatorRunnerConfigSection.cs" />
     <Compile Include="Config\SoccerSimulatorXmlConfigFactory.cs" />
     <Compile Include="Config\SoccerSimulatorConfigurationSectionHandler.cs" />
+    <Compile Include="Data\FantasyEuro2016DataFactory.cs" />
+    <Compile Include="Data\FantasyPremierLeague2016DataFactory.cs" />
+    <Compile Include="Data\FantasyPremierLeagueApiDataFactory.cs" />
     <Compile Include="Data\XmlConfigFactoryBase.cs" />
     <Compile Include="Data\XmlLeagueDataFactory.cs" />
     <Compile Include="Data\OpenFootballDB.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
-    <Compile Include="Data\FantasyPremierLeagueDataFactory.cs" />
+    <Compile Include="Data\FantasyPremierLeague2015DataFactory.cs" />
     <Content Include="Data\SampleDataFactory.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataFixtures_20160611_1316.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataFixtures_20160621_1650.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataFixtures_20160624_0019.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataFixtures_20160630_1817.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataFixtures_20160704_1754.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataFixtures_20160705_2230.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataFixtures_20160707_1826.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataFixtures_20160712_2225.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataFormations.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataPlayers_20160611_1316.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataPlayers_20160621_1650.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataPlayers_20160624_0020.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataPlayers_20160630_1817.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataPlayers_20160704_1754.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataPlayers_20160705_2230.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataPlayers_20160707_1826.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataPlayers_20160712_2225.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataTeams_Groupstage.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataTeams_Ro16.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataTeams_Quarter.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataTeams_Semi.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\Euro 2016\EuroDataTeams_Final.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Data\SoccerSimulator\FPL 2015-16\TransfersPage_20150818_2327.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2015-16\TransfersPage_20150822_1312.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2015-16\TransfersPage_20150914_2245.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2015-16\TransfersPage_20150916_2322.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2015-16\TransfersPage_20150919_0016.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2015-16\TransfersPage_20151005_2237.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2015-16\TransfersPage_20151015_1854.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2015-16\TransfersPage_20151118_1738.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2015-16\TransfersPage_20151202_1752.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2015-16\TransfersPage_20151209_0834.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2015-16\TransfersPage_20151215_1815.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2015-16\TransfersPage_20151219_0203.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2015-16\TransfersPage_20151224_1251.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2015-16\TransfersPage_20160105_1719.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Data\SoccerSimulator\FPL 2016-17\FPL 2016-17 20160719_150600.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2016-17\FPL 2016-17 20160720_145504.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -82,8 +221,6 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="soccerSimulator.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -95,48 +232,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="App_Data\SoccerSimulator\Fixtures.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20150818_2327.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20150822_1312.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20150914_2245.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20150916_2322.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20150919_0016.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20151005_2237.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20151015_1854.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20151118_1738.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20151202_1752.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20151209_0834.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20151215_1815.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20151219_0203.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20151224_1251.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="App_Data\SoccerSimulator\TransfersPage_20160105_1719.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="App_Data\SoccerSimulator\TransfersPage_20160113_2349.json">
@@ -299,6 +394,7 @@
       <Name>FantasySimulator.Simulator.Soccer</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
