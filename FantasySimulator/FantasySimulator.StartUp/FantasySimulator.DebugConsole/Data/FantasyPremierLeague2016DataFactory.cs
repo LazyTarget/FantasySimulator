@@ -9,6 +9,7 @@ using FantasySimulator.Core;
 using FantasySimulator.Interfaces;
 using FantasySimulator.Simulator.Soccer;
 using HtmlAgilityPack;
+using Lux.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -130,8 +131,12 @@ namespace FantasySimulator.DebugConsole.Data
                 // Write to file
                 var path = fileName;
                 if (!Path.IsPathRooted(path))
-                    path = Path.Combine(Environment.CurrentDirectory, path);
-                var dir = new DirectoryInfo(Path.GetDirectoryName(path));
+                {
+                    //path = Path.Combine(Environment.CurrentDirectory, path);
+                    path = PathHelper.Combine(Environment.CurrentDirectory, path);
+                }
+                //var dir = new DirectoryInfo(Path.GetDirectoryName(path));
+                var dir = new DirectoryInfo(PathHelper.GetParent(path));
                 if (!dir.Exists)
                     dir.Create();
                 
