@@ -23,12 +23,18 @@ namespace FantasySimulator.Core
 
         public static TValue GetPropertyValue<TValue>(this JObject obj, string propertyName)
         {
+            var result = GetPropertyValue<TValue>(obj, propertyName, default(TValue));
+            return result;
+        }
+
+        public static TValue GetPropertyValue<TValue>(this JObject obj, string propertyName, TValue defaultValue)
+        {
             if (obj == null)
-                return default(TValue);
+                return defaultValue;
             var prop = obj.Property(propertyName);
             if (prop == null)
-                return default(TValue);
-            var res = prop.Value.ToObjectOrDefault<TValue>();
+                return defaultValue;
+            var res = prop.Value.ToObjectOrDefault<TValue>(defaultValue);
             return res;
         }
 
