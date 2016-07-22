@@ -19,7 +19,7 @@ namespace FantasySimulator.Simulator.Soccer
 
         public static bool HasHomeTeamAdvantage(this Team team, Fixture fixture)
         {
-            if (team.ID == fixture.HomeTeam.Team.ID)
+            if (team.ID == fixture.HomeTeam?.Team?.ID)
                 return true;
             return false;
         }
@@ -29,9 +29,9 @@ namespace FantasySimulator.Simulator.Soccer
         {
             if (player != null)
             {
-                if (player.Team.ID == fixture.HomeTeam.Team.ID)
+                if (player.Team?.ID == fixture.HomeTeam?.Team?.ID)
                     return fixture.AwayTeam;
-                if (player.Team.ID == fixture.AwayTeam.Team.ID)
+                if (player.Team?.ID == fixture.AwayTeam?.Team?.ID)
                     return fixture.HomeTeam;
             }
             return null;
@@ -52,7 +52,7 @@ namespace FantasySimulator.Simulator.Soccer
 
         public static LeagueTeam GetLeagueTeam(this Player player, League league)
         {
-            var leaugeTeam = league.Teams.FirstOrDefault(x => x.Team.ID == player.Team.ID);
+            var leaugeTeam = league.Teams.FirstOrDefault(x => x.Team?.ID == player.Team?.ID);
             return leaugeTeam;
         }
 
@@ -81,8 +81,14 @@ namespace FantasySimulator.Simulator.Soccer
         public static TeamFixtureOutcome GetTeamFixtureOutcome(this LeagueTeam team, Fixture fixture)
         {
             var res = TeamFixtureOutcome.None;
-            if (!fixture.Statistics.GameFinished)
+            if (fixture.HomeTeam == null || fixture.AwayTeam == null)
+            {
                 res = TeamFixtureOutcome.Undetermined;
+            }
+            else if (!fixture.Statistics.GameFinished)
+            {
+                res = TeamFixtureOutcome.Undetermined;
+            }
             else
             {
                 if (fixture.Statistics.Score.GoalsForHomeTeam == fixture.Statistics.Score.GoalsForAwayTeam)

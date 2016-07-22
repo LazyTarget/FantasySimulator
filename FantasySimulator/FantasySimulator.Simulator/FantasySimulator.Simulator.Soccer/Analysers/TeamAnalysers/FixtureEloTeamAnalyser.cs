@@ -46,6 +46,11 @@ namespace FantasySimulator.Simulator.Soccer.Analysers
             
             var playerTeam = player.GetLeagueTeam(fixture);
             var opposingTeam = player.GetOpposingTeam(fixture);
+            if (playerTeam == null || opposingTeam == null)
+            {
+                _log.Warn($"Invalid teams");
+                yield break;
+            }
             
             var playerTeamEloRating = EloProvider.GetRating(fixture.Time, player.Team).WaitForResult();
             var opposingTeamEloRating = EloProvider.GetRating(fixture.Time, opposingTeam.Team).WaitForResult();

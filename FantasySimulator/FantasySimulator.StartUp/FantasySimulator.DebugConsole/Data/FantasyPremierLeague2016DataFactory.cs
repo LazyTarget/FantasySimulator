@@ -19,6 +19,7 @@ namespace FantasySimulator.DebugConsole.Data
     public class FantasyPremierLeague2016DataFactory : ISoccerSimulationDataFactory, IHasProperties, IXmlConfigurable
     {
         private const string GetDataJsonUrl         = "https://fantasy.premierleague.com/drf/bootstrap-static";
+        private const string GetFixturesJsonUrl     = "http://api.football-data.org/alpha/soccerseasons/426/fixtures";
 
         private List<Team> _ukClubs;
 
@@ -38,10 +39,16 @@ namespace FantasySimulator.DebugConsole.Data
             set { Properties["FetchNewData"] = value; }
         }
 
-        public string JsonDataOutputFilename
+        public string LeagueDataFilename
         {
-            get { return Properties["JsonDataOutputFilename"].SafeConvert<string>(); }
-            set { Properties["JsonDataOutputFilename"] = value; }
+            get { return Properties["LeagueDataFilename"].SafeConvert<string>(); }
+            set { Properties["LeagueDataFilename"] = value; }
+        }
+
+        public string FixturesFilename
+        {
+            get { return Properties["FixturesFilename"].SafeConvert<string>(); }
+            set { Properties["FixturesFilename"] = value; }
         }
 
 
@@ -68,9 +75,12 @@ namespace FantasySimulator.DebugConsole.Data
                 try
                 {
                     var eng = await openFootball.GetEnglishClubs();
+                    var eng2 = await openFootball.GetEnglishClubs2();
                     var wal = await openFootball.GetWelshClubs();
-                    _ukClubs.AddRange(eng);
-                    _ukClubs.AddRange(wal);
+
+                    _ukClubs.AddRange(eng.Where(x => _ukClubs.All(y => !y.MatchName(x.Name))));
+                    _ukClubs.AddRange(eng2.Where(x => _ukClubs.All(y => !y.MatchName(x.Name))));
+                    _ukClubs.AddRange(wal.Where(x => _ukClubs.All(y => !y.MatchName(x.Name))));
                 }
                 catch (Exception ex)
                 {
@@ -84,21 +94,29 @@ namespace FantasySimulator.DebugConsole.Data
                 macros["now-utc"]   = (macro, format) => DateTime.UtcNow.ToString(format);
                 macros["now-local"] = (macro, format) => DateTime.Now.ToString(format);
 
-                var fileName = JsonDataOutputFilename;
-                fileName = _macroResolver.Resolve(fileName, macros);
+                var leagueDataFileName = LeagueDataFilename;
+                leagueDataFileName = _macroResolver.Resolve(leagueDataFileName, macros);
 
-                
-                JObject leagueDataJson;
+                var fixturesFileName = FixturesFilename;
+                fixturesFileName = _macroResolver.Resolve(fixturesFileName, macros);
+
+
+                JObject leagueDataJson,
+                        fixturesJson;
                 if (FetchNewData)
                 {
                     leagueDataJson = await GetLeagueDataFromWebsite();
-                    var saved = await SaveLeagueDataToTextFile(leagueDataJson, fileName);
+                    fixturesJson = await GetFixturesFromWebsite();
+                    var s1 = await SaveJTokenToTextFile(leagueDataJson, leagueDataFileName);
+                    var s2 = await SaveJTokenToTextFile(fixturesJson, fixturesFileName);
                 }
                 else
-                    leagueDataJson = await GetLeagueDataFromTextFile(fileName);
+                {
+                    leagueDataJson = (JObject) await LoadJTokenFromTextFile(leagueDataFileName);
+                    fixturesJson = (JObject)await LoadJTokenFromTextFile(fixturesFileName);
+                }
 
 
-                JObject fixturesJson = null;
 
 
                 var teams = new List<Team>();
@@ -128,8 +146,44 @@ namespace FantasySimulator.DebugConsole.Data
             }
         }
 
+        private async Task<JObject> GetLeagueDataFromWebsite()
+        {
+            var http = new HttpClient();
+            try
+            {
+                var response = await http.GetAsync(GetDataJsonUrl);
+                response.EnsureSuccessStatusCode();
 
-        private async Task<bool> SaveLeagueDataToTextFile(JObject leagueDataJson, string fileName)
+                var json = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<JObject>(json);
+                return obj;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        private async Task<JObject> GetFixturesFromWebsite()
+        {
+            var http = new HttpClient();
+            try
+            {
+                var response = await http.GetAsync(GetFixturesJsonUrl);
+                response.EnsureSuccessStatusCode();
+
+                var json = await response.Content.ReadAsStringAsync();
+                var obj = JsonConvert.DeserializeObject<JObject>(json);
+                return obj;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+
+        private async Task<bool> SaveJTokenToTextFile(JToken token, string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
                 throw new ArgumentNullException(nameof(fileName));
@@ -156,38 +210,19 @@ namespace FantasySimulator.DebugConsole.Data
                         Formatting = Formatting.Indented,
                     };
                     JsonConverter[] converters = new JsonConverter[0];
-                    leagueDataJson.WriteTo(jw, converters);
+                    token.WriteTo(jw, converters);
                     await wr.FlushAsync();
                 }
                 return true;
             }
             catch (Exception ex)
             {
-
+                throw;
             }
             return false;
         }
         
-        
-        private async Task<JObject> GetLeagueDataFromWebsite()
-        {
-            var http = new HttpClient();
-            try
-            {
-                var response = await http.GetAsync(GetDataJsonUrl);
-                response.EnsureSuccessStatusCode();
-
-                var json = await response.Content.ReadAsStringAsync();
-                var obj = JsonConvert.DeserializeObject<JObject>(json);
-                return obj;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        
-        private async Task<JObject> GetLeagueDataFromTextFile(string fileName)
+        private async Task<JToken> LoadJTokenFromTextFile(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
                 throw new ArgumentNullException(nameof(fileName));
@@ -203,8 +238,8 @@ namespace FantasySimulator.DebugConsole.Data
                     var streamReader = new StreamReader(stream);
                     json = await streamReader.ReadToEndAsync();
                 }
-                var obj = JsonConvert.DeserializeObject<JObject>(json);
-                return obj;
+                var token = JsonConvert.DeserializeObject<JToken>(json);
+                return token;
             }
             catch (Exception ex)
             {
@@ -419,8 +454,8 @@ namespace FantasySimulator.DebugConsole.Data
 
                         var homeTeamName = obj.GetPropertyValue<string>("homeTeamName");
                         var awayTeamName = obj.GetPropertyValue<string>("awayTeamName");
-                        var homeTeam = leagueTeams.Single(x => x.Team.Name == homeTeamName || x.Team.MatchName(homeTeamName));
-                        var awayTeam = leagueTeams.Single(x => x.Team.Name == awayTeamName || x.Team.MatchName(awayTeamName));
+                        var homeTeam = leagueTeams.SingleOrDefault(x => x.Team.Name == homeTeamName || x.Team.MatchName(homeTeamName));
+                        var awayTeam = leagueTeams.SingleOrDefault(x => x.Team.Name == awayTeamName || x.Team.MatchName(awayTeamName));
                         fixture.HomeTeam = homeTeam;
                         fixture.AwayTeam = awayTeam;
 
@@ -455,8 +490,15 @@ namespace FantasySimulator.DebugConsole.Data
 
 
                         // Update Team statistics
-                        fixture.HomeTeam.UpdateStatisticsBasedOnFixture(fixture);
-                        fixture.AwayTeam.UpdateStatisticsBasedOnFixture(fixture);
+                        if (fixture.HomeTeam != null && fixture.AwayTeam != null)
+                        {
+                            fixture.HomeTeam.UpdateStatisticsBasedOnFixture(fixture);
+                            fixture.AwayTeam.UpdateStatisticsBasedOnFixture(fixture);
+                        }
+                        else
+                        {
+
+                        }
                     }
                     catch (Exception ex)
                     {
