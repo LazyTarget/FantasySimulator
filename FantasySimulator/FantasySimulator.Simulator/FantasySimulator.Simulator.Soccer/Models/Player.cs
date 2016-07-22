@@ -27,7 +27,7 @@ namespace FantasySimulator.Simulator.Soccer
 
         public string DisplayName { get; set; }
 
-        public int Age { get; set; }
+        public int? Age { get; set; }
 
         public Rating Rating { get; set; }
 

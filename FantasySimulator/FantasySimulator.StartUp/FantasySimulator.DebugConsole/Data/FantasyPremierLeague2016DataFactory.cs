@@ -64,11 +64,18 @@ namespace FantasySimulator.DebugConsole.Data
             try
             {
                 var openFootball = new OpenFootballDB();
-                var eng = await openFootball.GetEnglishClubs();
-                var wal = await openFootball.GetWelshClubs();
                 _ukClubs = new List<Team>();
-                _ukClubs.AddRange(eng);
-                _ukClubs.AddRange(wal);
+                try
+                {
+                    var eng = await openFootball.GetEnglishClubs();
+                    var wal = await openFootball.GetWelshClubs();
+                    _ukClubs.AddRange(eng);
+                    _ukClubs.AddRange(wal);
+                }
+                catch (Exception ex)
+                {
+                    
+                }
 
 
 
@@ -221,44 +228,50 @@ namespace FantasySimulator.DebugConsole.Data
 
 
             // Get playing positions
-            var typeInfo = leagueDataJson.Property("typeInfo").Value.ToObject<JArray>();
-            foreach (var type in typeInfo.Select(x => x.ToObject<JObject>()).Where(x => x != null))
+            var typeInfo = leagueDataJson?.Property("element_types")?.Value?.ToObject<JArray>();
+            if (typeInfo != null)
             {
-                PlayerPosition pos;
-                var posID = type.GetPropertyValue<int>("id");
-                var posShortName = type.GetPropertyValue<string>("singular_name_short");
-                switch (posShortName)
+                foreach (var type in typeInfo.Select(x => x.ToObject<JObject>()).Where(x => x != null))
                 {
-                    case "GKP":
-                        pos = PlayerPosition.Goalkeeper;
-                        break;
+                    PlayerPosition pos;
+                    var posID = type.GetPropertyValue<int>("id");
+                    var posShortName = type.GetPropertyValue<string>("singular_name_short");
+                    switch (posShortName)
+                    {
+                        case "GKP":
+                            pos = PlayerPosition.Goalkeeper;
+                            break;
 
-                    case "DEF":
-                        pos = PlayerPosition.Defender;
-                        break;
+                        case "DEF":
+                            pos = PlayerPosition.Defender;
+                            break;
 
-                    case "MID":
-                        pos = PlayerPosition.Midfielder;
-                        break;
+                        case "MID":
+                            pos = PlayerPosition.Midfielder;
+                            break;
 
-                    case "FWD":
-                        pos = PlayerPosition.Forward;
-                        break;
+                        case "FWD":
+                            pos = PlayerPosition.Forward;
+                            break;
 
-                    default:
-                        continue;
+                        default:
+                            continue;
+                    }
+                    positions[posID] = pos;
                 }
-                positions[posID] = pos;
             }
+            
 
 
             // Get teams
-            var eiwTeams = leagueDataJson.Property("eiwteams").Value.ToObject<JObject>();
+            var eiwTeams = leagueDataJson?.Property("teams")?.Value?.ToObject<JArray>();
             if (eiwTeams != null)
             {
-                foreach (var prop in eiwTeams.Properties())
+                foreach (var eiwTeam in eiwTeams)
                 {
-                    var t = prop.Value.ToObjectOrDefault<JObject>();
+                    var t = eiwTeam?.ToObjectOrDefault<JObject>();
+                    if (t == null)
+                        continue;
                     var teamID = t.GetPropertyValue<string>("id");
                     if (string.IsNullOrWhiteSpace(teamID))
                         throw new FormatException("Invalid TeamID");
@@ -273,8 +286,13 @@ namespace FantasySimulator.DebugConsole.Data
                             ShortName = t.GetPropertyValue<string>("short_name"),
 
                             // todo: implement
-                            //Rating = 
                             //Statistics = 
+                            //Rating = new Rating
+                            //{
+                            //    // todo: normalize to a 1-10 rating
+                            //    //Value = (t.GetPropertyValue<int>("strength_overall_home") +
+                            //    //        t.GetPropertyValue<int>("strength_overall_away")) / 2
+                            //}
                         };
                         teams.Add(team);
 
@@ -295,78 +313,93 @@ namespace FantasySimulator.DebugConsole.Data
 
 
             // Get players
-            var propMapping = leagueDataJson.Property("elStat").Value.ToObject<JObject>();
-            var elInfo = leagueDataJson.Property("elInfo").Value.ToObject<JArray>();
-            var stats = elInfo.Select(x => x.ToObjectOrDefault<JArray>()).Where(x => x != null);
-
-            foreach (var playerData in stats)
+            var elements = leagueDataJson?.Property("elements")?.Value?.ToObject<JArray>();
+            if (elements != null)
             {
-                var posID = GetProperty<int>(playerData, propMapping, "element_type_id");
-
-                // todo: load and update player (statitics), if player plays in multiple leagues
-
-                var player                          = new Player();
-                player.ID                           = GetProperty<string>(playerData, propMapping, "id");
-                player.FirstName                    = GetProperty<string>(playerData, propMapping, "first_name");
-                player.LastName                     = GetProperty<string>(playerData, propMapping, "second_name");
-                player.DisplayName                  = GetProperty<string>(playerData, propMapping, "web_name");
-                
-                player.Fantasy                      = new FantasyPlayer
+                foreach (var playerData in elements)
                 {
-                    Position                        = positions[posID],
-                    CurrentPrice                    = GetProperty<double>(playerData, propMapping, "event_cost") / 10,
-                    OriginalPrice                   = GetProperty<double>(playerData, propMapping, "original_cost") / 10,
-                    Unavailable                     = GetProperty<string>(playerData, propMapping, "status") != "a",
-                    ChanceOfPlayingNextFixture      = GetProperty<double>(playerData, propMapping, "chance_of_playing_this_round", -1) / 100,
-                    News                            = GetProperty<string>(playerData, propMapping, "news"),
-                    OwnagePercent                   = GetProperty<double>(playerData, propMapping, "selected_by_percent", -1),
-                    TransfersDetailsForSeason       = new TransferDetails
+                    var p = playerData?.ToObjectOrDefault<JObject>();
+                    if (p == null)
+                        continue;
+
+                    var posID = p.GetPropertyValue<int>("element_type");
+                    var pos = positions[posID];
+                    
+                    // todo: load and update player (statitics), if player plays in multiple leagues
+
+                    var player                          = new Player();
+                    player.ID                           = p.GetPropertyValue<string>("id");
+                    player.FirstName                    = p.GetPropertyValue<string>("first_name");
+                    player.LastName                     = p.GetPropertyValue<string>("second_name");
+                    player.DisplayName                  = p.GetPropertyValue<string>("web_name");
+                    
+                    var currentPrice = p.GetPropertyValue<double>("now_cost") / 10;
+                    var costChangeSinceStart = p.GetPropertyValue<double>("cost_change_start") / 10;
+
+                    player.Fantasy                      = new FantasyPlayer
                     {
-                        TransfersIn                 = GetProperty<int>(playerData, propMapping, "transfers_in"),
-                        TransfersOut                = GetProperty<int>(playerData, propMapping, "transfers_out"),
-                    },
-                    TransfersDetailsForGW           = new TransferDetails
+                        Position                        = pos,
+                        CurrentPrice                    = currentPrice,
+                        OriginalPrice                   = currentPrice + costChangeSinceStart,
+                        Unavailable                     = p.GetPropertyValue<string>("status") != "a",
+                        ChanceOfPlayingNextFixture      = p.GetPropertyValue<double>("chance_of_playing_this_round", -1) / 100,
+                        News                            = p.GetPropertyValue<string>("news"),
+                        OwnagePercent                   = p.GetPropertyValue<double>("selected_by_percent", -1),
+                        TransfersDetailsForSeason       = new TransferDetails
+                        {
+                            TransfersIn                 = p.GetPropertyValue<int>("transfers_in"),
+                            TransfersOut                = p.GetPropertyValue<int>("transfers_out"),
+                        },
+                        TransfersDetailsForGW           = new TransferDetails
+                        {
+                            TransfersIn                 = p.GetPropertyValue<int>("transfers_in_event"),
+                            TransfersOut                = p.GetPropertyValue<int>("transfers_out_event"),
+                        },
+                    };
+
+                    player.Statistics                   = new PlayerStatistics
                     {
-                        TransfersIn                 = GetProperty<int>(playerData, propMapping, "transfers_in_event"),
-                        TransfersOut                = GetProperty<int>(playerData, propMapping, "transfers_out_event"),
-                    },
-                };
-
-                player.Statistics                   = new PlayerStatistics
-                {
-                    PlayedMinutes                   = GetProperty<int>(playerData, propMapping, "minutes"),
-                    Goals                           = GetProperty<int>(playerData, propMapping, "goals_scored"),
-                    Assists                         = GetProperty<int>(playerData, propMapping, "assists"),
-                    TimesInDreamteam                = GetProperty<int>(playerData, propMapping, "dreamteam_count"),
-                    YellowCards                     = GetProperty<int>(playerData, propMapping, "yellow_cards"),
-                    RedCards                        = GetProperty<int>(playerData, propMapping, "red_cards"),
-                    BonusPoints                     = GetProperty<int>(playerData, propMapping, "bonus"),
-                    Form                            = GetProperty<double>(playerData, propMapping, "form"),
-                    PenaltiesMissed                 = GetProperty<int>(playerData, propMapping, "penalties_missed"),
-                    PenaltiesSaved                  = GetProperty<int>(playerData, propMapping, "penalties_scored"),
-                    Saves                           = GetProperty<int>(playerData, propMapping, "saves"),
-                    TotalPoints                     = GetProperty<int>(playerData, propMapping, "total_points"),
-                    CleanSheets                     = GetProperty<int>(playerData, propMapping, "clean_sheets"),
-                    PointsPerGame                   = GetProperty<double>(playerData, propMapping, "points_per_game"),
-                    OwnGoals                        = GetProperty<int>(playerData, propMapping, "own_goals"),
+                        PlayedMinutes                   = p.GetPropertyValue<int>("minutes"),
+                        Goals                           = p.GetPropertyValue<int>("goals_scored"),
+                        Assists                         = p.GetPropertyValue<int>("assists"),
+                        TimesInDreamteam                = p.GetPropertyValue<int>("dreamteam_count"),
+                        YellowCards                     = p.GetPropertyValue<int>("yellow_cards"),
+                        RedCards                        = p.GetPropertyValue<int>("red_cards"),
+                        BonusPoints                     = p.GetPropertyValue<int>("bonus"),
+                        Form                            = p.GetPropertyValue<double>("form"),
+                        PenaltiesMissed                 = p.GetPropertyValue<int>("penalties_missed"),
+                        PenaltiesSaved                  = p.GetPropertyValue<int>("penalties_scored"),
+                        Saves                           = p.GetPropertyValue<int>("saves"),
+                        TotalPoints                     = p.GetPropertyValue<int>("total_points"),
+                        CleanSheets                     = p.GetPropertyValue<int>("clean_sheets"),
+                        PointsPerGame                   = p.GetPropertyValue<double>("points_per_game"),
+                        OwnGoals                        = p.GetPropertyValue<int>("own_goals"),
 
 
-                    // todo:
-                    //Appearances = "",
-                    //Crosses = 
-                    //Offsides = 
-                    //PenaltiesScored = 
-                    //Substitutions = 
-                    //Shots = 
-                };
+                        // todo:
+                        //Appearances = "",
+                        //Crosses = 
+                        //Offsides = 
+                        //PenaltiesScored = 
+                        //Substitutions = 
+                        //Shots = 
+                    };
 
-                var teamID = GetProperty<string>(playerData, propMapping, "team_id");
-                var team = teams.Single(x => x.ID == teamID);
-                player.Team = team;
-                team.Players = team.Players.Append(player);
+                    var teamID = p.GetPropertyValue<string>("team");
+                    var team = teams.SingleOrDefault(x => x.ID == teamID);
+                    if (team != null)
+                    {
+                        player.Team = team;
+                        team.Players = team.Players.Append(player);
+                    }
+                    else
+                    {
+                        
+                    }
 
-                // Update Team statistics   (todo: will get wrong if player changes team)
-                //team.Statistics.GoalsFor = player.Statistics.Goals;
+                    // Update Team statistics   (todo: will get wrong if player changes team)
+                    //team.Statistics.GoalsFor = player.Statistics.Goals;
+                }
             }
 
 
@@ -438,26 +471,6 @@ namespace FantasySimulator.DebugConsole.Data
             league.Gameweeks = gameweeks.ToArray();
             return league;
         }
-
-
-        private TValue GetProperty<TValue>(JArray data, JObject mapping, string propertyName, TValue defaultValue = default(TValue))
-        {
-            try
-            {
-                var res = defaultValue;
-                var prop = mapping.Property(propertyName);
-                if (prop != null && prop.HasValues)
-                {
-                    var propIndex = prop.Value.ToObjectOrDefault<int>();
-                    if (propIndex >= 0)
-                        res = data.ElementAt(propIndex).ToObjectOrDefault<TValue>(defaultValue);
-                }
-                return res;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
+        
     }
 }
