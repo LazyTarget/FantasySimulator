@@ -377,7 +377,13 @@
     <None Include="App_Data\SoccerSimulator\FPL 2016-17\FPL 2016-17 20160722_182314.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2016-17\FPL 2016-17 20160723_213545.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="App_Data\SoccerSimulator\FPL 2016-17\OpenFootball PL - Fixtures 20160722_182314.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\SoccerSimulator\FPL 2016-17\OpenFootball PL - Fixtures 20160723_213545.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
