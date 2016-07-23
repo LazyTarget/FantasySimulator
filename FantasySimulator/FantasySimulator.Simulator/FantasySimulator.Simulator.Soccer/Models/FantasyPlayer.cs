@@ -24,5 +24,7 @@
         public double ChanceOfPlayingNextFixture { get; set; }
 
         public string News { get; set; }
+
+        public object IndexInfo { get; set; }
     }
 }

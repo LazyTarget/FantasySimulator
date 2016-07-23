@@ -9,6 +9,7 @@ using FantasySimulator.Core;
 using FantasySimulator.Interfaces;
 using FantasySimulator.Simulator.Soccer;
 using HtmlAgilityPack;
+using Lux;
 using Lux.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -371,6 +372,14 @@ namespace FantasySimulator.DebugConsole.Data
                     var currentPrice = p.GetPropertyValue<double>("now_cost") / 10;
                     var costChangeSinceStart = p.GetPropertyValue<double>("cost_change_start") / 10;
 
+                    object indexInfo = new PremierLeagueFantasyIndex
+                    {
+                        EaIndex = new Assignable<double>(p.GetPropertyValue<double>("ea_index")),
+                        Influence = new Assignable<double>(p.GetPropertyValue<double>("influence")),
+                        Creativity = new Assignable<double>(p.GetPropertyValue<double>("creativity")),
+                        Threat = new Assignable<double>(p.GetPropertyValue<double>("threat")),
+                    };
+
                     player.Fantasy                      = new FantasyPlayer
                     {
                         Position                        = pos,
@@ -390,6 +399,7 @@ namespace FantasySimulator.DebugConsole.Data
                             TransfersIn                 = p.GetPropertyValue<int>("transfers_in_event"),
                             TransfersOut                = p.GetPropertyValue<int>("transfers_out_event"),
                         },
+                        IndexInfo = indexInfo,
                     };
 
                     player.Statistics                   = new PlayerStatistics
