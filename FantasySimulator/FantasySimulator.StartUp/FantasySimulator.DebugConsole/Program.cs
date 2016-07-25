@@ -72,7 +72,8 @@ namespace FantasySimulator.DebugConsole
             }
 
 #if DEBUG
-            Console.ReadLine();
+            if (Environment.UserInteractive)
+                Console.ReadLine();
             _log.Info("Program exited...");
 #endif
         }

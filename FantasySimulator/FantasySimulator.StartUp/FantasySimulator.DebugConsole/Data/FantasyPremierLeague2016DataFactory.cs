@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -19,8 +20,16 @@ namespace FantasySimulator.DebugConsole.Data
     //[AutoConfigureProperties] todo:
     public class FantasyPremierLeague2016DataFactory : ISoccerSimulationDataFactory, IHasProperties, IXmlConfigurable
     {
-        private const string GetDataJsonUrl         = "https://fantasy.premierleague.com/drf/bootstrap-static";
-        private const string GetFixturesJsonUrl     = "http://api.football-data.org/alpha/soccerseasons/426/fixtures";
+        private const string GetDataJsonUrl                         = "https://fantasy.premierleague.com/drf/bootstrap-static";
+        private static readonly Uri GetBootstrapJsonUri             = new Uri("https://fantasy.premierleague.com/drf/bootstrap");
+        private static readonly Uri GetBootstrapStaticJsonUri       = new Uri("https://fantasy.premierleague.com/drf/bootstrap-static");
+        private static readonly Uri GetElementsJsonUri              = new Uri("https://fantasy.premierleague.com/drf/elements");
+        private static readonly Uri GetElementTypesJsonUri          = new Uri("https://fantasy.premierleague.com/drf/element-types");
+        private static readonly Uri GetRegionsJsonUri               = new Uri("https://fantasy.premierleague.com/drf/region");
+        private static readonly Uri GetTeamsJsonUri                 = new Uri("https://fantasy.premierleague.com/drf/teams");
+        private static readonly Uri GetEventsJsonUri                = new Uri("https://fantasy.premierleague.com/drf/events");
+        private static readonly Uri GetFixturesJsonUri              = new Uri("https://fantasy.premierleague.com/drf/fixtures");
+        private const string GetFixturesJsonUrl                     = "http://api.football-data.org/alpha/soccerseasons/426/fixtures";
 
         private List<Team> _ukClubs;
 
@@ -40,16 +49,70 @@ namespace FantasySimulator.DebugConsole.Data
             set { Properties["FetchNewData"] = value; }
         }
 
-        public string LeagueDataFilename
+        public string Username
         {
-            get { return Properties["LeagueDataFilename"].SafeConvert<string>(); }
-            set { Properties["LeagueDataFilename"] = value; }
+            get { return Properties["Username"].SafeConvert<string>(); }
+            set { Properties["Username"] = value; }
+        }
+
+        public string Password
+        {
+            get { return Properties["Password"].SafeConvert<string>(); }
+            set { Properties["Password"] = value; }
+        }
+
+        public string BootstrapFilename
+        {
+            get { return Properties["BootstrapFilename"].SafeConvert<string>(); }
+            set { Properties["BootstrapFilename"] = value; }
+        }
+
+        public string BootstrapStaticFilename
+        {
+            get { return Properties["BootstrapStaticFilename"].SafeConvert<string>(); }
+            set { Properties["BootstrapStaticFilename"] = value; }
+        }
+
+        public string ElementsFilename
+        {
+            get { return Properties["ElementsFilename"].SafeConvert<string>(); }
+            set { Properties["ElementsFilename"] = value; }
+        }
+
+        public string ElementTypesFilename
+        {
+            get { return Properties["ElementTypesFilename"].SafeConvert<string>(); }
+            set { Properties["ElementTypesFilename"] = value; }
+        }
+
+        public string RegionsFilename
+        {
+            get { return Properties["RegionsFilename"].SafeConvert<string>(); }
+            set { Properties["RegionsFilename"] = value; }
+        }
+
+        public string TeamsFilename
+        {
+            get { return Properties["TeamsFilename"].SafeConvert<string>(); }
+            set { Properties["TeamsFilename"] = value; }
+        }
+
+        public string EventsFilename
+        {
+            get { return Properties["EventsFilename"].SafeConvert<string>(); }
+            set { Properties["EventsFilename"] = value; }
         }
 
         public string FixturesFilename
         {
             get { return Properties["FixturesFilename"].SafeConvert<string>(); }
             set { Properties["FixturesFilename"] = value; }
+        }
+
+        public string OpenFootballFixturesFilename
+        {
+            get { return Properties["OpenFootballFixturesFilename"].SafeConvert<string>(); }
+            set { Properties["OpenFootballFixturesFilename"] = value; }
         }
 
 
@@ -94,34 +157,70 @@ namespace FantasySimulator.DebugConsole.Data
                 macros["now"]       = (macro, format) => DateTime.UtcNow.ToString(format);
                 macros["now-utc"]   = (macro, format) => DateTime.UtcNow.ToString(format);
                 macros["now-local"] = (macro, format) => DateTime.Now.ToString(format);
+                
 
-                var leagueDataFileName = LeagueDataFilename;
-                leagueDataFileName = _macroResolver.Resolve(leagueDataFileName, macros);
-
-                var fixturesFileName = FixturesFilename;
-                fixturesFileName = _macroResolver.Resolve(fixturesFileName, macros);
-
-
-                JObject leagueDataJson,
-                        fixturesJson;
+                var bootstrapFilename               = _macroResolver.Resolve(BootstrapFilename, macros);
+                var bootstrapStaticFilename         = _macroResolver.Resolve(BootstrapStaticFilename, macros);
+                var elementsFilename                = _macroResolver.Resolve(ElementsFilename, macros);
+                var elementTypesFilename            = _macroResolver.Resolve(ElementTypesFilename, macros);
+                var regionsFilename                 = _macroResolver.Resolve(RegionsFilename, macros);
+                var teamsFilename                   = _macroResolver.Resolve(TeamsFilename, macros);
+                var eventsFilename                  = _macroResolver.Resolve(EventsFilename, macros);
+                var fixturesFilename                = _macroResolver.Resolve(FixturesFilename, macros);
+                var openFootballFixturesFilename    = _macroResolver.Resolve(OpenFootballFixturesFilename, macros);
+                
+                JToken bootstrapJson,
+                       bootstrapStaticJson,
+                       elementsJson,
+                       elementTypesJson,
+                       regionsJson,
+                       teamsJson,
+                       eventsJson,
+                       fixturesJson,
+                       openFootballFixturesJson;
                 if (FetchNewData)
                 {
-                    leagueDataJson = await GetLeagueDataFromWebsite();
-                    fixturesJson = await GetFixturesFromWebsite();
-                    var s1 = await SaveJTokenToTextFile(leagueDataJson, leagueDataFileName);
-                    var s2 = await SaveJTokenToTextFile(fixturesJson, fixturesFileName);
+                    bootstrapJson               = await GetJTokenFromAPI(GetBootstrapJsonUri);
+                    bootstrapStaticJson         = await GetJTokenFromAPI(GetBootstrapStaticJsonUri);
+                    elementsJson                = await GetJTokenFromAPI(GetElementsJsonUri);
+                    elementTypesJson            = await GetJTokenFromAPI(GetElementTypesJsonUri);
+                    regionsJson                 = await GetJTokenFromAPI(GetRegionsJsonUri);
+                    teamsJson                   = await GetJTokenFromAPI(GetTeamsJsonUri);
+                    eventsJson                  = await GetJTokenFromAPI(GetEventsJsonUri);
+                    fixturesJson                = await GetJTokenFromAPI(GetFixturesJsonUri);
+                    openFootballFixturesJson    = await GetOpenFootballFixturesFromWebsite();
+
+                    var s1 = await SaveJTokenToTextFile(bootstrapJson,              bootstrapFilename);
+                    var s2 = await SaveJTokenToTextFile(bootstrapStaticJson,        bootstrapStaticFilename);
+                    var s3 = await SaveJTokenToTextFile(elementsJson,               elementsFilename);
+                    var s4 = await SaveJTokenToTextFile(elementTypesJson,           elementTypesFilename);
+                    var s5 = await SaveJTokenToTextFile(regionsJson,                regionsFilename);
+                    var s6 = await SaveJTokenToTextFile(teamsJson,                  teamsFilename);
+                    var s7 = await SaveJTokenToTextFile(eventsJson,                 eventsFilename);
+                    var s8 = await SaveJTokenToTextFile(fixturesJson,               fixturesFilename);
+                    var s9 = await SaveJTokenToTextFile(openFootballFixturesJson,   openFootballFixturesFilename);
+                    var success = s1 && s2 && s3 && s4 && s5 && s6 && s7 && s8 && s9;
                 }
                 else
                 {
-                    leagueDataJson = (JObject) await LoadJTokenFromTextFile(leagueDataFileName);
-                    fixturesJson = (JObject)await LoadJTokenFromTextFile(fixturesFileName);
+                    bootstrapJson               = await LoadJTokenFromTextFile(bootstrapFilename);
+                    bootstrapStaticJson         = await LoadJTokenFromTextFile(bootstrapStaticFilename);
+                    elementsJson                = await LoadJTokenFromTextFile(elementsFilename);
+                    elementTypesJson            = await LoadJTokenFromTextFile(elementTypesFilename);
+                    regionsJson                 = await LoadJTokenFromTextFile(regionsFilename);
+                    teamsJson                   = await LoadJTokenFromTextFile(teamsFilename);
+                    eventsJson                  = await LoadJTokenFromTextFile(eventsFilename);
+                    fixturesJson                = await LoadJTokenFromTextFile(fixturesFilename);
+                    openFootballFixturesJson    = await LoadJTokenFromTextFile(openFootballFixturesFilename);
                 }
 
 
 
+                var leagueDataJson = (JObject) bootstrapStaticJson;
+                var fixturesDataJson = (JObject) openFootballFixturesJson;
 
                 var teams = new List<Team>();
-                var premierLeague = GenerateLeague(leagueDataJson, fixturesJson, ref teams);
+                var premierLeague = GenerateLeague(leagueDataJson, fixturesDataJson, ref teams);
 
 
                 // todo: FA Cup
@@ -146,18 +245,25 @@ namespace FantasySimulator.DebugConsole.Data
                 throw;
             }
         }
-
-        private async Task<JObject> GetLeagueDataFromWebsite()
+        
+        private async Task<JToken> GetJTokenFromAPI(Uri uri)
         {
-            var http = new HttpClient();
             try
             {
-                var response = await http.GetAsync(GetDataJsonUrl);
+                var handler = new HttpClientHandler();
+                //handler.Credentials = new NetworkCredential(Username, Password, uri.Host);
+                handler.CookieContainer = new CookieContainer();
+
+                var http = new HttpClient(handler);
+
+                var request = new HttpRequestMessage(HttpMethod.Get, uri);
+                
+                var response = await http.SendAsync(request);
                 response.EnsureSuccessStatusCode();
 
                 var json = await response.Content.ReadAsStringAsync();
-                var obj = JsonConvert.DeserializeObject<JObject>(json);
-                return obj;
+                var token = JsonConvert.DeserializeObject<JToken>(json);
+                return token;
             }
             catch (Exception ex)
             {
@@ -165,7 +271,7 @@ namespace FantasySimulator.DebugConsole.Data
             }
         }
 
-        private async Task<JObject> GetFixturesFromWebsite()
+        private async Task<JObject> GetOpenFootballFixturesFromWebsite()
         {
             var http = new HttpClient();
             try
@@ -227,7 +333,10 @@ namespace FantasySimulator.DebugConsole.Data
         private async Task<JToken> LoadJTokenFromTextFile(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
-                throw new ArgumentNullException(nameof(fileName));
+            {
+                //throw new ArgumentNullException(nameof(fileName));
+                return null;
+            }
             try
             {
                 // Write to file
