@@ -214,6 +214,7 @@ namespace FantasySimulator.DebugConsole.Data
                     token.WriteTo(jw, converters);
                     await wr.FlushAsync();
                 }
+                System.Console.WriteLine("File saved: " + path);
                 return true;
             }
             catch (Exception ex)
