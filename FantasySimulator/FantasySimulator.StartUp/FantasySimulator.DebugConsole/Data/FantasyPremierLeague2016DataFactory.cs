@@ -253,6 +253,11 @@ namespace FantasySimulator.DebugConsole.Data
                 var handler = new HttpClientHandler();
                 //handler.Credentials = new NetworkCredential(Username, Password, uri.Host);
                 handler.CookieContainer = new CookieContainer();
+                if (string.IsNullOrWhiteSpace(Username))
+                {
+                    var authenticator = new FantasyPremierLeagueApi.Helpers.WebRetriever.FantasyPremierLeague2016Authenticator(new FantasyPremierLeagueApi.Helpers.Logger.ConsoleLogger());
+                    handler.CookieContainer = authenticator.Authenticate(Username, Password);
+                }
 
                 var http = new HttpClient(handler);
 

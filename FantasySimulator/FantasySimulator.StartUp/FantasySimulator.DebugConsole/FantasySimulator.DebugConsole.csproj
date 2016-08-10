@@ -35,20 +35,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FantasyPremierLeagueApi.Api, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\FantasyPremierLeagueApi.Api.1.0.1.0\lib\net40\FantasyPremierLeagueApi.Api.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FantasyPremierLeagueApi.Helpers.Logger, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\FantasyPremierLeagueApi.Api.1.0.1.0\lib\net40\FantasyPremierLeagueApi.Helpers.Logger.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FantasyPremierLeagueApi.Helpers.WebRetriever, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\FantasyPremierLeagueApi.Api.1.0.1.0\lib\net40\FantasyPremierLeagueApi.Helpers.WebRetriever.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FantasyPremierLeagueApi.Model, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\FantasyPremierLeagueApi.Api.1.0.1.0\lib\net40\FantasyPremierLeagueApi.Model.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\third party\FantasyPremierLeagueApi.Api.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
@@ -66,8 +54,8 @@
       <HintPath>..\..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
