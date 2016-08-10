@@ -246,7 +246,7 @@ namespace FantasySimulator.DebugConsole.Data
             }
         }
         
-        private async Task<JToken> GetJTokenFromAPI(Uri uri)
+        public async Task<JToken> GetJTokenFromAPI(Uri uri)
         {
             try
             {
@@ -290,10 +290,13 @@ namespace FantasySimulator.DebugConsole.Data
         }
 
 
-        private async Task<bool> SaveJTokenToTextFile(JToken token, string fileName)
+        public async Task<bool> SaveJTokenToTextFile(JToken token, string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
-                throw new ArgumentNullException(nameof(fileName));
+            {
+                //throw new ArgumentNullException(nameof(fileName));
+                return true;
+            }
             try
             {
                 // Write to file
@@ -307,7 +310,7 @@ namespace FantasySimulator.DebugConsole.Data
                 var dir = new DirectoryInfo(PathHelper.GetParent(path));
                 if (!dir.Exists)
                     dir.Create();
-                
+
                 var exists = File.Exists(path);
                 using (var stream = File.Open(path, exists ? FileMode.Truncate : FileMode.CreateNew, FileAccess.Write))
                 {
@@ -330,7 +333,7 @@ namespace FantasySimulator.DebugConsole.Data
             return false;
         }
         
-        private async Task<JToken> LoadJTokenFromTextFile(string fileName)
+        public async Task<JToken> LoadJTokenFromTextFile(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
             {

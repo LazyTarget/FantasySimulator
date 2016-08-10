@@ -397,6 +397,9 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="download-fpl-data.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -8,6 +8,7 @@ using FantasySimulator.DebugConsole.Config;
 using FantasySimulator.DebugConsole.Data;
 using FantasySimulator.Interfaces;
 using FantasySimulator.Simulator.Soccer;
+using FantasySimulator.Core;
 
 namespace FantasySimulator.DebugConsole
 {
@@ -37,7 +38,53 @@ namespace FantasySimulator.DebugConsole
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_OnUnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_OnFirstChanceException;
 
-            
+
+            var subject = args?.FirstOrDefault();
+            if (subject == "buffer")
+            {
+                System.Threading.Thread.Sleep(10 * 1000);
+
+                var macros = new Dictionary<string, Func<string, string, object>>();
+                macros["now"]           = (macro, format) => DateTime.UtcNow.ToString(format);
+                macros["now-utc"]       = (macro, format) => DateTime.UtcNow.ToString(format);
+                macros["now-local"]     = (macro, format) => DateTime.Now.ToString(format);
+                var macroResolver = new MacroResolver();
+                var dataFactory = new FantasyPremierLeague2016DataFactory();
+
+                var queue = args.Skip(1).ToArray();
+                foreach(var input in queue)
+                {
+                    var parts = input.Split(' ');
+                    var action = parts.First();
+                    if (action == "fpl2016-dl")
+                    {
+                        var url = parts.ElementAt(1);
+                        var uri = new Uri(url);
+                        var fileName = string.Join(" ", parts.Skip(2));
+                        fileName = fileName.StartsWith("\"") && fileName.EndsWith("\"")
+                            ? fileName.Substring(1, fileName.Length - 2)
+                            : fileName;
+                        fileName = macroResolver.Resolve(fileName, macros);
+
+                        var data = dataFactory.GetJTokenFromAPI(uri).WaitForResult();
+                        var saved = dataFactory.SaveJTokenToTextFile(data, fileName).WaitForResult();
+                    }
+                }
+            }
+            else
+            {
+                RunSimulator(args);
+                
+#if DEBUG
+                if (Environment.UserInteractive)
+                    Console.ReadLine();
+                _log.Info("Program exited...");
+#endif
+            }
+        }
+
+        private static void RunSimulator(string[] args)
+        {
             var configSection = SimulatorRunnerConfigSection.LoadFromConfig();
             foreach (SimulatorConfigElement configElement in configSection.Runners)
             {
@@ -68,14 +115,7 @@ namespace FantasySimulator.DebugConsole
                 }
 
                 Console.WriteLine("Simulator '{0}' complete", simulator.GetType().Name);
-
             }
-
-#if DEBUG
-            if (Environment.UserInteractive)
-                Console.ReadLine();
-            _log.Info("Program exited...");
-#endif
         }
 
         private static void RunSoccerSimulator(SoccerSimulator simulator, SimulatorConfigElement simulatorConfigElement)
