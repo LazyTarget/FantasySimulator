@@ -51,13 +51,13 @@ namespace FantasySimulator.DebugConsole.Data
 
         public string Username
         {
-            get { return Properties["Username"].SafeConvert<string>(); }
+            get { return Properties.ContainsKey("Username") ? Properties["Username"].SafeConvert<string>() : null; }
             set { Properties["Username"] = value; }
         }
 
         public string Password
         {
-            get { return Properties["Password"].SafeConvert<string>(); }
+            get { return Properties.ContainsKey("Password") ? Properties["Password"].SafeConvert<string>() : null; }
             set { Properties["Password"] = value; }
         }
 
@@ -253,7 +253,7 @@ namespace FantasySimulator.DebugConsole.Data
                 var handler = new HttpClientHandler();
                 //handler.Credentials = new NetworkCredential(Username, Password, uri.Host);
                 handler.CookieContainer = new CookieContainer();
-                if (string.IsNullOrWhiteSpace(Username))
+                if (!string.IsNullOrWhiteSpace(Username))
                 {
                     var authenticator = new FantasyPremierLeagueApi.Helpers.WebRetriever.FantasyPremierLeague2016Authenticator(new FantasyPremierLeagueApi.Helpers.Logger.ConsoleLogger());
                     handler.CookieContainer = authenticator.Authenticate(Username, Password);

@@ -9,6 +9,7 @@ using FantasySimulator.DebugConsole.Data;
 using FantasySimulator.Interfaces;
 using FantasySimulator.Simulator.Soccer;
 using FantasySimulator.Core;
+using Fclp;
 
 namespace FantasySimulator.DebugConsole
 {
@@ -39,35 +40,85 @@ namespace FantasySimulator.DebugConsole
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_OnFirstChanceException;
 
 
-            var subject = args?.FirstOrDefault();
-            if (subject == "buffer")
+            
+            
+            if (args?.Length > 0)
             {
-                System.Threading.Thread.Sleep(10 * 1000);
+                //System.Threading.Thread.Sleep(10 * 1200);
 
                 var macros = new Dictionary<string, Func<string, string, object>>();
                 macros["now"]           = (macro, format) => DateTime.UtcNow.ToString(format);
                 macros["now-utc"]       = (macro, format) => DateTime.UtcNow.ToString(format);
                 macros["now-local"]     = (macro, format) => DateTime.Now.ToString(format);
                 var macroResolver = new MacroResolver();
-                var dataFactory = new FantasyPremierLeague2016DataFactory();
 
-                var queue = args.Skip(1).ToArray();
-                foreach(var input in queue)
+                var parts = args.ToArray();
+                var switchIndex = parts.ToList().FindIndex(x => x.StartsWith("/"));
+                if (switchIndex < 0)
+                    switchIndex = parts.Length;
+                var verb = switchIndex > 0
+                    ? String.Join(" ", parts.Take(switchIndex))
+                    : parts.Length > 0 ? parts[0] : null;
+                parts = switchIndex > 0
+                    ? parts.Skip(switchIndex).ToArray()
+                    : parts.Length > 1 ? parts.Skip(1).ToArray() : parts;
+                
+                if (verb == "fpl2016-dl")
                 {
-                    var parts = input.Split(' ');
-                    var action = parts.First();
-                    if (action == "fpl2016-dl")
+                    var parser = new FluentCommandLineParser<DownloadJsonArguments>();
+                    parser.Setup(x => x.Uri)
+                        .As("uri")
+                        .Required()
+                        .WithDescription("The uri to download from");
+                    parser.Setup(x => x.FileName)
+                        .As('f', "file")
+                        .Required()
+                        .WithDescription("The target filename");
+                    parser.Setup(x => x.Username)
+                        .As("user")
+                        .WithDescription("The auth user");
+                    parser.Setup(x => x.Password)
+                        .As("pass")
+                        .WithDescription("The auth password");
+
+                    var r = parser.Parse(parts);
+                    if (r.HasErrors)
                     {
-                        var url = parts.ElementAt(1);
-                        var uri = new Uri(url);
-                        var fileName = string.Join(" ", parts.Skip(2));
+                        Console.WriteLine("Error: " + r.ErrorText);
+                    }
+                    else if (r.HelpCalled)
+                    {
+                        Console.WriteLine($"Help for {verb} is not implemented...");
+                    }
+                    else
+                    {
+                        var arguments = parser.Object;
+                        
+                        var fileName = arguments.FileName;
                         fileName = fileName.StartsWith("\"") && fileName.EndsWith("\"")
                             ? fileName.Substring(1, fileName.Length - 2)
                             : fileName;
                         fileName = macroResolver.Resolve(fileName, macros);
 
-                        var data = dataFactory.GetJTokenFromAPI(uri).WaitForResult();
-                        var saved = dataFactory.SaveJTokenToTextFile(data, fileName).WaitForResult();
+                        try
+                        {
+                            var dataFactory = new FantasyPremierLeague2016DataFactory();
+                            dataFactory.Username = arguments.Username;
+                            dataFactory.Password = arguments.Password;
+
+                            var data = dataFactory.GetJTokenFromAPI(arguments.Uri).WaitForResult();
+                            var saved = dataFactory.SaveJTokenToTextFile(data, fileName).WaitForResult();
+                        }
+                        catch (AggregateException ex)
+                        {
+                            Console.WriteLine("Error saving data. Error: " + ex?.InnerException?.GetBaseException()?.Message);
+                            Console.WriteLine(ex);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error saving data. Error: " + ex?.GetBaseException()?.Message);
+                            Console.WriteLine(ex);
+                        }
                     }
                 }
             }
